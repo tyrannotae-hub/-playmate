@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { yearsSince } from "@/lib/data";
-import { ClubBooking, ClubClass, ClubFacility, ClubOwner } from "@/lib/types";
+import { ClubBooking, ClubClass, ClubFacility, ClubOwner, FacilityNotice } from "@/lib/types";
 
 export async function getCurrentClubOwner(): Promise<ClubOwner | null> {
   const supabase = await createClient();
@@ -23,7 +23,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
   const supabase = await createClient();
   const { data } = await supabase
     .from("facilities")
-    .select("id, name, address, phone, description")
+    .select("id, name, address, phone, description, cover_image_url")
     .eq("id", facilityId)
     .maybeSingle();
 
@@ -34,7 +34,24 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     address: data.address,
     phone: data.phone ?? "",
     description: data.description ?? "",
+    coverImageUrl: data.cover_image_url ?? "",
   };
+}
+
+export async function getMyNotices(facilityId: string): Promise<FacilityNotice[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("facility_notices")
+    .select("id, title, content, created_at")
+    .eq("facility_id", facilityId)
+    .order("created_at", { ascending: false });
+
+  return (data ?? []).map((n) => ({
+    id: n.id,
+    title: n.title,
+    content: n.content,
+    createdAt: n.created_at,
+  }));
 }
 
 export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {

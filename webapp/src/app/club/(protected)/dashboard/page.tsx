@@ -1,15 +1,13 @@
 import Link from "next/link";
-import { getCurrentClubOwner, getMyClasses, getMyClubBookings, getMyFacility } from "@/lib/club-data";
+import { getCurrentClubOwner, getMyClasses, getMyClubBookings } from "@/lib/club-data";
 import BookingRow from "@/components/club/BookingRow";
-import FacilityInfoForm from "./FacilityInfoForm";
 import { cardClass } from "@/lib/ui";
 
 export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
   if (!owner) return null;
 
-  const [facility, classes, bookings] = await Promise.all([
-    getMyFacility(owner.facilityId),
+  const [classes, bookings] = await Promise.all([
     getMyClasses(owner.facilityId),
     getMyClubBookings(owner.facilityId),
   ]);
@@ -34,12 +32,10 @@ export default async function ClubDashboardPage() {
         </div>
       </div>
 
-      {facility && (
-        <div className="mt-6">
-          <p className="mb-2.5 text-sm font-bold text-muted">시설 정보</p>
-          <FacilityInfoForm facility={facility} />
-        </div>
-      )}
+      <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
+        <p className="font-bold">클럽 홈 꾸미기</p>
+        <p className="mt-1 text-sm text-muted">커버 이미지·소개·공지사항을 관리해요 →</p>
+      </Link>
 
       <div className="mt-7 flex items-center justify-between">
         <p className="text-sm font-bold text-muted">승인 대기 중인 예약</p>

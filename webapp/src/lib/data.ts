@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Booking, Child, ParentProfile, Review, Sport, TeamClass } from "@/lib/types";
+import { Booking, Child, FacilityHome, ParentProfile, Review, Sport, TeamClass } from "@/lib/types";
 
 export async function getSports(): Promise<Sport[]> {
   const supabase = await createClient();
@@ -115,6 +115,42 @@ export async function getAllClasses(): Promise<TeamClass[]> {
 export async function getClassById(id: string): Promise<TeamClass | null> {
   const all = await getAllClasses();
   return all.find((c) => c.id === id) ?? null;
+}
+
+export async function getFacilityHome(facilityId: string): Promise<FacilityHome | null> {
+  const supabase = await createClient();
+  const { data: facility } = await supabase
+    .from("facilities")
+    .select("id, name, address, phone, description, cover_image_url")
+    .eq("id", facilityId)
+    .maybeSingle();
+
+  if (!facility) return null;
+
+  const { data: notices } = await supabase
+    .from("facility_notices")
+    .select("id, title, content, created_at")
+    .eq("facility_id", facilityId)
+    .order("created_at", { ascending: false });
+
+  const allClasses = await getAllClasses();
+  const classes = allClasses.filter((c) => c.facility.id === facilityId);
+
+  return {
+    id: facility.id,
+    name: facility.name,
+    address: facility.address,
+    phone: facility.phone ?? "",
+    description: facility.description ?? "",
+    coverImageUrl: facility.cover_image_url ?? "",
+    notices: (notices ?? []).map((n) => ({
+      id: n.id,
+      title: n.title,
+      content: n.content,
+      createdAt: n.created_at,
+    })),
+    classes,
+  };
 }
 
 export async function getReviewsForClass(classId: string): Promise<Review[]> {

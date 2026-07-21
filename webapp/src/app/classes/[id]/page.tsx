@@ -26,7 +26,9 @@ export default async function ClassDetailPage({
         </div>
 
         <div className="px-4 pt-4">
-          <p className="text-xs font-bold text-muted">{item.facility.name}</p>
+          <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
+            {item.facility.name} →
+          </Link>
           <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
           <p className="mt-1.5 text-sm text-muted">
             {item.reviewCount > 0

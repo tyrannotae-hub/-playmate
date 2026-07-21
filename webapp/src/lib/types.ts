@@ -91,6 +91,25 @@ export type ClubFacility = {
   address: string;
   phone: string;
   description: string;
+  coverImageUrl: string;
+};
+
+export type FacilityNotice = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+};
+
+export type FacilityHome = {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  description: string;
+  coverImageUrl: string;
+  notices: FacilityNotice[];
+  classes: TeamClass[];
 };
 
 export type ClubSchedule = {
