@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { Sport, TeamClass } from "@/lib/types";
+import { regionLabel } from "@/lib/region-meta";
 
 type SortKey = "distance" | "rating" | "price";
 
@@ -25,13 +26,21 @@ export default function SearchClient({
   const initialSport = params.get("sport") ?? "all";
 
   const [sportId, setSportId] = useState(initialSport);
+  const [region, setRegion] = useState("all");
   const [sort, setSort] = useState<SortKey>("distance");
 
+  const regions = useMemo(() => {
+    const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
+    return codes.map((code) => ({ code, label: regionLabel(code) }));
+  }, [classes]);
+
   const results = useMemo(() => {
-    const filtered =
+    const bySport =
       sportId === "all" ? classes : classes.filter((c) => c.sportId === sportId);
-    return [...filtered].sort(SORTERS[sort]);
-  }, [classes, sportId, sort]);
+    const byRegion =
+      region === "all" ? bySport : bySport.filter((c) => c.facility.region === region);
+    return [...byRegion].sort(SORTERS[sort]);
+  }, [classes, sportId, region, sort]);
 
   return (
     <>
@@ -40,7 +49,7 @@ export default function SearchClient({
         back
       />
       <main className="px-4 pb-10 pt-3">
-        <div className="mb-4 flex gap-2">
+        <div className="mb-2.5 flex gap-2">
           <select
             value={sportId}
             onChange={(e) => setSportId(e.target.value)}
@@ -54,6 +63,21 @@ export default function SearchClient({
             ))}
           </select>
           <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            className="rounded-full border border-line bg-surface px-3 py-2 text-sm font-semibold"
+          >
+            <option value="all">전체 지역</option>
+            {regions.map((r) => (
+              <option key={r.code} value={r.code}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4 flex gap-2">
+          <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
             className="rounded-full border border-line bg-surface px-3 py-2 text-sm font-semibold"
@@ -65,7 +89,7 @@ export default function SearchClient({
         </div>
 
         <p className="mb-3 text-xs font-semibold text-muted">
-          강남·구로 · {results.length}개 결과
+          {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 
         <div className="flex flex-col gap-3">

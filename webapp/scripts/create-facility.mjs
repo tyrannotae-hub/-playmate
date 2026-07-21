@@ -1,9 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
-const [, , name, address, phone] = process.argv;
+const [, , name, address, phone, regionCode] = process.argv;
 
 if (!name || !address) {
-  console.error("사용법: npm run facility:create -- <시설명> <주소> [연락처]");
+  console.error(
+    "사용법: npm run facility:create -- <시설명> <주소> [연락처] [region_code]\n" +
+      "region_code 예: seoul-gangnam, seoul-guro, seoul-mokdong (검색 지역 필터에 쓰임, webapp/src/lib/region-meta.ts 참고)"
+  );
   process.exit(1);
 }
 
@@ -23,7 +26,7 @@ const admin = createClient(url, serviceKey, {
 
 const { data, error } = await admin
   .from("facilities")
-  .insert({ name, address, phone: phone ?? null })
+  .insert({ name, address, phone: phone ?? null, region_code: regionCode ?? null })
   .select("id, name")
   .single();
 

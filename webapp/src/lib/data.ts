@@ -29,7 +29,7 @@ type RawClass = {
   class_type: "individual" | "group" | "team";
   price: number;
   price_unit: string;
-  facility: { id: string; name: string; address: string } | null;
+  facility: { id: string; name: string; address: string; region_code: string | null } | null;
   instructor: {
     id: string;
     name: string;
@@ -71,7 +71,7 @@ function toTeamClass(
     facility: {
       id: row.facility?.id ?? "",
       name: row.facility?.name ?? "",
-      region: "",
+      region: row.facility?.region_code ?? "",
       address: row.facility?.address ?? "",
     },
     instructor: {
@@ -104,7 +104,7 @@ export async function getAllClasses(): Promise<TeamClass[]> {
   const { data, error } = await supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*)"
+      "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*)"
     );
 
   if (error || !data) return [];
