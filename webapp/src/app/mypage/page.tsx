@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import StatusBadge from "@/components/StatusBadge";
 import LogoutButton from "./LogoutButton";
+import ChildrenSection from "./ChildrenSection";
 import { getCurrentParent, getMyBookings, getMyChildren } from "@/lib/data";
 
 export default async function MyPage() {
@@ -18,19 +19,7 @@ export default async function MyPage() {
         <h2 className="text-lg font-extrabold">{user.email}</h2>
 
         <p className="mb-2.5 mt-6 text-sm font-bold text-muted">내 자녀</p>
-        <div className="flex flex-wrap gap-2.5">
-          {children.map((c) => (
-            <div
-              key={c.id}
-              className="rounded-xl border border-line bg-surface px-4 py-3 text-sm font-bold"
-            >
-              {c.name} {c.age}세
-            </div>
-          ))}
-          {children.length === 0 && (
-            <p className="text-sm text-muted">등록된 자녀가 없어요.</p>
-          )}
-        </div>
+        <ChildrenSection initialChildren={children} />
 
         <p className="mb-2.5 mt-7 text-sm font-bold text-muted">예약 내역</p>
         <div className="flex flex-col gap-2.5">

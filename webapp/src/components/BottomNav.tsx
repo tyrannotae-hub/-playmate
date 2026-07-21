@@ -22,6 +22,7 @@ export default function BottomNav() {
             <Link
               key={item.label + i}
               href={item.href}
+              prefetch={false}
               className={`flex-1 py-3 text-center text-xs font-semibold transition ${
                 active ? "text-rink" : "text-muted"
               }`}
