@@ -204,6 +204,9 @@
   input:focus,select:focus,textarea:focus{border-color:var(--rink);}
   .submit-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:6px;}
   .privacy-note{font-size:12.5px;color:var(--muted);max-width:52ch;line-height:1.6;}
+  .form-status{margin-top:12px;font-size:13.5px;font-weight:600;min-height:1.2em;}
+  .form-status[data-state="ok"]{color:var(--rink-deep);}
+  .form-status[data-state="error"]{color:var(--energy);}
 
   /* ---------- footer ---------- */
   footer{padding:44px 0 60px;}
@@ -353,7 +356,7 @@
       </div>
 
       <div class="panel" id="panel-parent">
-        <form id="form-parent" onsubmit="return sendMail(event,'parent')">
+        <form id="form-parent" onsubmit="return submitLead(event,'parent')">
           <div class="field-grid">
             <div class="field">
               <label class="flabel" for="p-name">보호자 성함</label>
@@ -380,11 +383,12 @@
             <button type="submit" class="btn btn-primary">사전 등록 완료하기</button>
             <span class="privacy-note">제출하신 연락처는 서비스 안내 목적으로만 사용되며, 목적 달성 후 파기됩니다.</span>
           </div>
+          <p class="form-status" id="status-parent" role="status"></p>
         </form>
       </div>
 
       <div class="panel" id="panel-partner">
-        <form id="form-partner" onsubmit="return sendMail(event,'partner')">
+        <form id="form-partner" onsubmit="return submitLead(event,'partner')">
           <div class="field-grid">
             <div class="field">
               <label class="flabel" for="s-name">시설/클럽명</label>
@@ -411,6 +415,7 @@
             <button type="submit" class="btn btn-primary">입점 문의 보내기</button>
             <span class="privacy-note">제출하신 연락처는 입점 안내 목적으로만 사용되며, 목적 달성 후 파기됩니다.</span>
           </div>
+          <p class="form-status" id="status-partner" role="status"></p>
         </form>
       </div>
     </div>
@@ -431,31 +436,60 @@
 </footer>
 
 <script>
+  var SUPABASE_URL = 'https://unazmttaqqukrlupmnhr.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_Zs2HO6B1ywX9_bpk1kT_9A_pO9M0Gte';
+
   function selectAudience(who){
     document.getElementById(who === 'parent' ? 'aud-parent' : 'aud-partner').checked = true;
   }
 
-  function sendMail(e, type){
+  function setStatus(el, state, message){
+    el.dataset.state = state;
+    el.textContent = message;
+  }
+
+  function submitLead(e, type){
     e.preventDefault();
-    var to = 'tyrannotae@gmail.com';
-    var subject, body;
+    var statusEl = document.getElementById(type === 'parent' ? 'status-parent' : 'status-partner');
+    var btn = e.target.querySelector('button[type="submit"]');
+    var payload = { audience: type };
+
     if(type === 'parent'){
-      var name = document.getElementById('p-name').value;
-      var phone = document.getElementById('p-phone').value;
-      var age = document.getElementById('p-age').value;
-      var sport = document.getElementById('p-sport').value;
-      subject = '[플레이메이트 사전등록] ' + name;
-      body = '보호자 성함: ' + name + '\n휴대폰 번호: ' + phone + '\n자녀 나이: ' + age + '\n관심 종목: ' + sport;
+      payload.name = document.getElementById('p-name').value;
+      payload.phone = document.getElementById('p-phone').value;
+      payload.child_age = document.getElementById('p-age').value;
+      payload.interest_sport = document.getElementById('p-sport').value;
     } else {
-      var sname = document.getElementById('s-name').value;
-      var scontact = document.getElementById('s-contact').value;
-      var sphone = document.getElementById('s-phone').value;
-      var sregion = document.getElementById('s-region').value;
-      var smsg = document.getElementById('s-msg').value;
-      subject = '[플레이메이트 입점문의] ' + sname;
-      body = '시설/클럽명: ' + sname + '\n담당자 성함: ' + scontact + '\n연락처: ' + sphone + '\n위치: ' + sregion + '\n문의 내용: ' + smsg;
+      payload.facility_name = document.getElementById('s-name').value;
+      payload.contact_name = document.getElementById('s-contact').value;
+      payload.phone = document.getElementById('s-phone').value;
+      payload.region = document.getElementById('s-region').value;
+      payload.message = document.getElementById('s-msg').value;
     }
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+    btn.disabled = true;
+    setStatus(statusEl, '', '제출하는 중...');
+
+    fetch(SUPABASE_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(function(res){
+        btn.disabled = false;
+        if(!res.ok){ throw new Error('submit failed'); }
+        e.target.reset();
+        setStatus(statusEl, 'ok', '제출됐어요! 오픈하면 가장 먼저 알려드릴게요.');
+      })
+      .catch(function(){
+        btn.disabled = false;
+        setStatus(statusEl, 'error', '제출에 실패했어요. 잠시 후 다시 시도해주세요.');
+      });
+
     return false;
   }
 
