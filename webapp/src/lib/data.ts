@@ -29,6 +29,7 @@ type RawClass = {
   class_type: "individual" | "group" | "team";
   price: number;
   price_unit: string;
+  description: string | null;
   facility: { id: string; name: string; address: string; region_code: string | null } | null;
   instructor: {
     id: string;
@@ -38,6 +39,7 @@ type RawClass = {
     certified_by: string | null;
   } | null;
   class_schedules: RawSchedule[];
+  class_images: { url: string; sort_order: number }[];
 };
 
 async function ratingMap() {
@@ -96,6 +98,10 @@ function toTeamClass(
       capacity: s.slot_capacity,
       booked: s.slot_booked_count,
     })),
+    description: row.description ?? "",
+    images: [...row.class_images]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((img) => img.url),
   };
 }
 
@@ -104,7 +110,7 @@ export async function getAllClasses(): Promise<TeamClass[]> {
   const { data, error } = await supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*)"
+      "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*), class_images(url, sort_order)"
     );
 
   if (error || !data) return [];

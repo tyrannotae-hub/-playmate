@@ -59,7 +59,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, instructor:instructors(name), class_schedules(*)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, instructor:instructors(name), class_schedules(*), class_images(url, sort_order)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -81,6 +81,10 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       capacity: s.slot_capacity,
       booked: s.slot_booked_count,
     }));
+    const images = (row.class_images as unknown as { url: string; sort_order: number }[])
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((img) => img.url);
 
     return {
       id: row.id,
@@ -93,6 +97,8 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       price: row.price,
       priceUnit: row.price_unit,
       schedules,
+      description: row.description ?? "",
+      images,
     };
   });
 }

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
+import ClassGallery from "./ClassGallery";
 import { getClassById, getReviewsForClass } from "@/lib/data";
 import { sportEmoji } from "@/lib/sport-meta";
 import { buttonClass, cardClass } from "@/lib/ui";
@@ -21,9 +22,7 @@ export default async function ClassDetailPage({
     <>
       <TopNav back />
       <main className="pb-28">
-        <div className="flex h-40 items-center justify-center bg-rink-soft text-5xl">
-          {sportEmoji(item.sportId)}
-        </div>
+        <ClassGallery images={item.images} emoji={sportEmoji(item.sportId)} />
 
         <div className="px-4 pt-4">
           <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">

@@ -44,6 +44,8 @@ export type TeamClass = {
   rating: number;
   reviewCount: number;
   schedules: ClassSchedule[];
+  description: string;
+  images: string[];
 };
 
 export type Review = {
@@ -131,6 +133,8 @@ export type ClubClass = {
   price: number;
   priceUnit: string;
   schedules: ClubSchedule[];
+  description: string;
+  images: string[];
 };
 
 export type ClubBooking = {

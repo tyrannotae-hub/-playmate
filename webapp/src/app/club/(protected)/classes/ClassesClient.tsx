@@ -272,7 +272,7 @@ export default function ClassesClient({
 
       <div className="mt-4 flex flex-col gap-2.5">
         {initialClasses.map((c) => (
-          <ClassCard key={c.id} item={c} sports={sports} />
+          <ClassCard key={c.id} item={c} sports={sports} facilityId={facilityId} />
         ))}
         {initialClasses.length === 0 && !adding && (
           <p className="py-4 text-sm text-muted">등록된 클래스가 없어요.</p>

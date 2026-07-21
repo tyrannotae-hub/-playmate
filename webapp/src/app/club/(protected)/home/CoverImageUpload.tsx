@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { buttonClass } from "@/lib/ui";
+import { resizeImageToCover } from "@/lib/image-resize";
 
 // 모든 클럽이 같은 비율/크기로 통일되도록 업로드 전 클라이언트에서 고정 크기로 리사이즈
 const COVER_WIDTH = 1200;
@@ -22,37 +23,6 @@ export default function CoverImageUpload({
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function resizeToCover(file: File): Promise<Blob> {
-    const objectUrl = URL.createObjectURL(file);
-    try {
-      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const el = new Image();
-        el.onload = () => resolve(el);
-        el.onerror = reject;
-        el.src = objectUrl;
-      });
-
-      const canvas = document.createElement("canvas");
-      canvas.width = COVER_WIDTH;
-      canvas.height = COVER_HEIGHT;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("CANVAS_UNSUPPORTED");
-
-      const scale = Math.max(COVER_WIDTH / img.width, COVER_HEIGHT / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      ctx.drawImage(img, (COVER_WIDTH - w) / 2, (COVER_HEIGHT - h) / 2, w, h);
-
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, "image/jpeg", 0.85)
-      );
-      if (!blob) throw new Error("EXPORT_FAILED");
-      return blob;
-    } finally {
-      URL.revokeObjectURL(objectUrl);
-    }
-  }
-
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -62,7 +32,7 @@ export default function CoverImageUpload({
     const supabase = createClient();
 
     try {
-      const resized = await resizeToCover(file);
+      const resized = await resizeImageToCover(file, COVER_WIDTH, COVER_HEIGHT);
       const path = `${facilityId}/cover.jpg`;
 
       const { error: uploadError } = await supabase.storage

@@ -5,10 +5,20 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import ClassMediaManager from "./ClassMediaManager";
 
-export default function ClassCard({ item, sports }: { item: ClubClass; sports: Sport[] }) {
+export default function ClassCard({
+  item,
+  sports,
+  facilityId,
+}: {
+  item: ClubClass;
+  sports: Sport[];
+  facilityId: string;
+}) {
   const router = useRouter();
   const sport = sports.find((s) => s.id === item.sportId);
+  const [showMedia, setShowMedia] = useState(false);
   const [addingSchedule, setAddingSchedule] = useState(false);
   const [dayLabel, setDayLabel] = useState("");
   const [timeLabel, setTimeLabel] = useState("");
@@ -162,6 +172,21 @@ export default function ClassCard({ item, sports }: { item: ClubClass; sports: S
             </button>
           </div>
         </form>
+      )}
+
+      <button
+        onClick={() => setShowMedia((v) => !v)}
+        className="mt-3 w-full text-center text-xs font-bold text-rink-deep"
+      >
+        {showMedia ? "사진/소개 관리 닫기 ▲" : "사진/소개 관리 ▼"}
+      </button>
+      {showMedia && (
+        <ClassMediaManager
+          facilityId={facilityId}
+          classId={item.id}
+          initialImages={item.images}
+          initialDescription={item.description}
+        />
       )}
     </div>
   );

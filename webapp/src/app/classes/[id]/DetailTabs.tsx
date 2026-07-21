@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Review, TeamClass } from "@/lib/types";
 import { cardClass } from "@/lib/ui";
 
-const TABS = ["프로필", "커리큘럼", "시간표", "리뷰"] as const;
+const TABS = ["프로필", "상세소개", "시간표", "리뷰"] as const;
 type Tab = (typeof TABS)[number];
 
 export default function DetailTabs({
@@ -56,11 +56,15 @@ export default function DetailTabs({
         </div>
       )}
 
-      {tab === "커리큘럼" && (
-        <div className={cardClass("text-sm leading-relaxed text-muted")}>
-          기초 체력·스케이팅 훈련으로 시작해 퍽 컨트롤, 팀 전술까지 단계별로
-          진행합니다. 대상 연령 {item.ageMin}–{item.ageMax}세, 정원{" "}
-          {item.schedules[0].capacity}명의 {item.classType === "team" ? "팀" : item.classType === "group" ? "그룹" : "개인"} 수업입니다.
+      {tab === "상세소개" && (
+        <div className={cardClass("whitespace-pre-line text-sm leading-relaxed")}>
+          {item.description || (
+            <span className="text-muted">
+              대상 연령 {item.ageMin}–{item.ageMax}세, 정원 {item.schedules[0].capacity}명의{" "}
+              {item.classType === "team" ? "팀" : item.classType === "group" ? "그룹" : "개인"}{" "}
+              수업입니다. 아직 클럽에서 상세 소개를 등록하지 않았어요.
+            </span>
+          )}
         </div>
       )}
 
