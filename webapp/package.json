@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "facility:create": "node --env-file=.env.admin.local scripts/create-facility.mjs",
     "club:create": "node --env-file=.env.admin.local scripts/create-club-owner.mjs",
     "db:migrate": "node --env-file=.env.admin.local scripts/run-sql.mjs"
   },
