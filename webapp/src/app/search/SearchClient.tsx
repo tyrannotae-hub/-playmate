@@ -6,6 +6,7 @@ import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { Sport, TeamClass } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
+import { buttonClass } from "@/lib/ui";
 
 type SortKey = "distance" | "rating" | "price";
 
@@ -50,24 +51,40 @@ export default function SearchClient({
         title={sportId === "all" ? "검색" : sports.find((s) => s.id === sportId)?.name}
         back
       />
-      <main className="px-4 pb-10 pt-3">
-        <div className="mb-2.5 flex gap-2">
-          <select
-            value={sportId}
-            onChange={(e) => setSportId(e.target.value)}
-            className="flex-1 rounded-full border border-line bg-surface px-3 py-2 text-sm font-semibold"
+      <main className="pb-10 pt-3">
+        <div className="mb-3 flex gap-2 overflow-x-auto px-4 pb-1">
+          <button
+            onClick={() => setSportId("all")}
+            className={buttonClass({
+              variant: sportId === "all" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-shrink-0",
+            })}
           >
-            <option value="all">전체 종목</option>
-            {sports.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.emoji} {s.name}
-              </option>
-            ))}
-          </select>
+            전체 종목
+          </button>
+          {sports.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setSportId(s.id)}
+              className={buttonClass({
+                variant: sportId === s.id ? "secondary" : "outline",
+                size: "sm",
+                full: false,
+                className: "flex-shrink-0",
+              })}
+            >
+              {s.emoji} {s.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="mb-4 flex gap-2 px-4">
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="rounded-full border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="flex-1 rounded-full border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="all">전체 지역</option>
             {regions.map((r) => (
@@ -76,9 +93,6 @@ export default function SearchClient({
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="mb-4 flex gap-2">
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
@@ -90,11 +104,11 @@ export default function SearchClient({
           </select>
         </div>
 
-        <p className="mb-3 text-xs font-semibold text-muted">
+        <p className="mb-3 px-4 text-xs font-semibold text-muted">
           {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 px-4">
           {results.map((c) => (
             <ClassCard key={c.id} item={c} />
           ))}

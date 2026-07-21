@@ -46,6 +46,7 @@ export type TeamClass = {
   schedules: ClassSchedule[];
   description: string;
   images: string[];
+  createdAt: string;
 };
 
 export type Review = {

@@ -30,6 +30,7 @@ type RawClass = {
   price: number;
   price_unit: string;
   description: string | null;
+  created_at: string;
   facility: { id: string; name: string; address: string; region_code: string | null } | null;
   instructor: {
     id: string;
@@ -102,6 +103,7 @@ function toTeamClass(
     images: [...row.class_images]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((img) => img.url),
+    createdAt: row.created_at,
   };
 }
 
