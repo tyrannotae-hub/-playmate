@@ -1,52 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginClient() {
-  const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") ?? "/";
 
   const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [step, setStep] = useState<"email" | "code">("email");
+  const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function sendCode(e: React.FormEvent) {
+  async function sendLink(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     setErrorMsg("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    setSubmitting(false);
-    if (error) {
-      setErrorMsg("인증번호 전송에 실패했어요. 이메일을 확인해주세요.");
-      return;
-    }
-    setStep("code");
-  }
-
-  async function verifyCode(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    setErrorMsg("");
-    const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
-      token: code,
-      type: "email",
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      },
     });
     setSubmitting(false);
     if (error) {
-      setErrorMsg("인증번호가 올바르지 않아요.");
+      setErrorMsg("전송에 실패했어요. 이메일을 확인해주세요.");
       return;
     }
-    router.push(next);
-    router.refresh();
+    setSent(true);
   }
 
   return (
@@ -59,8 +43,17 @@ export default function LoginClient() {
         <p className="mt-2 text-sm text-muted">아이 체육, 맞춰서 찾다</p>
 
         <div className="mt-10 w-full">
-          {step === "email" ? (
-            <form onSubmit={sendCode}>
+          {sent ? (
+            <>
+              <div className="text-4xl">📩</div>
+              <h2 className="mt-4 text-lg font-bold">메일함을 확인해주세요</h2>
+              <p className="mt-2 text-sm text-muted">
+                {email}로 로그인 링크를 보냈어요. 메일 안의 링크를 누르면 바로
+                로그인돼요. (스팸함도 확인해주세요)
+              </p>
+            </>
+          ) : (
+            <form onSubmit={sendLink}>
               <input
                 type="email"
                 required
@@ -75,28 +68,7 @@ export default function LoginClient() {
                 disabled={submitting}
                 className="mt-3 w-full rounded-xl bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
               >
-                인증번호 받기 →
-              </button>
-            </form>
-          ) : (
-            <form onSubmit={verifyCode}>
-              <p className="mb-3 text-xs text-muted">{email}로 전송된 6자리 코드를 입력해주세요</p>
-              <input
-                type="text"
-                inputMode="numeric"
-                required
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="인증번호 6자리"
-                className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-center text-sm"
-              />
-              {errorMsg && <p className="mt-2 text-sm text-energy">{errorMsg}</p>}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="mt-3 w-full rounded-xl bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
-              >
-                확인
+                로그인 링크 받기 →
               </button>
             </form>
           )}
