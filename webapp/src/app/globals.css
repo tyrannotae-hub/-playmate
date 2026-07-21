@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f3f8fa;
+  --foreground: #0f1720;
+  --surface: #ffffff;
+  --rink: #1768ac;
+  --rink-deep: #0d3f63;
+  --rink-soft: #dceef7;
+  --energy: #ff6b35;
+  --energy-soft: #ffe4d6;
+  --line: #d8e3e8;
+  --muted: #57707c;
+  --good: #1f9d55;
+  --warn: #d98c00;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-rink: var(--rink);
+  --color-rink-deep: var(--rink-deep);
+  --color-rink-soft: var(--rink-soft);
+  --color-energy: var(--energy);
+  --color-energy-soft: var(--energy-soft);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1218;
+    --foreground: #eaf1f4;
+    --surface: #111b23;
+    --rink: #5fb3dd;
+    --rink-deep: #bfe4f5;
+    --rink-soft: #16303c;
+    --energy: #ff8f63;
+    --energy-soft: #3a2419;
+    --line: #233038;
+    --muted: #8ca0aa;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
