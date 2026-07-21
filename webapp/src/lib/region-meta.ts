@@ -9,3 +9,8 @@ export function regionLabel(code: string | null | undefined): string {
   if (!code) return "";
   return REGION_LABEL[code] ?? code;
 }
+
+export const REGION_OPTIONS = Object.entries(REGION_LABEL).map(([code, label]) => ({
+  code,
+  label,
+}));

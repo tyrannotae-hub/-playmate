@@ -61,6 +61,12 @@ export type Child = {
   age: number;
 };
 
+export type ParentProfile = {
+  name: string;
+  address: string;
+  regionCode: string;
+};
+
 export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";
 
 export type Booking = {

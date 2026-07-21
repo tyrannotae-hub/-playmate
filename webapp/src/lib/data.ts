@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Booking, Child, Review, Sport, TeamClass } from "@/lib/types";
+import { Booking, Child, ParentProfile, Review, Sport, TeamClass } from "@/lib/types";
 
 export async function getSports(): Promise<Sport[]> {
   const supabase = await createClient();
@@ -142,6 +142,27 @@ export async function getCurrentParent() {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
+}
+
+export async function getMyProfile(): Promise<ParentProfile> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { name: "", address: "", regionCode: "" };
+
+  const { data } = await supabase
+    .from("parents")
+    .select("name, address, region_code")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  return {
+    name: data?.name ?? "학부모",
+    address: data?.address ?? "",
+    regionCode: data?.region_code ?? "",
+  };
 }
 
 export async function getMyChildren(): Promise<Child[]> {

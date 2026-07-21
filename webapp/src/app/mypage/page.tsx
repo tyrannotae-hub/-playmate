@@ -4,20 +4,24 @@ import TopNav from "@/components/TopNav";
 import StatusBadge from "@/components/StatusBadge";
 import LogoutButton from "./LogoutButton";
 import ChildrenSection from "./ChildrenSection";
-import { getCurrentParent, getMyBookings, getMyChildren } from "@/lib/data";
+import { getCurrentParent, getMyBookings, getMyChildren, getMyProfile } from "@/lib/data";
 import { buttonClass, cardClass } from "@/lib/ui";
 
 export default async function MyPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/mypage");
 
-  const [children, bookings] = await Promise.all([getMyChildren(), getMyBookings()]);
+  const [profile, children, bookings] = await Promise.all([
+    getMyProfile(),
+    getMyChildren(),
+    getMyBookings(),
+  ]);
 
   return (
     <>
       <TopNav title="마이페이지" />
       <main className="px-4 pb-10 pt-4">
-        <h2 className="text-lg font-extrabold">{user.email}</h2>
+        <h2 className="text-lg font-extrabold">{profile.name}</h2>
 
         <p className="mb-2.5 mt-6 text-sm font-bold text-muted">내 자녀</p>
         <ChildrenSection initialChildren={children} />
@@ -52,9 +56,12 @@ export default async function MyPage() {
         </div>
 
         <div className="mt-8 flex gap-2">
-          <button className={buttonClass({ variant: "outline", full: false, className: "flex-1" })}>
+          <Link
+            href="/mypage/settings"
+            className={buttonClass({ variant: "outline", full: false, className: "flex-1 text-center" })}
+          >
             계정 설정
-          </button>
+          </Link>
           <LogoutButton />
         </div>
       </main>

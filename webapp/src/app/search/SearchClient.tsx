@@ -18,15 +18,17 @@ const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
 export default function SearchClient({
   classes,
   sports,
+  initialRegion = "",
 }: {
   classes: TeamClass[];
   sports: Sport[];
+  initialRegion?: string;
 }) {
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
 
   const [sportId, setSportId] = useState(initialSport);
-  const [region, setRegion] = useState("all");
+  const [region, setRegion] = useState(initialRegion || "all");
   const [sort, setSort] = useState<SortKey>("distance");
 
   const regions = useMemo(() => {
