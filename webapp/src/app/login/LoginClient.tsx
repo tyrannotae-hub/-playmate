@@ -7,6 +7,10 @@ import { createClient } from "@/lib/supabase/client";
 
 const EMAIL_DOMAIN = "playmate.local";
 
+function isValidPassword(pw: string): boolean {
+  return pw.length >= 8 && /[A-Za-z]/.test(pw) && /[0-9]/.test(pw);
+}
+
 export default function LoginClient() {
   const router = useRouter();
   const params = useSearchParams();
@@ -52,8 +56,8 @@ export default function LoginClient() {
       setErrorMsg("비밀번호가 서로 달라요.");
       return;
     }
-    if (password.length < 6) {
-      setErrorMsg("비밀번호는 6자 이상이어야 해요.");
+    if (!isValidPassword(password)) {
+      setErrorMsg("비밀번호는 영문+숫자 포함 8자 이상이어야 해요.");
       return;
     }
     setSubmitting(true);
@@ -147,14 +151,19 @@ export default function LoginClient() {
               className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
             />
             {mode === "signup" && (
-              <input
-                type="password"
-                required
-                value={passwordConfirm}
-                onChange={(e) => setPasswordConfirm(e.target.value)}
-                placeholder="비밀번호 확인"
-                className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
-              />
+              <>
+                <p className="-mt-1 text-left text-xs text-muted">
+                  영문+숫자 포함 8자 이상
+                </p>
+                <input
+                  type="password"
+                  required
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  placeholder="비밀번호 확인"
+                  className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
+                />
+              </>
             )}
           </div>
 
