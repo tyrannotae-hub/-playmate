@@ -22,6 +22,7 @@ export default function BookingForm({
   const [childId, setChildId] = useState(initialChildren[0]?.id ?? "");
   const [childName, setChildName] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [notifyEmail, setNotifyEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -61,6 +62,7 @@ export default function BookingForm({
     const { error } = await supabase.rpc("request_booking", {
       p_child_id: childId,
       p_schedule_id: item.schedules[0].id,
+      p_notify_email: notifyEmail.trim() || null,
     });
     setSubmitting(false);
 
@@ -175,6 +177,19 @@ export default function BookingForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-sm font-bold">
+              알림받을 이메일 <span className="font-normal text-muted">(선택)</span>
+            </label>
+            <input
+              type="email"
+              value={notifyEmail}
+              onChange={(e) => setNotifyEmail(e.target.value)}
+              placeholder="예약 상태 변경을 이메일로 받아보세요"
+              className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
+            />
           </div>
 
           <p className="rounded-xl bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">

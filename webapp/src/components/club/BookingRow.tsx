@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
 import { cardClass } from "@/lib/ui";
@@ -17,16 +16,15 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
   ) {
     setSubmitting(true);
     setErrorMsg("");
-    const supabase = createClient();
 
-    const patch: Record<string, unknown> = { status };
-    if (status === "confirmed") patch.confirmed_at = new Date().toISOString();
-    if (status === "cancelled") patch.cancelled_at = new Date().toISOString();
-
-    const { error } = await supabase.from("bookings").update(patch).eq("id", booking.id);
+    const res = await fetch(`/api/bookings/${booking.id}/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
 
     setSubmitting(false);
-    if (error) {
+    if (!res.ok) {
       setErrorMsg("처리에 실패했어요. 다시 시도해주세요.");
       return;
     }
