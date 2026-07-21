@@ -72,3 +72,48 @@ export type Booking = {
   status: BookingStatus;
   scheduleLabel: string;
 };
+
+export type ClubOwner = {
+  id: string;
+  name: string;
+  facilityId: string;
+};
+
+export type ClubFacility = {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  description: string;
+};
+
+export type ClubSchedule = {
+  id: string;
+  dayLabel: string;
+  timeLabel: string;
+  capacity: number;
+  booked: number;
+};
+
+export type ClubClass = {
+  id: string;
+  name: string;
+  sportId: string;
+  instructorName: string;
+  ageMin: number;
+  ageMax: number;
+  classType: "individual" | "group" | "team";
+  price: number;
+  priceUnit: string;
+  schedules: ClubSchedule[];
+};
+
+export type ClubBooking = {
+  id: string;
+  className: string;
+  scheduleLabel: string;
+  childName: string;
+  childAge: number;
+  status: BookingStatus;
+  requestedAt: string;
+};

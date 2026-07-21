@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+import AppShell from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: "PlayMate — 아이에게 맞는 운동을 찾는 가장 빠른 길",
@@ -16,8 +16,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <div className="mx-auto w-full max-w-md flex-1 pb-20">{children}</div>
-        <BottomNav />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

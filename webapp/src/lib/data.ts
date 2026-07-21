@@ -195,7 +195,7 @@ export async function getBookingById(id: string): Promise<Booking | null> {
   return bookings.find((b) => b.id === id) ?? null;
 }
 
-function yearsSince(dateStr: string): number {
+export function yearsSince(dateStr: string): number {
   const birth = new Date(dateStr);
   const now = new Date();
   let age = now.getFullYear() - birth.getFullYear();
