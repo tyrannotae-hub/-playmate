@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ClubFacility } from "@/lib/types";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 export default function FacilityInfoForm({ facility }: { facility: ClubFacility }) {
   const [editing, setEditing] = useState(false);
@@ -36,7 +37,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
 
   if (!editing) {
     return (
-      <div className="rounded-2xl border border-line bg-surface p-4">
+      <div className={cardClass()}>
         <p className="font-bold">{facility.name}</p>
         <p className="mt-1 text-sm text-muted">{address || "주소 미입력"}</p>
         <p className="mt-1 text-sm text-muted">{phone || "연락처 미입력"}</p>
@@ -44,7 +45,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <div className="mt-3 flex items-center gap-2">
           <button
             onClick={() => setEditing(true)}
-            className="rounded-full border border-line px-3.5 py-2 text-xs font-bold text-muted"
+            className={buttonClass({ variant: "outline", size: "sm", full: false })}
           >
             정보 수정
           </button>
@@ -55,10 +56,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
   }
 
   return (
-    <form
-      onSubmit={save}
-      className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4"
-    >
+    <form onSubmit={save} className={cardClass("flex flex-col gap-3")}>
       <div>
         <label className="mb-1.5 block text-xs font-bold text-muted">주소</label>
         <input
@@ -84,19 +82,24 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
-      {errorMsg && <p className="text-xs text-energy">{errorMsg}</p>}
+      {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
       <div className="flex gap-2">
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-full bg-rink py-2.5 text-xs font-bold text-white disabled:opacity-40"
+          className={buttonClass({
+            variant: "custom",
+            size: "sm",
+            full: false,
+            className: "flex-1 bg-rink text-white",
+          })}
         >
           저장
         </button>
         <button
           type="button"
           onClick={() => setEditing(false)}
-          className="rounded-full border border-line px-4 py-2.5 text-xs font-bold text-muted"
+          className={buttonClass({ variant: "outline", size: "sm", full: false, className: "px-4" })}
         >
           취소
         </button>

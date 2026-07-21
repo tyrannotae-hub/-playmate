@@ -4,6 +4,7 @@ import { useState } from "react";
 import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 import { Booking } from "@/lib/types";
+import { buttonClass } from "@/lib/ui";
 
 export default function ReviewForm({ booking }: { booking: Booking }) {
   const [rating, setRating] = useState(5);
@@ -95,12 +96,12 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
           아이 얼굴 노출에 주의해주세요 (모자이크 권장)
         </p>
 
-        {errorMsg && <p className="mt-2 text-sm text-energy">{errorMsg}</p>}
+        {errorMsg && <p className="mt-2 text-sm text-negative">{errorMsg}</p>}
 
         <button
           onClick={submit}
           disabled={content.trim().length === 0 || submitting}
-          className="mt-6 w-full rounded-full bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+          className={buttonClass({ className: "mt-6" })}
         >
           {submitting ? "등록 중..." : "등록하기"}
         </button>

@@ -10,14 +10,14 @@ export default function TopNav({
   back?: boolean;
 }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
+    <header className="shadow-card sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-3.5">
         {back && (
           <button
             type="button"
             onClick={() => history.back()}
             aria-label="뒤로"
-            className="text-lg"
+            className="-ml-1.5 flex h-8 w-8 items-center justify-center rounded-full text-lg transition hover:bg-line/50"
           >
             ←
           </button>

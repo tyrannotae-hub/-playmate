@@ -5,6 +5,7 @@ import StatusBadge from "@/components/StatusBadge";
 import LogoutButton from "./LogoutButton";
 import ChildrenSection from "./ChildrenSection";
 import { getCurrentParent, getMyBookings, getMyChildren } from "@/lib/data";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 export default async function MyPage() {
   const user = await getCurrentParent();
@@ -24,7 +25,7 @@ export default async function MyPage() {
         <p className="mb-2.5 mt-7 text-sm font-bold text-muted">예약 내역</p>
         <div className="flex flex-col gap-2.5">
           {bookings.map((b) => (
-            <div key={b.id} className="rounded-2xl border border-line bg-surface p-4">
+            <div key={b.id} className={cardClass()}>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="font-bold">{b.className}</p>
@@ -38,7 +39,7 @@ export default async function MyPage() {
               {b.status === "completed" && (
                 <Link
                   href={`/review/${b.id}`}
-                  className="mt-3 inline-block rounded-full bg-rink-soft px-3 py-1.5 text-xs font-bold text-rink-deep"
+                  className="btn-label mt-3 inline-block rounded-full bg-rink-soft px-3 py-1.5 text-xs font-bold text-rink-deep"
                 >
                   리뷰 쓰기
                 </Link>
@@ -51,7 +52,7 @@ export default async function MyPage() {
         </div>
 
         <div className="mt-8 flex gap-2">
-          <button className="flex-1 rounded-full border border-line py-3 text-sm font-bold">
+          <button className={buttonClass({ variant: "outline", full: false, className: "flex-1" })}>
             계정 설정
           </button>
           <LogoutButton />

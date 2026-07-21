@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BookingRow from "@/components/club/BookingRow";
 import { BookingStatus, ClubBooking } from "@/lib/types";
+import { buttonClass } from "@/lib/ui";
 
 const TABS: { key: BookingStatus | "all"; label: string }[] = [
   { key: "requested", label: "승인 대기" },
@@ -23,9 +24,11 @@ export default function BookingsClient({ bookings }: { bookings: ClubBooking[] }
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`rounded-full px-3.5 py-2 text-xs font-bold ${
-              tab === t.key ? "bg-foreground text-background" : "border border-line text-muted"
-            }`}
+            className={buttonClass({
+              variant: tab === t.key ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+            })}
           >
             {t.label}
           </button>

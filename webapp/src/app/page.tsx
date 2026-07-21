@@ -2,6 +2,7 @@ import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { getAllClasses, getCurrentParent, getMyChildren } from "@/lib/data";
+import { cardClass } from "@/lib/ui";
 
 export default async function HomePage() {
   const [classes, user] = await Promise.all([getAllClasses(), getCurrentParent()]);
@@ -21,7 +22,7 @@ export default async function HomePage() {
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/recommend"
-            className="rounded-2xl border border-line bg-surface p-4 transition hover:border-rink"
+            className={cardClass("transition hover:border-rink")}
           >
             <div className="text-xs font-bold text-muted">종목을 모르겠어요</div>
             <div className="mt-1 text-sm font-extrabold text-rink-deep">
@@ -30,7 +31,7 @@ export default async function HomePage() {
           </Link>
           <Link
             href="/search"
-            className="rounded-2xl border border-line bg-surface p-4 transition hover:border-rink"
+            className={cardClass("transition hover:border-rink")}
           >
             <div className="text-xs font-bold text-muted">종목을 이미 알아요</div>
             <div className="mt-1 text-sm font-extrabold text-rink-deep">

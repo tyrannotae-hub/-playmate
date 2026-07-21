@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentClubOwner, getMyClasses, getMyClubBookings, getMyFacility } from "@/lib/club-data";
 import BookingRow from "@/components/club/BookingRow";
 import FacilityInfoForm from "./FacilityInfoForm";
+import { cardClass } from "@/lib/ui";
 
 export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
@@ -19,15 +20,15 @@ export default async function ClubDashboardPage() {
   return (
     <>
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="rounded-2xl border border-line bg-surface p-4 text-center">
+        <div className={cardClass("text-center")}>
           <p className="text-2xl font-extrabold">{classes.length}</p>
           <p className="mt-1 text-xs text-muted">운영 클래스</p>
         </div>
-        <div className="rounded-2xl border border-line bg-surface p-4 text-center">
+        <div className={cardClass("text-center")}>
           <p className="text-2xl font-extrabold text-warn">{pending.length}</p>
           <p className="mt-1 text-xs text-muted">승인 대기</p>
         </div>
-        <div className="rounded-2xl border border-line bg-surface p-4 text-center">
+        <div className={cardClass("text-center")}>
           <p className="text-2xl font-extrabold text-good">{confirmed.length}</p>
           <p className="mt-1 text-xs text-muted">확정 예약</p>
         </div>

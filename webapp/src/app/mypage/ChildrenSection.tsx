@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Child } from "@/lib/types";
+import { buttonClass } from "@/lib/ui";
 
 export default function ChildrenSection({
   initialChildren,
@@ -91,19 +92,19 @@ export default function ChildrenSection({
               className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
-          {errorMsg && <p className="text-sm text-energy">{errorMsg}</p>}
+          {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 rounded-full bg-energy py-3 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+              className={buttonClass({ full: false, className: "flex-1" })}
             >
               {submitting ? "등록 중..." : "등록하기"}
             </button>
             <button
               type="button"
               onClick={() => setAdding(false)}
-              className="rounded-full border border-line px-5 py-3 text-sm font-bold text-muted"
+              className={buttonClass({ variant: "outline", full: false, className: "px-5" })}
             >
               취소
             </button>

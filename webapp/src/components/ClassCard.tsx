@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import { sportEmoji } from "@/lib/sport-meta";
+import { cardClass } from "@/lib/ui";
 
 export default function ClassCard({ item }: { item: TeamClass }) {
   const schedule = item.schedules[0];
@@ -9,7 +10,7 @@ export default function ClassCard({ item }: { item: TeamClass }) {
   return (
     <Link
       href={`/classes/${item.id}`}
-      className="block rounded-2xl border border-line bg-surface p-4 transition hover:border-rink"
+      className={cardClass("block transition hover:border-rink")}
     >
       <div className="flex items-start justify-between gap-3">
         <div>

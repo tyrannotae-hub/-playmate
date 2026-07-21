@@ -14,7 +14,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur">
+    <nav className="shadow-elevated fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur">
       <div className="mx-auto flex max-w-md items-stretch justify-around">
         {ITEMS.map((item, i) => {
           const active = pathname === item.href;
@@ -23,7 +23,7 @@ export default function BottomNav() {
               key={item.label + i}
               href={item.href}
               prefetch={false}
-              className={`flex-1 py-3 text-center text-xs font-semibold transition ${
+              className={`btn-label flex-1 py-3 text-center text-xs font-bold transition ${
                 active ? "text-rink" : "text-muted"
               }`}
             >

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, Sport } from "@/lib/types";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 export default function ClassCard({ item, sports }: { item: ClubClass; sports: Sport[] }) {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function ClassCard({ item, sports }: { item: ClubClass; sports: S
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-surface p-4">
+    <div className={cardClass()}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs font-bold text-muted">
@@ -71,7 +72,7 @@ export default function ClassCard({ item, sports }: { item: ClubClass; sports: S
         </div>
         <button
           onClick={deleteClass}
-          className="rounded-full border border-line px-3 py-1.5 text-xs font-bold text-muted"
+          className={buttonClass({ variant: "outline", size: "sm", full: false })}
         >
           삭제
         </button>
@@ -103,7 +104,11 @@ export default function ClassCard({ item, sports }: { item: ClubClass; sports: S
       {!addingSchedule ? (
         <button
           onClick={() => setAddingSchedule(true)}
-          className="mt-3 w-full rounded-xl border border-dashed border-line py-2 text-xs font-bold text-muted"
+          className={buttonClass({
+            variant: "custom",
+            size: "sm",
+            className: "mt-3 border border-dashed border-line text-muted",
+          })}
         >
           + 시간대 추가
         </button>
@@ -134,19 +139,24 @@ export default function ClassCard({ item, sports }: { item: ClubClass; sports: S
             placeholder="정원"
             className="w-full rounded-xl border border-line bg-background px-3 py-2.5 text-xs"
           />
-          {errorMsg && <p className="text-xs text-energy">{errorMsg}</p>}
+          {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 rounded-full bg-rink py-2 text-xs font-bold text-white disabled:opacity-40"
+              className={buttonClass({
+                variant: "custom",
+                size: "sm",
+                full: false,
+                className: "flex-1 bg-rink text-white",
+              })}
             >
               추가
             </button>
             <button
               type="button"
               onClick={() => setAddingSchedule(false)}
-              className="rounded-full border border-line px-4 py-2 text-xs font-bold text-muted"
+              className={buttonClass({ variant: "outline", size: "sm", full: false, className: "px-4" })}
             >
               취소
             </button>

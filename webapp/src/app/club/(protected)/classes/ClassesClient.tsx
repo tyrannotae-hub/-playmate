@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, Sport } from "@/lib/types";
+import { buttonClass, cardClass } from "@/lib/ui";
 import ClassCard from "./ClassCard";
 
 export default function ClassesClient({
@@ -111,7 +112,12 @@ export default function ClassesClient({
         {!adding && (
           <button
             onClick={() => setAdding(true)}
-            className="rounded-full bg-rink px-3.5 py-2 text-xs font-bold text-white"
+            className={buttonClass({
+              variant: "custom",
+              size: "sm",
+              full: false,
+              className: "bg-rink text-white",
+            })}
           >
             + 새 클래스 등록
           </button>
@@ -119,10 +125,7 @@ export default function ClassesClient({
       </div>
 
       {adding && (
-        <form
-          onSubmit={createClass}
-          className="mt-3 flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4"
-        >
+        <form onSubmit={createClass} className={cardClass("mt-3 flex flex-col gap-3")}>
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">클래스 이름</label>
             <input
@@ -243,19 +246,23 @@ export default function ClassesClient({
             className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
           />
 
-          {errorMsg && <p className="text-xs text-energy">{errorMsg}</p>}
+          {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 rounded-full bg-rink py-3 text-sm font-bold text-white disabled:opacity-40"
+              className={buttonClass({
+                variant: "custom",
+                full: false,
+                className: "flex-1 bg-rink text-white",
+              })}
             >
               {submitting ? "등록 중..." : "클래스 등록"}
             </button>
             <button
               type="button"
               onClick={() => setAdding(false)}
-              className="rounded-full border border-line px-5 py-3 text-sm font-bold text-muted"
+              className={buttonClass({ variant: "outline", full: false, className: "px-5" })}
             >
               취소
             </button>

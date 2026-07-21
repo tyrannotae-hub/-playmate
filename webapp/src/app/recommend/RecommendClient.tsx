@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import { Sport } from "@/lib/types";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 const TRAIT_OPTIONS = [
   "에너지 넘치고 활동적",
@@ -58,7 +59,7 @@ export default function RecommendClient({
               <Link
                 key={sport.id}
                 href={`/search?sport=${sport.id}`}
-                className="block rounded-2xl border border-line bg-surface p-4 hover:border-rink"
+                className={cardClass("block hover:border-rink")}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-base font-bold">
@@ -77,7 +78,7 @@ export default function RecommendClient({
           </div>
           <button
             onClick={() => setStep(1)}
-            className="mt-6 w-full rounded-full border border-line py-3 text-sm font-bold text-muted"
+            className={buttonClass({ variant: "outline", className: "mt-6" })}
           >
             다시 선택할래요
           </button>
@@ -120,7 +121,7 @@ export default function RecommendClient({
         <button
           disabled={selected.length === 0}
           onClick={() => setStep(2)}
-          className="mt-8 w-full rounded-full bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+          className={buttonClass({ className: "mt-8" })}
         >
           다음 →
         </button>

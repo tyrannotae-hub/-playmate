@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { buttonClass } from "@/lib/ui";
 
 export default function ClubLoginClient() {
   const router = useRouter();
@@ -66,12 +67,15 @@ export default function ClubLoginClient() {
           />
         </div>
 
-        {errorMsg && <p className="mt-3 text-sm text-energy">{errorMsg}</p>}
+        {errorMsg && <p className="mt-3 text-sm text-negative">{errorMsg}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-4 w-full rounded-xl bg-rink py-3.5 text-sm font-bold text-white disabled:opacity-40"
+          className={buttonClass({
+            variant: "custom",
+            className: "mt-4 bg-rink text-white",
+          })}
         >
           로그인
         </button>

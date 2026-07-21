@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
+import { buttonClass } from "@/lib/ui";
 
 const EMAIL_DOMAIN = "playmate.local";
 
@@ -112,9 +113,12 @@ export default function LoginClient() {
               setMode("login");
               setErrorMsg("");
             }}
-            className={`flex-1 rounded-full py-2.5 text-sm font-bold ${
-              mode === "login" ? "bg-foreground text-background" : "border border-line text-muted"
-            }`}
+            className={buttonClass({
+              variant: mode === "login" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-1 py-2.5 text-sm",
+            })}
           >
             로그인
           </button>
@@ -123,9 +127,12 @@ export default function LoginClient() {
               setMode("signup");
               setErrorMsg("");
             }}
-            className={`flex-1 rounded-full py-2.5 text-sm font-bold ${
-              mode === "signup" ? "bg-foreground text-background" : "border border-line text-muted"
-            }`}
+            className={buttonClass({
+              variant: mode === "signup" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-1 py-2.5 text-sm",
+            })}
           >
             회원가입
           </button>
@@ -167,12 +174,12 @@ export default function LoginClient() {
             )}
           </div>
 
-          {errorMsg && <p className="mt-3 text-sm text-energy">{errorMsg}</p>}
+          {errorMsg && <p className="mt-3 text-sm text-negative">{errorMsg}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 w-full rounded-xl bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+            className={buttonClass({ className: "mt-4" })}
           >
             {mode === "login" ? "로그인" : "가입하고 시작하기"}
           </button>
@@ -186,7 +193,10 @@ export default function LoginClient() {
 
         <button
           onClick={loginWithKakao}
-          className="mt-5 w-full rounded-xl bg-[#FEE500] py-3.5 text-sm font-bold text-[#191600]"
+          className={buttonClass({
+            variant: "custom",
+            className: "mt-5 bg-[#FEE500] text-[#191600]",
+          })}
         >
           카카오로 시작하기
         </button>

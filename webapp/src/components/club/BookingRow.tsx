@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
+import { cardClass } from "@/lib/ui";
 
 export default function BookingRow({ booking }: { booking: ClubBooking }) {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-surface p-4">
+    <div className={cardClass()}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="font-bold">{booking.className}</p>
@@ -48,21 +49,21 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
         <StatusBadge status={booking.status} />
       </div>
 
-      {errorMsg && <p className="mt-2 text-xs text-energy">{errorMsg}</p>}
+      {errorMsg && <p className="mt-2 text-xs text-negative">{errorMsg}</p>}
 
       {booking.status === "requested" && (
         <div className="mt-3 flex gap-2">
           <button
             disabled={submitting}
             onClick={() => updateStatus("confirmed")}
-            className="flex-1 rounded-full bg-rink py-2.5 text-xs font-bold text-white disabled:opacity-40"
+            className="btn-label flex-1 rounded-full bg-rink py-2.5 text-xs font-bold text-white disabled:opacity-40"
           >
             승인
           </button>
           <button
             disabled={submitting}
             onClick={() => updateStatus("cancelled")}
-            className="flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
+            className="btn-label flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
           >
             거절
           </button>
@@ -74,14 +75,14 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
           <button
             disabled={submitting}
             onClick={() => updateStatus("completed")}
-            className="flex-1 rounded-full bg-good py-2.5 text-xs font-bold text-white disabled:opacity-40"
+            className="btn-label flex-1 rounded-full bg-good py-2.5 text-xs font-bold text-white disabled:opacity-40"
           >
             완료 처리
           </button>
           <button
             disabled={submitting}
             onClick={() => updateStatus("cancelled")}
-            className="flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
+            className="btn-label flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
           >
             취소
           </button>

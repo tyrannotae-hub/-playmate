@@ -4,6 +4,7 @@ import { useState } from "react";
 import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 import { Child, TeamClass } from "@/lib/types";
+import { buttonClass } from "@/lib/ui";
 
 type Phase = "add-child" | "form" | "requested" | "error";
 
@@ -104,11 +105,11 @@ export default function BookingForm({
                 className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
-            {errorMsg && <p className="text-sm text-energy">{errorMsg}</p>}
+            {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 w-full rounded-full bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+              className={buttonClass({ className: "mt-2" })}
             >
               등록하고 계속하기
             </button>
@@ -139,7 +140,7 @@ export default function BookingForm({
               <p className="mt-2 text-sm text-muted">{errorMsg}</p>
               <button
                 onClick={() => setPhase("form")}
-                className="mt-6 w-full rounded-full border border-line py-3 text-sm font-bold"
+                className={buttonClass({ variant: "outline", className: "mt-6" })}
               >
                 다시 시도하기
               </button>
@@ -183,7 +184,7 @@ export default function BookingForm({
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 w-full rounded-full bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
+            className={buttonClass({ className: "mt-2" })}
           >
             {submitting ? "신청 중..." : "예약 신청 보내기"}
           </button>

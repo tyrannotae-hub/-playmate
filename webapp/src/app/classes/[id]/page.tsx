@@ -4,6 +4,7 @@ import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import { getClassById, getReviewsForClass } from "@/lib/data";
 import { sportEmoji } from "@/lib/sport-meta";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 export default async function ClassDetailPage({
   params,
@@ -38,7 +39,7 @@ export default async function ClassDetailPage({
             <DetailTabs item={item} reviews={reviews} />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-line bg-surface p-4">
+          <div className={cardClass("mt-6")}>
             <p className="text-lg font-extrabold tabular-nums">
               {item.priceUnit} {item.price.toLocaleString()}원
             </p>
@@ -47,11 +48,8 @@ export default async function ClassDetailPage({
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-16 z-20 mx-auto w-full max-w-md border-t border-line bg-surface px-4 py-3">
-        <Link
-          href={`/booking/${item.id}`}
-          className="block w-full rounded-full bg-energy py-3.5 text-center text-sm font-bold text-[#1A0E08]"
-        >
+      <div className="shadow-elevated fixed inset-x-0 bottom-16 z-20 mx-auto w-full max-w-md border-t border-line bg-surface px-4 py-3">
+        <Link href={`/booking/${item.id}`} className={buttonClass({ className: "text-center" })}>
           예약 신청하기
         </Link>
       </div>

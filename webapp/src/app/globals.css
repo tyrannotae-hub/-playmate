@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+/*
+  Spotify 디자인 시스템에서 차용한 구조: 근흑색 다크테마(콘텐츠가 배경에 묻히고
+  포인트 컬러만 도드라짐), pill/circle geometry, 카드에 그림자 기반 입체감.
+  PlayMate 고유 톤(아이스링크 블루 + 에너지 오렌지 2축 포인트)은 그대로 유지.
+*/
 :root {
   --background: #f3f8fa;
   --foreground: #0f1720;
   --surface: #ffffff;
+  --surface-2: #eaf2f5;
   --rink: #1768ac;
   --rink-deep: #0d3f63;
   --rink-soft: #dceef7;
@@ -13,12 +19,17 @@
   --muted: #57707c;
   --good: #1f9d55;
   --warn: #d98c00;
+  --negative: #e5484d;
+  --shadow-card: 0 2px 10px rgba(15, 23, 32, 0.07);
+  --shadow-elevated: 0 8px 24px rgba(15, 23, 32, 0.14);
+  --button-tracking: 0.02em;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-rink: var(--rink);
   --color-rink-deep: var(--rink-deep);
   --color-rink-soft: var(--rink-soft);
@@ -28,22 +39,30 @@
   --color-muted: var(--muted);
   --color-good: var(--good);
   --color-warn: var(--warn);
+  --color-negative: var(--negative);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b1218;
-    --foreground: #eaf1f4;
-    --surface: #111b23;
+    /* Spotify 근흑색 3단 표면(#121212/#181818/#1f1f1f)을 기준으로 채도를 낮춤 */
+    --background: #121212;
+    --foreground: #fdfdfd;
+    --surface: #181818;
+    --surface-2: #1f1f1f;
     --rink: #5fb3dd;
     --rink-deep: #bfe4f5;
-    --rink-soft: #16303c;
+    --rink-soft: #1c2b32;
     --energy: #ff8f63;
-    --energy-soft: #3a2419;
-    --line: #233038;
-    --muted: #8ca0aa;
+    --energy-soft: #2a1f18;
+    --line: #2e2e2e;
+    --muted: #b3b3b3;
+    --good: #3ddc84;
+    --warn: #ffa42b;
+    --negative: #f3727f;
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -52,4 +71,16 @@ body {
   color: var(--foreground);
   font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-elevated {
+  box-shadow: var(--shadow-elevated);
+}
+
+.btn-label {
+  letter-spacing: var(--button-tracking);
 }
