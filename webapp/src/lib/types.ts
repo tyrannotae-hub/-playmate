@@ -22,6 +22,7 @@ export type Instructor = {
 };
 
 export type ClassSchedule = {
+  id: string;
   dayLabel: string;
   timeLabel: string;
   capacity: number;

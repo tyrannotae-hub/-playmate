@@ -1,9 +1,11 @@
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
-import { classes, children } from "@/lib/mock-data";
+import { getAllClasses, getCurrentParent, getMyChildren } from "@/lib/data";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [classes, user] = await Promise.all([getAllClasses(), getCurrentParent()]);
+  const children = user ? await getMyChildren() : [];
   const child = children[0];
 
   return (
@@ -11,7 +13,9 @@ export default function HomePage() {
       <TopNav />
       <main className="px-4 pb-10 pt-2">
         <p className="mb-5 text-[15px] text-muted">
-          안녕하세요 👋 {child.name}({child.age}세)의 운동을 찾아볼까요?
+          {child
+            ? `안녕하세요 👋 ${child.name}(${child.age}세)의 운동을 찾아볼까요?`
+            : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
         </p>
 
         <div className="grid grid-cols-2 gap-3">
@@ -40,6 +44,11 @@ export default function HomePage() {
           {classes.slice(0, 3).map((c) => (
             <ClassCard key={c.id} item={c} />
           ))}
+          {classes.length === 0 && (
+            <p className="py-6 text-center text-sm text-muted">
+              곧 클래스가 열려요. 사전 등록하고 가장 먼저 알림 받으세요.
+            </p>
+          )}
         </div>
       </main>
     </>

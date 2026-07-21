@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ReviewForm from "./ReviewForm";
-import { bookings } from "@/lib/mock-data";
+import { getBookingById, getCurrentParent } from "@/lib/data";
 
 export default async function ReviewPage({
   params,
@@ -8,8 +8,13 @@ export default async function ReviewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const booking = bookings.find((b) => b.id === id);
+
+  const user = await getCurrentParent();
+  if (!user) redirect(`/login?next=/review/${id}`);
+
+  const booking = await getBookingById(id);
   if (!booking) notFound();
+  if (booking.status !== "completed") notFound();
 
   return <ReviewForm booking={booking} />;
 }

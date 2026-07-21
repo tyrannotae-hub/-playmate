@@ -4,17 +4,23 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
-import { classes, sports } from "@/lib/mock-data";
+import { Sport, TeamClass } from "@/lib/types";
 
 type SortKey = "distance" | "rating" | "price";
 
-const SORTERS: Record<SortKey, (a: (typeof classes)[number], b: (typeof classes)[number]) => number> = {
+const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
   distance: (a, b) => a.distanceKm - b.distanceKm,
   rating: (a, b) => b.rating - a.rating,
   price: (a, b) => a.price - b.price,
 };
 
-export default function SearchClient() {
+export default function SearchClient({
+  classes,
+  sports,
+}: {
+  classes: TeamClass[];
+  sports: Sport[];
+}) {
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
 
@@ -25,11 +31,14 @@ export default function SearchClient() {
     const filtered =
       sportId === "all" ? classes : classes.filter((c) => c.sportId === sportId);
     return [...filtered].sort(SORTERS[sort]);
-  }, [sportId, sort]);
+  }, [classes, sportId, sort]);
 
   return (
     <>
-      <TopNav title={sportId === "all" ? "검색" : sports.find((s) => s.id === sportId)?.name} back />
+      <TopNav
+        title={sportId === "all" ? "검색" : sports.find((s) => s.id === sportId)?.name}
+        back
+      />
       <main className="px-4 pb-10 pt-3">
         <div className="mb-4 flex gap-2">
           <select

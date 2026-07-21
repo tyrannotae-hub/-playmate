@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { TeamClass } from "@/lib/types";
-import { getSportById } from "@/lib/mock-data";
+import { sportEmoji } from "@/lib/sport-meta";
 
 export default function ClassCard({ item }: { item: TeamClass }) {
-  const sport = getSportById(item.sportId);
   const schedule = item.schedules[0];
   const isFull = schedule.booked >= schedule.capacity;
 
@@ -15,7 +14,7 @@ export default function ClassCard({ item }: { item: TeamClass }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-muted">
-            <span>{sport?.emoji}</span>
+            <span>{sportEmoji(item.sportId)}</span>
             <span>{item.facility.name}</span>
           </div>
           <h3 className="text-base font-bold">{item.name}</h3>

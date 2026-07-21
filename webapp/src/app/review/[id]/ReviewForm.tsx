@@ -2,12 +2,43 @@
 
 import { useState } from "react";
 import TopNav from "@/components/TopNav";
+import { createClient } from "@/lib/supabase/client";
 import { Booking } from "@/lib/types";
 
 export default function ReviewForm({ booking }: { booking: Booking }) {
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [done, setDone] = useState(false);
+
+  async function submit() {
+    setSubmitting(true);
+    setErrorMsg("");
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase.from("reviews").insert({
+      booking_id: booking.id,
+      parent_id: user.id,
+      target_type: "team_class",
+      target_id: booking.classId,
+      rating,
+      content,
+      author_label: nickname.trim() || "학부모",
+    });
+
+    setSubmitting(false);
+    if (error) {
+      setErrorMsg("후기 등록에 실패했어요. 이미 작성했는지 확인해주세요.");
+      return;
+    }
+    setDone(true);
+  }
 
   if (done) {
     return (
@@ -45,30 +76,33 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
           ))}
         </div>
 
+        <input
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+          placeholder="닉네임 (예: 민준맘, 비워두면 '학부모'로 표시)"
+          className="mt-4 w-full rounded-xl border border-line bg-surface p-3.5 text-sm"
+        />
+
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="후기를 남겨주세요..."
-          className="mt-5 w-full rounded-xl border border-line bg-surface p-3.5 text-sm"
+          className="mt-3 w-full rounded-xl border border-line bg-surface p-3.5 text-sm"
           rows={5}
         />
 
-        <button
-          type="button"
-          className="mt-3 rounded-full border border-line px-4 py-2 text-sm font-bold text-muted"
-        >
-          📷 사진 추가
-        </button>
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-3 text-xs text-muted">
           아이 얼굴 노출에 주의해주세요 (모자이크 권장)
         </p>
 
+        {errorMsg && <p className="mt-2 text-sm text-energy">{errorMsg}</p>}
+
         <button
-          onClick={() => setDone(true)}
-          disabled={content.trim().length === 0}
+          onClick={submit}
+          disabled={content.trim().length === 0 || submitting}
           className="mt-6 w-full rounded-full bg-energy py-3.5 text-sm font-bold text-[#1A0E08] disabled:opacity-40"
         >
-          등록하기
+          {submitting ? "등록 중..." : "등록하기"}
         </button>
       </main>
     </>

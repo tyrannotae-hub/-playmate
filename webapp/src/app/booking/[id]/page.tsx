@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import BookingForm from "./BookingForm";
-import { getClassById } from "@/lib/mock-data";
+import { getClassById, getCurrentParent, getMyChildren } from "@/lib/data";
 
 export default async function BookingPage({
   params,
@@ -8,8 +8,14 @@ export default async function BookingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item = getClassById(id);
+
+  const user = await getCurrentParent();
+  if (!user) redirect(`/login?next=/booking/${id}`);
+
+  const item = await getClassById(id);
   if (!item) notFound();
 
-  return <BookingForm item={item} />;
+  const children = await getMyChildren();
+
+  return <BookingForm item={item} initialChildren={children} />;
 }

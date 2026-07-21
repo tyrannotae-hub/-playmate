@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
-import { getClassById, getReviewsForClass, getSportById } from "@/lib/mock-data";
+import { getClassById, getReviewsForClass } from "@/lib/data";
+import { sportEmoji } from "@/lib/sport-meta";
 
 export default async function ClassDetailPage({
   params,
@@ -10,25 +11,27 @@ export default async function ClassDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item = getClassById(id);
+  const item = await getClassById(id);
   if (!item) notFound();
 
-  const sport = getSportById(item.sportId);
-  const reviews = getReviewsForClass(item.id);
+  const reviews = await getReviewsForClass(item.id);
 
   return (
     <>
       <TopNav back />
       <main className="pb-28">
         <div className="flex h-40 items-center justify-center bg-rink-soft text-5xl">
-          {sport?.emoji}
+          {sportEmoji(item.sportId)}
         </div>
 
         <div className="px-4 pt-4">
           <p className="text-xs font-bold text-muted">{item.facility.name}</p>
           <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
           <p className="mt-1.5 text-sm text-muted">
-            ★ {item.rating} (리뷰 {item.reviewCount}) · {item.facility.address}
+            {item.reviewCount > 0
+              ? `★ ${item.rating} (리뷰 ${item.reviewCount})`
+              : "아직 리뷰가 없어요"}{" "}
+            · {item.facility.address}
           </p>
 
           <div className="mt-5">
