@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ClubFacility } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass } from "@/lib/ui";
 
 export default function FacilityInfoForm({ facility }: { facility: ClubFacility }) {
   const [editing, setEditing] = useState(false);
   const [address, setAddress] = useState(facility.address);
   const [phone, setPhone] = useState(facility.phone);
   const [description, setDescription] = useState(facility.description);
+  const [instagramUrl, setInstagramUrl] = useState(facility.instagramUrl);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saved, setSaved] = useState(false);
@@ -22,7 +23,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
 
     const { error } = await supabase
       .from("facilities")
-      .update({ address, phone, description })
+      .update({ address, phone, description, instagram_url: instagramUrl || null })
       .eq("id", facility.id);
 
     setSubmitting(false);
@@ -37,10 +38,11 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
 
   if (!editing) {
     return (
-      <div className={cardClass()}>
+      <div>
         <p className="font-bold">{facility.name}</p>
         <p className="mt-1 text-sm text-muted">{address || "주소 미입력"}</p>
         <p className="mt-1 text-sm text-muted">{phone || "연락처 미입력"}</p>
+        <p className="mt-1 text-sm text-muted">{instagramUrl || "인스타그램 링크 미입력"}</p>
         {description && <p className="mt-2 text-sm">{description}</p>}
         <div className="mt-3 flex items-center gap-2">
           <button
@@ -56,7 +58,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
   }
 
   return (
-    <form onSubmit={save} className={cardClass("flex flex-col gap-3")}>
+    <form onSubmit={save} className="flex flex-col gap-3 border-t border-line pt-4">
       <div>
         <label className="mb-1.5 block text-xs font-bold text-muted">주소</label>
         <input
@@ -79,6 +81,15 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
+          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+        />
+      </div>
+      <div>
+        <label className="mb-1.5 block text-xs font-bold text-muted">인스타그램 링크</label>
+        <input
+          value={instagramUrl}
+          onChange={(e) => setInstagramUrl(e.target.value)}
+          placeholder="https://instagram.com/우리팀계정"
           className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>

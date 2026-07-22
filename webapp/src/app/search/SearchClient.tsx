@@ -111,7 +111,7 @@ export default function SearchClient({
           {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 
-        <div className="flex flex-col gap-3 px-4">
+        <div className="px-4">
           {results.map((c) => (
             <ClassCard key={c.id} item={c} wished={wishedSet.has(c.id)} />
           ))}

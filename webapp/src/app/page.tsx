@@ -5,7 +5,6 @@ import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
-import { cardClass } from "@/lib/ui";
 
 export default async function HomePage() {
   const [classes, sports, user] = await Promise.all([
@@ -39,12 +38,12 @@ export default async function HomePage() {
               : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
           </p>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Link href="/recommend" className={cardClass("transition hover:border-rink")}>
+          <div className="flex divide-x divide-line border-y border-line">
+            <Link href="/recommend" className="flex-1 py-4 pr-4 transition hover:text-rink-deep">
               <div className="text-xs font-bold text-muted">종목을 모르겠어요</div>
               <div className="mt-1 text-sm font-extrabold text-rink-deep">추천받기 →</div>
             </Link>
-            <Link href="/search" className={cardClass("transition hover:border-rink")}>
+            <Link href="/search" className="flex-1 py-4 pl-4 transition hover:text-rink-deep">
               <div className="text-xs font-bold text-muted">종목을 이미 알아요</div>
               <div className="mt-1 text-sm font-extrabold text-rink-deep">바로 검색 →</div>
             </Link>

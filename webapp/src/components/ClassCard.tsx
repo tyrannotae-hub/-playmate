@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import { sportEmoji } from "@/lib/sport-meta";
-import { cardClass } from "@/lib/ui";
+import { listRowClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
 export default function ClassCard({ item, wished = false }: { item: TeamClass; wished?: boolean }) {
@@ -11,7 +11,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
   return (
     <Link
       href={`/classes/${item.id}`}
-      className={cardClass("block transition hover:border-rink")}
+      className={listRowClass("block transition hover:text-rink-deep")}
     >
       <div className="flex items-start justify-between gap-3">
         <div>

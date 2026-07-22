@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { FacilityNotice } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass, listRowClass } from "@/lib/ui";
 
 export default function NoticesManager({
   facilityId,
@@ -62,7 +62,7 @@ export default function NoticesManager({
       </div>
 
       {adding && (
-        <form onSubmit={addNotice} className={cardClass("mt-2.5 flex flex-col gap-3")}>
+        <form onSubmit={addNotice} className="mt-2.5 flex flex-col gap-3 border-t border-line pt-4">
           <input
             required
             value={title}
@@ -98,9 +98,9 @@ export default function NoticesManager({
         </form>
       )}
 
-      <div className="mt-2.5 flex flex-col gap-2.5">
+      <div className="mt-1">
         {initialNotices.map((n) => (
-          <div key={n.id} className={cardClass()}>
+          <div key={n.id} className={listRowClass()}>
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="font-bold">{n.title}</p>

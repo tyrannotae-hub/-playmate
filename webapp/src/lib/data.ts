@@ -131,17 +131,23 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
   const supabase = await createClient();
   const { data: facility } = await supabase
     .from("facilities")
-    .select("id, name, address, phone, description, cover_image_url")
+    .select("id, name, address, phone, description, cover_image_url, instagram_url")
     .eq("id", facilityId)
     .maybeSingle();
 
   if (!facility) return null;
 
-  const { data: notices } = await supabase
-    .from("facility_notices")
-    .select("id, title, content, created_at")
-    .eq("facility_id", facilityId)
-    .order("created_at", { ascending: false });
+  const [{ data: notices }, { data: coaches }] = await Promise.all([
+    supabase
+      .from("facility_notices")
+      .select("id, title, content, created_at")
+      .eq("facility_id", facilityId)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("instructors")
+      .select("id, name, bio, career_years, certification_verified, certified_by, profile_image_url")
+      .eq("facility_id", facilityId),
+  ]);
 
   const allClasses = await getAllClasses();
   const classes = allClasses.filter((c) => c.facility.id === facilityId);
@@ -153,11 +159,21 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     phone: facility.phone ?? "",
     description: facility.description ?? "",
     coverImageUrl: facility.cover_image_url ?? "",
+    instagramUrl: facility.instagram_url ?? "",
     notices: (notices ?? []).map((n) => ({
       id: n.id,
       title: n.title,
       content: n.content,
       createdAt: n.created_at,
+    })),
+    coaches: (coaches ?? []).map((c) => ({
+      id: c.id,
+      name: c.name,
+      bio: c.bio ?? "",
+      careerYears: c.career_years ?? 0,
+      certified: c.certification_verified ?? false,
+      certifiedBy: c.certified_by ?? undefined,
+      profileImageUrl: c.profile_image_url ?? "",
     })),
     classes,
   };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
-import { cardClass } from "@/lib/ui";
+import { listRowClass } from "@/lib/ui";
 
 export default function BookingRow({ booking }: { booking: ClubBooking }) {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
   }
 
   return (
-    <div className={cardClass()}>
+    <div className={listRowClass()}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="font-bold">{booking.className}</p>
