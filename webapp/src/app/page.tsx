@@ -33,11 +33,19 @@ export default async function HomePage() {
       <TopNav />
       <main className="pb-10 pt-2">
         <div className="px-4">
-          <p className="mb-5 text-[15px] text-muted">
-            {child
-              ? `안녕하세요 👋 ${child.name}(${child.age}세)의 운동을 찾아볼까요?`
-              : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
-          </p>
+          <div className="mb-5 flex items-center gap-2.5">
+            {child?.photoUrl && (
+              <div
+                className="h-8 w-8 shrink-0 rounded-full border border-line bg-surface-2 bg-cover bg-center"
+                style={{ backgroundImage: `url(${child.photoUrl})` }}
+              />
+            )}
+            <p className="text-[15px] text-muted">
+              {child
+                ? `안녕하세요 👋 ${child.name}(${child.age}세)의 운동을 찾아볼까요?`
+                : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 gap-3">
             <Link href="/recommend" className={cardClass("transition hover:border-rink")}>

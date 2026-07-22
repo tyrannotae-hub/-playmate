@@ -230,13 +230,13 @@ export async function getMyProfile(userId?: string): Promise<ParentProfile> {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return { name: "", address: "", regionCode: "" };
+    if (!user) return { name: "", address: "", regionCode: "", avatarUrl: "" };
     uid = user.id;
   }
 
   const { data } = await supabase
     .from("parents")
-    .select("name, address, region_code")
+    .select("name, address, region_code, avatar_url")
     .eq("id", uid)
     .maybeSingle();
 
@@ -244,6 +244,7 @@ export async function getMyProfile(userId?: string): Promise<ParentProfile> {
     name: data?.name ?? "학부모",
     address: data?.address ?? "",
     regionCode: data?.region_code ?? "",
+    avatarUrl: data?.avatar_url ?? "",
   };
 }
 
@@ -251,13 +252,14 @@ export async function getMyChildren(): Promise<Child[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("children")
-    .select("id, name, birth_date")
+    .select("id, name, birth_date, photo_url")
     .order("created_at", { ascending: true });
 
   return (data ?? []).map((c) => ({
     id: c.id,
     name: c.name,
     age: yearsSince(c.birth_date),
+    photoUrl: c.photo_url ?? "",
   }));
 }
 

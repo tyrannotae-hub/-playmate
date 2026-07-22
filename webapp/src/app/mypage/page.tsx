@@ -21,10 +21,18 @@ export default async function MyPage() {
     <>
       <TopNav title="마이페이지" />
       <main className="px-4 pb-10 pt-4">
-        <h2 className="text-lg font-extrabold">{profile.name}</h2>
+        <div className="flex items-center gap-3">
+          {profile.avatarUrl && (
+            <div
+              className="h-11 w-11 shrink-0 rounded-full border border-line bg-surface-2 bg-cover bg-center"
+              style={{ backgroundImage: `url(${profile.avatarUrl})` }}
+            />
+          )}
+          <h2 className="text-lg font-extrabold">{profile.name}</h2>
+        </div>
 
         <p className="mb-2.5 mt-6 text-sm font-bold text-muted">내 자녀</p>
-        <ChildrenSection initialChildren={children} />
+        <ChildrenSection parentId={user.id} initialChildren={children} />
 
         <p className="mb-2.5 mt-7 text-sm font-bold text-muted">예약 내역</p>
         <div className="flex flex-col gap-2.5">
