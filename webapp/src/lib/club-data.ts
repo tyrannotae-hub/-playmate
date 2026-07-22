@@ -1,6 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { yearsSince } from "@/lib/data";
-import { ClubBooking, ClubClass, ClubFacility, ClubOwner, FacilityNotice } from "@/lib/types";
+import {
+  ClubBooking,
+  ClubClass,
+  ClubFacility,
+  ClubOwner,
+  FacilityInstructor,
+  FacilityNotice,
+} from "@/lib/types";
 
 export async function getCurrentClubOwner(): Promise<ClubOwner | null> {
   const supabase = await createClient();
@@ -55,18 +62,41 @@ export async function getMyNotices(facilityId: string): Promise<FacilityNotice[]
   }));
 }
 
+export async function getMyInstructors(facilityId: string): Promise<FacilityInstructor[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("instructors")
+    .select("id, name, career_years, certification_verified, certified_by, bio, profile_image_url")
+    .eq("facility_id", facilityId)
+    .order("created_at", { ascending: false });
+
+  return (data ?? []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    careerYears: i.career_years ?? 0,
+    certified: i.certification_verified ?? false,
+    certifiedBy: i.certified_by ?? undefined,
+    bio: i.bio ?? "",
+    profileImageUrl: i.profile_image_url ?? "",
+  }));
+}
+
 export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, instructor:instructors(name), class_schedules(*), class_images(url, sort_order)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
 
   return (data ?? []).map((row) => {
-    const instructor = row.instructor as unknown as { name: string } | null;
+    const instructors = (
+      row.class_instructors as unknown as { instructor: { id: string; name: string } | null }[]
+    )
+      .map((ci) => ci.instructor)
+      .filter((i): i is { id: string; name: string } => !!i);
     const schedules = (
       row.class_schedules as unknown as {
         id: string;
@@ -91,7 +121,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       id: row.id,
       name: row.name,
       sportId: row.sport_id,
-      instructorName: instructor?.name ?? "미정",
+      instructors,
       ageMin: row.age_min,
       ageMax: row.age_max,
       classType: row.class_type,

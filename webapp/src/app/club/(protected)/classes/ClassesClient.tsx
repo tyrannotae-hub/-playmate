@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ClubClass, Sport } from "@/lib/types";
+import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import ClassCard from "./ClassCard";
 
@@ -11,10 +12,12 @@ export default function ClassesClient({
   facilityId,
   initialClasses,
   sports,
+  instructors,
 }: {
   facilityId: string;
   initialClasses: ClubClass[];
   sports: Sport[];
+  instructors: FacilityInstructor[];
 }) {
   const router = useRouter();
   const [adding, setAdding] = useState(false);
@@ -23,7 +26,7 @@ export default function ClassesClient({
 
   const [name, setName] = useState("");
   const [sportId, setSportId] = useState(sports[0]?.id ?? "");
-  const [instructorName, setInstructorName] = useState("");
+  const [instructorIds, setInstructorIds] = useState<string[]>([]);
   const [ageMin, setAgeMin] = useState(5);
   const [ageMax, setAgeMax] = useState(12);
   const [classType, setClassType] = useState<"individual" | "group" | "team">("group");
@@ -33,37 +36,17 @@ export default function ClassesClient({
   const [timeLabel, setTimeLabel] = useState("");
   const [capacity, setCapacity] = useState(6);
 
+  function toggleInstructor(id: string) {
+    setInstructorIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  }
+
   async function createClass(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     setErrorMsg("");
     const supabase = createClient();
-
-    let instructorId: string | null = null;
-    if (instructorName.trim()) {
-      const { data: existing } = await supabase
-        .from("instructors")
-        .select("id")
-        .eq("facility_id", facilityId)
-        .eq("name", instructorName.trim())
-        .maybeSingle();
-
-      if (existing) {
-        instructorId = existing.id;
-      } else {
-        const { data: created, error: instructorError } = await supabase
-          .from("instructors")
-          .insert({ facility_id: facilityId, name: instructorName.trim() })
-          .select("id")
-          .single();
-        if (instructorError || !created) {
-          setSubmitting(false);
-          setErrorMsg("강사 등록에 실패했어요.");
-          return;
-        }
-        instructorId = created.id;
-      }
-    }
 
     const { data: newClass, error: classError } = await supabase
       .from("teams_classes")
@@ -71,7 +54,6 @@ export default function ClassesClient({
         name,
         sport_id: sportId,
         facility_id: facilityId,
-        instructor_id: instructorId,
         age_min: ageMin,
         age_max: ageMax,
         class_type: classType,
@@ -87,6 +69,20 @@ export default function ClassesClient({
       return;
     }
 
+    if (instructorIds.length > 0) {
+      const { error: instructorLinkError } = await supabase.from("class_instructors").insert(
+        instructorIds.map((instructorId) => ({
+          team_class_id: newClass.id,
+          instructor_id: instructorId,
+        }))
+      );
+      if (instructorLinkError) {
+        setSubmitting(false);
+        setErrorMsg("코치 배정에 실패했어요.");
+        return;
+      }
+    }
+
     if (dayLabel.trim() && timeLabel.trim()) {
       await supabase.from("class_schedules").insert({
         team_class_id: newClass.id,
@@ -99,7 +95,7 @@ export default function ClassesClient({
     setSubmitting(false);
     setAdding(false);
     setName("");
-    setInstructorName("");
+    setInstructorIds([]);
     setDayLabel("");
     setTimeLabel("");
     router.refresh();
@@ -166,14 +162,38 @@ export default function ClassesClient({
           </div>
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">
-              담당 강사 (선택)
+              담당 코치 (선택, 복수 선택 가능)
             </label>
-            <input
-              value={instructorName}
-              onChange={(e) => setInstructorName(e.target.value)}
-              placeholder="예: 김코치"
-              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
-            />
+            {instructors.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+                먼저{" "}
+                <Link href="/club/instructors" className="font-bold text-rink-deep underline">
+                  코치 관리
+                </Link>
+                에서 코치를 등록해주세요.
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {instructors.map((i) => {
+                  const selected = instructorIds.includes(i.id);
+                  return (
+                    <button
+                      key={i.id}
+                      type="button"
+                      onClick={() => toggleInstructor(i.id)}
+                      className={buttonClass({
+                        variant: selected ? "secondary" : "outline",
+                        size: "sm",
+                        full: false,
+                      })}
+                    >
+                      {selected ? "✓ " : ""}
+                      {i.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -272,7 +292,13 @@ export default function ClassesClient({
 
       <div className="mt-4 flex flex-col gap-2.5">
         {initialClasses.map((c) => (
-          <ClassCard key={c.id} item={c} sports={sports} facilityId={facilityId} />
+          <ClassCard
+            key={c.id}
+            item={c}
+            sports={sports}
+            facilityId={facilityId}
+            instructors={instructors}
+          />
         ))}
         {initialClasses.length === 0 && !adding && (
           <p className="py-4 text-sm text-muted">등록된 클래스가 없어요.</p>

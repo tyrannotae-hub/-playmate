@@ -41,13 +41,15 @@ type RawClass = {
   description: string | null;
   created_at: string;
   facility: { id: string; name: string; address: string; region_code: string | null } | null;
-  instructor: {
-    id: string;
-    name: string;
-    career_years: number | null;
-    certification_verified: boolean;
-    certified_by: string | null;
-  } | null;
+  class_instructors: {
+    instructor: {
+      id: string;
+      name: string;
+      career_years: number | null;
+      certification_verified: boolean;
+      certified_by: string | null;
+    } | null;
+  }[];
   class_schedules: RawSchedule[];
   class_images: { url: string; sort_order: number }[];
 };
@@ -86,13 +88,16 @@ function toTeamClass(
       region: row.facility?.region_code ?? "",
       address: row.facility?.address ?? "",
     },
-    instructor: {
-      id: row.instructor?.id ?? "",
-      name: row.instructor?.name ?? "미정",
-      careerYears: row.instructor?.career_years ?? 0,
-      certified: row.instructor?.certification_verified ?? false,
-      certifiedBy: row.instructor?.certified_by ?? undefined,
-    },
+    instructors: row.class_instructors
+      .map((ci) => ci.instructor)
+      .filter((i): i is NonNullable<typeof i> => !!i)
+      .map((i) => ({
+        id: i.id,
+        name: i.name,
+        careerYears: i.career_years ?? 0,
+        certified: i.certification_verified ?? false,
+        certifiedBy: i.certified_by ?? undefined,
+      })),
     ageMin: row.age_min,
     ageMax: row.age_max,
     classType: row.class_type,
@@ -122,7 +127,7 @@ export async function getAllClasses(): Promise<TeamClass[]> {
     supabase
       .from("teams_classes")
       .select(
-        "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*), class_images(url, sort_order)"
+        "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by)), class_schedules(*), class_images(url, sort_order)"
       ),
     ratingMap(),
   ]);
