@@ -58,7 +58,7 @@ export default function CategoryDrawer({
           <Link
             href="/search"
             onClick={onClose}
-            className="btn-label block rounded-xl px-3 py-2.5 text-sm font-bold text-rink-deep transition hover:bg-rink-soft"
+            className="btn-label block rounded-lg px-3 py-2.5 text-sm font-bold text-rink-deep transition hover:bg-rink-soft"
           >
             전체 종목 보기
           </Link>
@@ -76,7 +76,7 @@ export default function CategoryDrawer({
                     key={s.id}
                     href={`/search?sport=${s.id}`}
                     onClick={onClose}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition hover:bg-rink-soft"
+                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition hover:bg-rink-soft"
                   >
                     <span className="text-lg">{s.emoji}</span>
                     {s.name}

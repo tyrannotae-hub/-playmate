@@ -14,7 +14,7 @@ export default function ClassCardCompact({
 
   return (
     <Link href={`/classes/${item.id}`} className="w-36 flex-shrink-0">
-      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-xl bg-rink-soft text-3xl">
+      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-3xl">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={cover} alt="" className="h-full w-full object-cover" />

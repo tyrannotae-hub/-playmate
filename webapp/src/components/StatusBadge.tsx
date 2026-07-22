@@ -11,7 +11,7 @@ export default function StatusBadge({ status }: { status: BookingStatus }) {
   const c = CONFIG[status];
   return (
     <span
-      className={`btn-label inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${c.className}`}
+      className={`btn-label inline-flex items-center rounded px-2.5 py-1 text-xs font-bold ${c.className}`}
     >
       {c.label}
     </span>

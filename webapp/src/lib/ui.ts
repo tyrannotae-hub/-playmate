@@ -1,6 +1,8 @@
-// Spotify에서 차용한 pill 버튼 geometry(무조건 rounded-full)와 그림자 기반 카드 입체감을
-// 앱 전체에서 일관되게 쓰기 위한 클래스 조합 헬퍼. 한글 UI라 uppercase는 의미가 없어서
-// 대신 살짝 넓은 letter-spacing(.btn-label)으로 "시스템 라벨" 느낌만 차용.
+// 클래스101/에이블리 레퍼런스를 따라 각진(낮은 radius) + 보더 위주 geometry로
+// 앱 전체에서 일관되게 쓰기 위한 클래스 조합 헬퍼. pill(rounded-full) 버튼과
+// 확산 그림자 기반 카드는 지양하고, 낮은 radius + 얇은 보더로 정보 밀도를 높인다.
+// 한글 UI라 uppercase는 의미가 없어서 대신 살짝 넓은 letter-spacing(.btn-label)으로
+// "시스템 라벨" 느낌만 차용.
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "custom";
 type ButtonSize = "md" | "sm";
@@ -30,7 +32,7 @@ export function buttonClass({
   full?: boolean;
 } = {}) {
   return [
-    "btn-label inline-flex items-center justify-center gap-1.5 rounded-full font-bold transition disabled:opacity-40 disabled:pointer-events-none",
+    "btn-label inline-flex items-center justify-center gap-1.5 rounded-lg font-bold transition disabled:opacity-40 disabled:pointer-events-none",
     full ? "w-full" : "",
     BUTTON_SIZES[size],
     BUTTON_VARIANTS[variant],
@@ -41,7 +43,7 @@ export function buttonClass({
 }
 
 export function cardClass(className = "") {
-  return ["rounded-2xl border border-line bg-surface p-4 shadow-card", className]
+  return ["rounded-lg border border-line bg-surface p-4", className]
     .filter(Boolean)
     .join(" ");
 }

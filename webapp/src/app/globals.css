@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /*
-  Spotify 디자인 시스템에서 차용한 구조: 근흑색 다크테마(콘텐츠가 배경에 묻히고
-  포인트 컬러만 도드라짐), pill/circle geometry, 카드에 그림자 기반 입체감.
+  다크테마 표면 구조(근흑색 3단)는 Spotify에서 차용해 유지하되, 카드/버튼의
+  geometry는 클래스101/에이블리 레퍼런스를 따라 각짐+보더 위주로 전환함.
+  pill 버튼과 큰 곡률 카드는 지양하고, 그림자는 진짜 떠 있는 오버레이
+  (드로어/고정 바)에만 은은하게 남겨둔다.
   PlayMate 고유 톤(아이스링크 블루 + 에너지 오렌지 2축 포인트)은 그대로 유지.
 */
 :root {
@@ -20,8 +22,8 @@
   --good: #1f9d55;
   --warn: #d98c00;
   --negative: #e5484d;
-  --shadow-card: 0 2px 10px rgba(15, 23, 32, 0.07);
-  --shadow-elevated: 0 8px 24px rgba(15, 23, 32, 0.14);
+  --shadow-card: 0 1px 2px rgba(15, 23, 32, 0.04);
+  --shadow-elevated: 0 4px 16px rgba(15, 23, 32, 0.10);
   --button-tracking: 0.02em;
 }
 
@@ -61,8 +63,8 @@
     --good: #3ddc84;
     --warn: #ffa42b;
     --negative: #f3727f;
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.4);
   }
 }
 

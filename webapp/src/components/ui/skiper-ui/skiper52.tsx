@@ -24,7 +24,7 @@ const HoverExpand_001 = ({
         return (
           <motion.div
             key={item.id}
-            className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl bg-rink-soft shadow-card"
+            className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-none bg-rink-soft"
             style={{ height: "13rem" }}
             initial={false}
             animate={{ width: active ? "13.5rem" : "3rem" }}
@@ -61,7 +61,7 @@ const HoverExpand_001 = ({
                   className="absolute inset-x-0 bottom-0 overflow-hidden p-3"
                 >
                   <Link href={`/classes/${item.id}`} className="block">
-                    <p className="btn-label inline-block whitespace-nowrap rounded-full bg-energy px-2 py-0.5 text-[11px] font-bold text-[#1a0e08]">
+                    <p className="btn-label inline-block whitespace-nowrap rounded bg-energy px-2 py-0.5 text-[11px] font-bold text-[#1a0e08]">
                       {item.reviewCount > 0 ? `★ ${item.rating}` : "신규 오픈"}
                     </p>
                     <p className="mt-1.5 truncate whitespace-nowrap text-sm font-extrabold text-white">
