@@ -94,7 +94,7 @@ export default function BookingForm({
                 value={childName}
                 onChange={(e) => setChildName(e.target.value)}
                 placeholder="예: 민준"
-                className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
+                className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
             <div>
@@ -104,7 +104,7 @@ export default function BookingForm({
                 required
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
+                className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
             {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}
@@ -169,7 +169,7 @@ export default function BookingForm({
             <select
               value={childId}
               onChange={(e) => setChildId(e.target.value)}
-              className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
+              className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
             >
               {children.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -188,11 +188,11 @@ export default function BookingForm({
               value={notifyEmail}
               onChange={(e) => setNotifyEmail(e.target.value)}
               placeholder="예약 상태 변경을 이메일로 받아보세요"
-              className="w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-sm"
+              className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
             />
           </div>
 
-          <p className="rounded-xl bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
+          <p className="rounded-lg bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
             ⚠️ 결제는 현장/계좌이체로 시설과 직접 진행됩니다
           </p>
 

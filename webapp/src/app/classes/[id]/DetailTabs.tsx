@@ -40,7 +40,7 @@ export default function DetailTabs({
             <p className="text-xs font-bold text-muted">담당 코치</p>
             <p className="mt-1 text-base font-bold">{item.instructor.name}</p>
             {item.instructor.certified && (
-              <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded-full bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+              <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
                 🏅 {item.instructor.certifiedBy} 인증완료
               </p>
             )}
@@ -75,7 +75,7 @@ export default function DetailTabs({
             return (
               <div
                 key={i}
-                className="shadow-card flex items-center justify-between rounded-xl border border-line bg-surface p-4"
+                className="flex items-center justify-between rounded-lg border border-line bg-surface p-4"
               >
                 <div>
                   <p className="font-bold">{s.dayLabel}</p>

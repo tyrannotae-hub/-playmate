@@ -65,7 +65,7 @@ export default function RecommendClient({
                   <div className="text-base font-bold">
                     {sport.emoji} {sport.name}
                   </div>
-                  <span className="rounded-full bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep tabular-nums">
+                  <span className="rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep tabular-nums">
                     {score}% 맞음
                   </span>
                 </div>
@@ -105,7 +105,7 @@ export default function RecommendClient({
               <button
                 key={trait}
                 onClick={() => toggle(trait)}
-                className={`rounded-xl border px-4 py-3.5 text-left text-sm font-semibold transition ${
+                className={`rounded-lg border px-4 py-3.5 text-left text-sm font-semibold transition ${
                   active
                     ? "border-rink bg-rink-soft text-rink-deep"
                     : "border-line bg-surface text-foreground"
