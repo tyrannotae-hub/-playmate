@@ -129,7 +129,7 @@ export default function ClassesClient({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="예: 주니어 초급반"
-              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div className="flex gap-2">
@@ -138,7 +138,7 @@ export default function ClassesClient({
               <select
                 value={sportId}
                 onChange={(e) => setSportId(e.target.value)}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -152,7 +152,7 @@ export default function ClassesClient({
               <select
                 value={classType}
                 onChange={(e) => setClassType(e.target.value as typeof classType)}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               >
                 <option value="group">그룹</option>
                 <option value="individual">개인</option>
@@ -165,7 +165,7 @@ export default function ClassesClient({
               담당 코치 (선택, 복수 선택 가능)
             </label>
             {instructors.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              <p className="rounded-md border border-dashed border-line px-3.5 py-3 text-xs text-muted">
                 먼저{" "}
                 <Link href="/club/instructors" className="font-bold text-rink-deep underline">
                   코치 관리
@@ -204,7 +204,7 @@ export default function ClassesClient({
                 min={0}
                 value={ageMin}
                 onChange={(e) => setAgeMin(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="flex-1">
@@ -215,7 +215,7 @@ export default function ClassesClient({
                 min={0}
                 value={ageMax}
                 onChange={(e) => setAgeMax(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function ClassesClient({
                 min={0}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="w-24">
@@ -237,7 +237,7 @@ export default function ClassesClient({
                 required
                 value={priceUnit}
                 onChange={(e) => setPriceUnit(e.target.value)}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -248,13 +248,13 @@ export default function ClassesClient({
               value={dayLabel}
               onChange={(e) => setDayLabel(e.target.value)}
               placeholder="요일 (예: 화·목)"
-              className="w-1/2 rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-1/2 rounded-md border border-line bg-background px-3.5 py-3 text-sm"
             />
             <input
               value={timeLabel}
               onChange={(e) => setTimeLabel(e.target.value)}
               placeholder="시간 (예: 16:00)"
-              className="w-1/2 rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-1/2 rounded-md border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <input
@@ -263,7 +263,7 @@ export default function ClassesClient({
             value={capacity}
             onChange={(e) => setCapacity(Number(e.target.value))}
             placeholder="정원"
-            className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
           />
 
           {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}

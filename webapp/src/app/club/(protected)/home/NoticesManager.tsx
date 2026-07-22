@@ -68,7 +68,7 @@ export default function NoticesManager({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목"
-            className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
           />
           <textarea
             required
@@ -76,7 +76,7 @@ export default function NoticesManager({
             onChange={(e) => setContent(e.target.value)}
             placeholder="내용"
             rows={3}
-            className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
           />
           {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">

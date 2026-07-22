@@ -66,7 +66,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <input
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -74,7 +74,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <input
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -83,7 +83,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -92,7 +92,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           value={instagramUrl}
           onChange={(e) => setInstagramUrl(e.target.value)}
           placeholder="https://www.instagram.com/우리클럽"
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}

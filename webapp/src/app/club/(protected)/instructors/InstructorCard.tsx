@@ -113,7 +113,7 @@ export default function InstructorCard({
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -123,7 +123,7 @@ export default function InstructorCard({
           min={0}
           value={careerYears}
           onChange={(e) => setCareerYears(Number(e.target.value))}
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <label className="flex items-center gap-2 text-sm">
@@ -141,7 +141,7 @@ export default function InstructorCard({
             value={certifiedBy}
             onChange={(e) => setCertifiedBy(e.target.value)}
             placeholder="예: 대한빙상경기연맹"
-            className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
           />
         </div>
       )}
@@ -152,7 +152,7 @@ export default function InstructorCard({
           onChange={(e) => setBio(e.target.value)}
           rows={3}
           placeholder="학부모에게 보여줄 코치 소개를 적어주세요"
-          className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}

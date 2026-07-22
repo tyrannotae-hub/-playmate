@@ -141,7 +141,7 @@ export default function ClassMediaManager({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="학부모에게 보여줄 클래스 소개를 적어주세요"
           rows={3}
-          className="w-full rounded-xl border border-line bg-background px-3 py-2.5 text-xs"
+          className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
         />
         <div className="mt-1.5 flex items-center gap-2">
           <button

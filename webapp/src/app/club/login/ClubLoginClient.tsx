@@ -42,7 +42,7 @@ export default function ClubLoginClient() {
   return (
     <main className="flex flex-col items-center px-6 pb-10 pt-16 text-center">
       <div className="text-2xl font-extrabold tracking-tight">
-        PlayMate<span className="text-energy">.</span> 클럽 관리
+        PlayMate<span className="text-energy">.</span> 클래스관리센터
       </div>
       <p className="mt-2 text-sm text-muted">내 시설·클래스·예약을 관리하세요</p>
 
@@ -55,7 +55,7 @@ export default function ClubLoginClient() {
             onChange={(e) => setUsername(e.target.value.trim())}
             placeholder="아이디"
             autoCapitalize="none"
-            className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
           />
           <input
             type="password"
@@ -63,7 +63,7 @@ export default function ClubLoginClient() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호"
-            className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
           />
         </div>
 
