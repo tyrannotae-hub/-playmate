@@ -3,9 +3,10 @@ import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
-import { getClassById, getReviewsForClass } from "@/lib/data";
+import { getClassById, getCurrentParent, getMyWishlistIds, getReviewsForClass } from "@/lib/data";
 import { sportEmoji } from "@/lib/sport-meta";
 import { buttonClass, cardClass } from "@/lib/ui";
+import WishlistButton from "@/components/WishlistButton";
 
 export default async function ClassDetailPage({
   params,
@@ -16,7 +17,9 @@ export default async function ClassDetailPage({
   const item = await getClassById(id);
   if (!item) notFound();
 
-  const reviews = await getReviewsForClass(item.id);
+  const [reviews, user] = await Promise.all([getReviewsForClass(item.id), getCurrentParent()]);
+  const wishedIds = user ? await getMyWishlistIds() : [];
+  const wished = wishedIds.includes(item.id);
 
   return (
     <>
@@ -25,9 +28,12 @@ export default async function ClassDetailPage({
         <ClassGallery images={item.images} emoji={sportEmoji(item.sportId)} />
 
         <div className="px-4 pt-4">
-          <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
-            {item.facility.name} →
-          </Link>
+          <div className="flex items-start justify-between gap-3">
+            <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
+              {item.facility.name} →
+            </Link>
+            <WishlistButton classId={item.id} initialWished={wished} />
+          </div>
           <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
           <p className="mt-1.5 text-sm text-muted">
             {item.reviewCount > 0

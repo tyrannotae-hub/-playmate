@@ -3,7 +3,7 @@ import TopNav from "@/components/TopNav";
 import ClassCardCompact from "@/components/ClassCardCompact";
 import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
-import { getAllClasses, getCurrentParent, getMyChildren, getSports } from "@/lib/data";
+import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
 import { cardClass } from "@/lib/ui";
 
 export default async function HomePage() {
@@ -12,8 +12,11 @@ export default async function HomePage() {
     getSports(),
     getCurrentParent(),
   ]);
-  const children = user ? await getMyChildren() : [];
+  const [children, wishedIds] = user
+    ? await Promise.all([getMyChildren(), getMyWishlistIds()])
+    : [[], []];
   const child = children[0];
+  const wishedSet = new Set(wishedIds);
 
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 10);
   const newest = [...classes]
@@ -55,7 +58,7 @@ export default async function HomePage() {
 
         <ScrollSection title="🔥 인기 클래스">
           {popular.map((c) => (
-            <ClassCardCompact key={c.id} item={c} />
+            <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
           ))}
           {popular.length === 0 && (
             <p className="py-6 text-sm text-muted">곧 클래스가 열려요.</p>
@@ -65,7 +68,7 @@ export default async function HomePage() {
         {newest.length > 0 && (
           <ScrollSection title="🆕 새로 등록된 클래스">
             {newest.map((c) => (
-              <ClassCardCompact key={c.id} item={c} />
+              <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
             ))}
           </ScrollSection>
         )}

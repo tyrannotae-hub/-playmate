@@ -2,8 +2,9 @@ import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import { sportEmoji } from "@/lib/sport-meta";
 import { cardClass } from "@/lib/ui";
+import WishlistButton from "@/components/WishlistButton";
 
-export default function ClassCard({ item }: { item: TeamClass }) {
+export default function ClassCard({ item, wished = false }: { item: TeamClass; wished?: boolean }) {
   const schedule = item.schedules[0];
   const isFull = schedule.booked >= schedule.capacity;
 
@@ -20,9 +21,12 @@ export default function ClassCard({ item }: { item: TeamClass }) {
           </div>
           <h3 className="text-base font-bold">{item.name}</h3>
         </div>
-        <div className="flex items-center gap-1 text-sm font-semibold text-rink-deep">
-          ★ {item.rating}
-          <span className="font-normal text-muted">({item.reviewCount})</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 text-sm font-semibold text-rink-deep">
+            ★ {item.rating}
+            <span className="font-normal text-muted">({item.reviewCount})</span>
+          </div>
+          <WishlistButton classId={item.id} initialWished={wished} size="sm" />
         </div>
       </div>
 

@@ -20,11 +20,14 @@ export default function SearchClient({
   classes,
   sports,
   initialRegion = "",
+  wishedIds = [],
 }: {
   classes: TeamClass[];
   sports: Sport[];
   initialRegion?: string;
+  wishedIds?: string[];
 }) {
+  const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
 
@@ -110,7 +113,7 @@ export default function SearchClient({
 
         <div className="flex flex-col gap-3 px-4">
           {results.map((c) => (
-            <ClassCard key={c.id} item={c} />
+            <ClassCard key={c.id} item={c} wished={wishedSet.has(c.id)} />
           ))}
           {results.length === 0 && (
             <p className="py-10 text-center text-sm text-muted">

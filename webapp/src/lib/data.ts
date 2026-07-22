@@ -260,6 +260,25 @@ export async function getBookingById(id: string): Promise<Booking | null> {
   return bookings.find((b) => b.id === id) ?? null;
 }
 
+export async function getMyWishlistIds(): Promise<string[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data } = await supabase.from("wishlists").select("team_class_id");
+  return (data ?? []).map((w) => w.team_class_id);
+}
+
+export async function getMyWishlistClasses(): Promise<TeamClass[]> {
+  const ids = await getMyWishlistIds();
+  if (ids.length === 0) return [];
+  const all = await getAllClasses();
+  const idSet = new Set(ids);
+  return all.filter((c) => idSet.has(c.id));
+}
+
 export function yearsSince(dateStr: string): number {
   const birth = new Date(dateStr);
   const now = new Date();

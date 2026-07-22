@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import SearchClient from "./SearchClient";
-import { getAllClasses, getCurrentParent, getMyProfile, getSports } from "@/lib/data";
+import { getAllClasses, getCurrentParent, getMyProfile, getMyWishlistIds, getSports } from "@/lib/data";
 
 export default async function SearchPage() {
   const [classes, sports, user] = await Promise.all([
@@ -8,11 +8,18 @@ export default async function SearchPage() {
     getSports(),
     getCurrentParent(),
   ]);
-  const profile = user ? await getMyProfile() : null;
+  const [profile, wishedIds] = user
+    ? await Promise.all([getMyProfile(), getMyWishlistIds()])
+    : [null, []];
 
   return (
     <Suspense fallback={null}>
-      <SearchClient classes={classes} sports={sports} initialRegion={profile?.regionCode ?? ""} />
+      <SearchClient
+        classes={classes}
+        sports={sports}
+        initialRegion={profile?.regionCode ?? ""}
+        wishedIds={wishedIds}
+      />
     </Suspense>
   );
 }
