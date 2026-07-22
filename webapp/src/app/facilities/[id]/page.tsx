@@ -107,26 +107,24 @@ export default async function FacilityHomePage({
         </div>
 
         <div className="px-4 pt-4">
-          <h1 className="text-xl font-extrabold">{facility.name}</h1>
-          <p className="mt-1 text-sm text-muted">{facility.address}</p>
-          {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
-
-          {facility.instagramUrl && (
-            <div className="mt-6 border-t border-line pt-6">
-              <p className="mb-2.5 text-sm font-bold text-muted">인스타그램 바로가기</p>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="text-xl font-extrabold">{facility.name}</h1>
+              <p className="mt-1 text-sm text-muted">{facility.address}</p>
+              {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
+            </div>
+            {facility.instagramUrl && (
               <a
                 href={facility.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={cardClass(
-                  "flex items-center gap-2.5 text-sm font-bold text-rink-deep transition hover:opacity-80"
-                )}
+                aria-label={`${facility.name} 인스타그램 바로가기`}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-rink-deep transition hover:opacity-80"
               >
                 <InstagramIcon />
-                {facility.name} 인스타그램에서 보기
               </a>
-            </div>
-          )}
+            )}
+          </div>
 
           {facility.description && (
             <div className="mt-6 border-t border-line pt-6">

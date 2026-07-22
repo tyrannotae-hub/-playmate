@@ -62,7 +62,7 @@ export default function ChildrenSection({
         {children.map((c) => (
           <div
             key={c.id}
-            className="flex items-center gap-3 rounded-lg border border-line bg-surface p-3"
+            className="flex items-center gap-3 rounded-md border border-line bg-surface p-3"
           >
             <AvatarUpload
               path={`${parentId}/child-${c.id}.jpg`}
@@ -79,7 +79,7 @@ export default function ChildrenSection({
         {!adding && (
           <button
             onClick={() => setAdding(true)}
-            className="rounded-lg border border-dashed border-line px-4 py-3 text-left text-sm font-bold text-muted"
+            className="rounded-md border border-dashed border-line px-4 py-3 text-left text-sm font-bold text-muted"
           >
             + 자녀 추가
           </button>

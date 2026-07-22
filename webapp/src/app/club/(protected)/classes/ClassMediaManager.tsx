@@ -100,7 +100,7 @@ export default function ClassMediaManager({
         </p>
         <div className="flex flex-wrap gap-2">
           {images.map((url) => (
-            <div key={url} className="relative h-16 w-20 overflow-hidden rounded-lg">
+            <div key={url} className="relative h-16 w-20 overflow-hidden rounded-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="h-full w-full object-cover" />
               <button
@@ -124,7 +124,7 @@ export default function ClassMediaManager({
               />
               <label
                 htmlFor={`class-image-input-${classId}`}
-                className="flex h-16 w-20 cursor-pointer items-center justify-center rounded-lg border border-dashed border-line text-xs text-muted"
+                className="flex h-16 w-20 cursor-pointer items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
               >
                 {uploading ? "..." : "+ 추가"}
               </label>

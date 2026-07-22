@@ -32,7 +32,7 @@ export function buttonClass({
   full?: boolean;
 } = {}) {
   return [
-    "btn-label inline-flex items-center justify-center gap-1.5 rounded-lg font-bold transition disabled:opacity-40 disabled:pointer-events-none",
+    "btn-label inline-flex items-center justify-center gap-1.5 rounded-md font-bold transition disabled:opacity-40 disabled:pointer-events-none",
     full ? "w-full" : "",
     BUTTON_SIZES[size],
     BUTTON_VARIANTS[variant],
@@ -43,7 +43,7 @@ export function buttonClass({
 }
 
 export function cardClass(className = "") {
-  return ["rounded-lg border border-line bg-surface p-4", className]
+  return ["rounded-md border border-line bg-surface p-4", className]
     .filter(Boolean)
     .join(" ");
 }

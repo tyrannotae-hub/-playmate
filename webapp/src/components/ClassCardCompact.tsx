@@ -7,14 +7,20 @@ import WishlistButton from "@/components/WishlistButton";
 export default function ClassCardCompact({
   item,
   wished = false,
+  variant = "scroll",
 }: {
   item: TeamClass;
   wished?: boolean;
+  /** "scroll": 가로 스크롤용 고정폭(w-36) / "grid": 그리드용 유동폭(w-full) */
+  variant?: "scroll" | "grid";
 }) {
   const cover = item.images[0];
 
   return (
-    <Link href={`/classes/${item.id}`} className="w-36 flex-shrink-0">
+    <Link
+      href={`/classes/${item.id}`}
+      className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
+    >
       <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-3xl">
         {cover ? (
           <Image src={cover} alt="" fill sizes="144px" className="object-cover" />

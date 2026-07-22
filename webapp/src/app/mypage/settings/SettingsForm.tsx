@@ -73,7 +73,7 @@ export default function SettingsForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="예: 민준맘"
-          className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -81,7 +81,7 @@ export default function SettingsForm({
         <select
           value={regionCode}
           onChange={(e) => setRegionCode(e.target.value)}
-          className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
         >
           <option value="">선택 안 함</option>
           {REGION_OPTIONS.map((r) => (
@@ -100,7 +100,7 @@ export default function SettingsForm({
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder="예: 서울 강남구 역삼동"
-          className="w-full rounded-lg border border-line bg-surface px-3.5 py-3 text-sm"
+          className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
         />
       </div>
 

@@ -105,7 +105,7 @@ export default function RecommendClient({
               <button
                 key={trait}
                 onClick={() => toggle(trait)}
-                className={`rounded-lg border px-4 py-3.5 text-left text-sm font-semibold transition ${
+                className={`rounded-md border px-4 py-3.5 text-left text-sm font-semibold transition ${
                   active
                     ? "border-rink bg-rink-soft text-rink-deep"
                     : "border-line bg-surface text-foreground"

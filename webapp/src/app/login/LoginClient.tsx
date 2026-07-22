@@ -147,7 +147,7 @@ export default function LoginClient() {
               onChange={(e) => setUsername(e.target.value.trim())}
               placeholder="아이디"
               autoCapitalize="none"
-              className="w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-sm"
+              className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
             />
             <input
               type="password"
@@ -155,7 +155,7 @@ export default function LoginClient() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호"
-              className="w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-sm"
+              className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
             />
             {mode === "signup" && (
               <>
@@ -168,7 +168,7 @@ export default function LoginClient() {
                   value={passwordConfirm}
                   onChange={(e) => setPasswordConfirm(e.target.value)}
                   placeholder="비밀번호 확인"
-                  className="w-full rounded-lg border border-line bg-surface px-4 py-3.5 text-sm"
+                  className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
                 />
               </>
             )}
