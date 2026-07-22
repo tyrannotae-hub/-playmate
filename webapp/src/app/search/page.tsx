@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import SearchClient from "./SearchClient";
 import { getAllClasses, getCurrentParent, getMyProfile, getMyWishlistIds, getSports } from "@/lib/data";
 
+export const runtime = "edge";
+
 export default async function SearchPage() {
   const [classes, sports, user] = await Promise.all([
     getAllClasses(),

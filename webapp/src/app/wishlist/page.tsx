@@ -3,6 +3,8 @@ import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { getCurrentParent, getMyWishlistClasses } from "@/lib/data";
 
+export const runtime = "edge";
+
 export default async function WishlistPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/wishlist");

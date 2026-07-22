@@ -1,6 +1,8 @@
 import RecommendClient from "./RecommendClient";
 import { getAllClasses, getSports } from "@/lib/data";
 
+export const runtime = "edge";
+
 export default async function RecommendPage() {
   const [sports, classes] = await Promise.all([getSports(), getAllClasses()]);
   const classCounts: Record<string, number> = {};

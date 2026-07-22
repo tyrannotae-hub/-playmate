@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function ClassGallery({
@@ -35,13 +36,9 @@ export default function ClassGallery({
         className="flex aspect-[4/3] w-full snap-x snap-mandatory overflow-x-auto"
       >
         {images.map((url, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={i}
-            src={url}
-            alt=""
-            className="h-full w-full flex-shrink-0 snap-center object-cover"
-          />
+          <div key={i} className="relative h-full w-full flex-shrink-0 snap-center">
+            <Image src={url} alt="" fill sizes="100vw" className="object-cover" />
+          </div>
         ))}
       </div>
       {images.length > 1 && (
