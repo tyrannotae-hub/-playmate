@@ -12,7 +12,13 @@ const ITEMS = [
   { href: "/club/bookings", label: "예약 관리" },
 ];
 
-export default function ClubNav({ facilityName }: { facilityName: string }) {
+export default function ClubNav({
+  facilityName,
+  ownerType = "club",
+}: {
+  facilityName: string;
+  ownerType?: "club" | "solo_coach";
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -27,7 +33,9 @@ export default function ClubNav({ facilityName }: { facilityName: string }) {
     <header className="shadow-card sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3.5">
         <div>
-          <p className="btn-label text-xs font-bold text-muted">클럽 관리</p>
+          <p className="btn-label text-xs font-bold text-muted">
+            {ownerType === "solo_coach" ? "코치 프로필 관리" : "클럽 관리"}
+          </p>
           <p className="text-base font-extrabold">{facilityName}</p>
         </div>
         <nav className="flex items-center gap-1.5">

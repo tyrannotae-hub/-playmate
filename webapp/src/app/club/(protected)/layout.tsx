@@ -14,7 +14,10 @@ export default async function ClubProtectedLayout({
 
   return (
     <>
-      <ClubNav facilityName={facility?.name ?? "내 클럽"} />
+      <ClubNav
+        facilityName={facility?.name ?? "내 클럽"}
+        ownerType={facility?.ownerType ?? "club"}
+      />
       <main className="px-4 pb-10 pt-5">{children}</main>
     </>
   );

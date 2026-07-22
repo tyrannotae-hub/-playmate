@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { getCurrentClubOwner, getMyClasses, getMyClubBookings } from "@/lib/club-data";
+import {
+  getCurrentClubOwner,
+  getMyClasses,
+  getMyClubBookings,
+  getMyFacility,
+} from "@/lib/club-data";
 import BookingRow from "@/components/club/BookingRow";
 import { cardClass } from "@/lib/ui";
 
@@ -7,10 +12,12 @@ export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
   if (!owner) return null;
 
-  const [classes, bookings] = await Promise.all([
+  const [facility, classes, bookings] = await Promise.all([
+    getMyFacility(owner.facilityId),
     getMyClasses(owner.facilityId),
     getMyClubBookings(owner.facilityId),
   ]);
+  const isSoloCoach = facility?.ownerType === "solo_coach";
 
   const pending = bookings.filter((b) => b.status === "requested");
   const confirmed = bookings.filter((b) => b.status === "confirmed");
@@ -33,7 +40,7 @@ export default async function ClubDashboardPage() {
       </div>
 
       <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
-        <p className="font-bold">클럽 홈 꾸미기</p>
+        <p className="font-bold">{isSoloCoach ? "프로필 꾸미기" : "클럽 홈 꾸미기"}</p>
         <p className="mt-1 text-sm text-muted">커버 이미지·소개·공지사항을 관리해요 →</p>
       </Link>
 

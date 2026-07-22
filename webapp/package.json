@@ -9,6 +9,7 @@
     "lint": "eslint",
     "facility:create": "node --env-file=.env.admin.local scripts/create-facility.mjs",
     "club:create": "node --env-file=.env.admin.local scripts/create-club-owner.mjs",
+    "coach:create": "node --env-file=.env.admin.local scripts/create-solo-coach.mjs",
     "db:migrate": "node --env-file=.env.admin.local scripts/run-sql.mjs"
   },
   "dependencies": {

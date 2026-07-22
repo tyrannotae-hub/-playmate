@@ -1,3 +1,8 @@
+// 클럽(다수 강사가 소속된 시설) 계정 온보딩 스크립트.
+// 클럽 소속 없이 혼자 수업을 운영하는 "개인 코치"는 이 스크립트가 아니라
+// create-solo-coach.mjs (npm run coach:create)로 온보딩한다 — 코치 본인 명의의
+// 1인 시설을 자동 생성해주는 별도 스크립트다. 자세한 설계 근거는 supabase/solo-coach.sql 참고.
+
 import { createClient } from "@supabase/supabase-js";
 
 const [, , username, password, name, facilityId] = process.argv;

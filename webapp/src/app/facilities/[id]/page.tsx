@@ -119,7 +119,9 @@ export default async function FacilityHomePage({
 
           {facility.description && (
             <div className="mt-6 border-t border-line pt-6">
-              <p className="mb-2.5 text-sm font-bold text-muted">클럽 소개</p>
+              <p className="mb-2.5 text-sm font-bold text-muted">
+                {facility.ownerType === "solo_coach" ? "코치 소개" : "클럽 소개"}
+              </p>
               <div className={cardClass("text-sm leading-relaxed")}>{facility.description}</div>
             </div>
           )}

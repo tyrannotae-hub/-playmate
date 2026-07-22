@@ -96,6 +96,7 @@ export type ClubFacility = {
   description: string;
   coverImageUrl: string;
   instagramUrl: string;
+  ownerType: "club" | "solo_coach";
 };
 
 export type FacilityNotice = {
@@ -123,6 +124,7 @@ export type FacilityHome = {
   description: string;
   coverImageUrl: string;
   instagramUrl: string;
+  ownerType: "club" | "solo_coach";
   notices: FacilityNotice[];
   instructors: FacilityInstructor[];
   classes: TeamClass[];
