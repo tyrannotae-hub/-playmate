@@ -24,7 +24,7 @@ export default async function ClassDetailPage({
   return (
     <>
       <TopNav back />
-      <main className="pb-28">
+      <main className="pb-36">
         <ClassGallery images={item.images} emoji={sportEmoji(item.sportId)} />
 
         <div className="px-4 pt-4">
@@ -55,7 +55,7 @@ export default async function ClassDetailPage({
         </div>
       </main>
 
-      <div className="shadow-elevated fixed inset-x-0 bottom-16 z-20 mx-auto w-full max-w-md border-t border-line bg-surface px-4 py-3">
+      <div className="shadow-elevated fixed inset-x-0 bottom-[4.5rem] z-20 mx-auto w-full max-w-md border-t border-line bg-surface px-4 py-3">
         <Link href={`/booking/${item.id}`} className={buttonClass({ className: "text-center" })}>
           예약 신청하기
         </Link>

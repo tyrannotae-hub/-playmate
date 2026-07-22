@@ -9,7 +9,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className={`mx-auto w-full flex-1 ${isClub ? "max-w-3xl pb-10" : "max-w-md pb-20"}`}>
+      <div className={`mx-auto w-full flex-1 ${isClub ? "max-w-3xl pb-10" : "max-w-md pb-24"}`}>
         {children}
       </div>
       {!isClub && <BottomNav />}
