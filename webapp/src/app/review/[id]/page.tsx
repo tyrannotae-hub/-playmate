@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import ReviewForm from "./ReviewForm";
 import { getBookingById, getCurrentParent } from "@/lib/data";
 
+export const runtime = "edge";
+
 export default async function ReviewPage({
   params,
 }: {

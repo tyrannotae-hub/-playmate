@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import BookingForm from "./BookingForm";
 import { getClassById, getCurrentParent, getMyChildren } from "@/lib/data";
 
+export const runtime = "edge";
+
 export default async function BookingPage({
   params,
 }: {

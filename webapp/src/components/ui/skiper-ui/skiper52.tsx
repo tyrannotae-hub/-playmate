@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { TeamClass } from "@/lib/types";
@@ -33,8 +34,7 @@ const HoverExpand_001 = ({
             onHoverStart={() => setActiveId(item.id)}
           >
             {cover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={cover} alt="" className="h-full w-full object-cover" />
+              <Image src={cover} alt="" fill sizes="216px" className="object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-3xl">
                 {sportEmoji(item.sportId)}

@@ -7,6 +7,8 @@ import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
 import { cardClass } from "@/lib/ui";
 
+export const runtime = "edge";
+
 export default async function HomePage() {
   const [classes, sports, user] = await Promise.all([
     getAllClasses(),

@@ -8,6 +8,8 @@ import { sportEmoji } from "@/lib/sport-meta";
 import { buttonClass, cardClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
+export const runtime = "edge";
+
 export default async function ClassDetailPage({
   params,
 }: {

@@ -7,6 +7,8 @@ import ChildrenSection from "./ChildrenSection";
 import { getCurrentParent, getMyBookings, getMyChildren, getMyProfile } from "@/lib/data";
 import { buttonClass, cardClass } from "@/lib/ui";
 
+export const runtime = "edge";
+
 export default async function MyPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/mypage");

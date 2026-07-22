@@ -3,6 +3,8 @@ import TopNav from "@/components/TopNav";
 import { getCurrentParent, getMyProfile } from "@/lib/data";
 import SettingsForm from "./SettingsForm";
 
+export const runtime = "edge";
+
 export default async function SettingsPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/mypage/settings");

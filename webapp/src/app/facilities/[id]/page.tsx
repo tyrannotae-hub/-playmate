@@ -1,9 +1,12 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { getFacilityHome } from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
 import { cardClass } from "@/lib/ui";
+
+export const runtime = "edge";
 
 const DAY_ORDER = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -46,10 +49,11 @@ function InstructorCard({ instructor }: { instructor: FacilityHome["instructors"
   return (
     <div className={cardClass("flex gap-3")}>
       {instructor.profileImageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={instructor.profileImageUrl}
           alt={instructor.name}
+          width={56}
+          height={56}
           className="h-14 w-14 shrink-0 rounded-full object-cover"
         />
       ) : (
@@ -88,11 +92,18 @@ export default async function FacilityHomePage({
     <>
       <TopNav back />
       <main className="pb-10">
-        <div
-          className="flex aspect-[16/9] w-full items-center justify-center bg-rink-soft bg-cover bg-center"
-          style={facility.coverImageUrl ? { backgroundImage: `url(${facility.coverImageUrl})` } : undefined}
-        >
-          {!facility.coverImageUrl && <span className="text-4xl">🏟️</span>}
+        <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-rink-soft">
+          {facility.coverImageUrl ? (
+            <Image
+              src={facility.coverImageUrl}
+              alt={facility.name}
+              fill
+              sizes="100vw"
+              className="object-cover"
+            />
+          ) : (
+            <span className="text-4xl">🏟️</span>
+          )}
         </div>
 
         <div className="px-4 pt-4">
