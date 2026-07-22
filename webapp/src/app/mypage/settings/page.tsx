@@ -13,7 +13,7 @@ export default async function SettingsPage() {
     <>
       <TopNav title="계정 설정" back />
       <main className="px-4 pb-10 pt-4">
-        <SettingsForm profile={profile} />
+        <SettingsForm profile={profile} userId={user.id} />
       </main>
     </>
   );

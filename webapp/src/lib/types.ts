@@ -62,12 +62,14 @@ export type Child = {
   id: string;
   name: string;
   age: number;
+  photoUrl: string;
 };
 
 export type ParentProfile = {
   name: string;
   address: string;
   regionCode: string;
+  avatarUrl: string;
 };
 
 export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";

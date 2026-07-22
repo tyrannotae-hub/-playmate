@@ -4,10 +4,13 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Child } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
+import AvatarUpload from "@/components/AvatarUpload";
 
 export default function ChildrenSection({
+  parentId,
   initialChildren,
 }: {
+  parentId: string;
   initialChildren: Child[];
 }) {
   const [children, setChildren] = useState(initialChildren);
@@ -40,29 +43,45 @@ export default function ChildrenSection({
     }
 
     const age = new Date().getFullYear() - new Date(data.birth_date).getFullYear();
-    setChildren((prev) => [...prev, { id: data.id, name: data.name, age }]);
+    setChildren((prev) => [...prev, { id: data.id, name: data.name, age, photoUrl: "" }]);
     setName("");
     setBirthDate("");
     setAdding(false);
   }
 
+  async function saveChildPhoto(childId: string, url: string) {
+    const supabase = createClient();
+    const { error } = await supabase.from("children").update({ photo_url: url }).eq("id", childId);
+    if (error) throw error;
+    setChildren((prev) => prev.map((c) => (c.id === childId ? { ...c, photoUrl: url } : c)));
+  }
+
   return (
     <div>
-      <div className="flex flex-wrap gap-2.5">
+      <div className="flex flex-col gap-2.5">
         {children.map((c) => (
           <div
             key={c.id}
-            className="rounded-xl border border-line bg-surface px-4 py-3 text-sm font-bold"
+            className="flex items-center gap-3 rounded-lg border border-line bg-surface p-3"
           >
-            {c.name} {c.age}세
+            <AvatarUpload
+              path={`${parentId}/child-${c.id}.jpg`}
+              currentUrl={c.photoUrl}
+              initials={c.name.slice(0, 1)}
+              size={48}
+              onUploaded={(url) => saveChildPhoto(c.id, url)}
+            />
+            <p className="text-sm font-bold">
+              {c.name} <span className="font-normal text-muted">{c.age}세</span>
+            </p>
           </div>
         ))}
         {!adding && (
           <button
             onClick={() => setAdding(true)}
-            className="rounded-xl border border-dashed border-line px-4 py-3 text-sm font-bold text-muted"
+            className="rounded-lg border border-dashed border-line px-4 py-3 text-left text-sm font-bold text-muted"
           >
-            + 추가
+            + 자녀 추가
           </button>
         )}
       </div>

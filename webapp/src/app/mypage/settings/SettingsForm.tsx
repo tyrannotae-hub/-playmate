@@ -6,8 +6,15 @@ import { createClient } from "@/lib/supabase/client";
 import { ParentProfile } from "@/lib/types";
 import { REGION_OPTIONS } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
+import AvatarUpload from "@/components/AvatarUpload";
 
-export default function SettingsForm({ profile }: { profile: ParentProfile }) {
+export default function SettingsForm({
+  profile,
+  userId,
+}: {
+  profile: ParentProfile;
+  userId: string;
+}) {
   const router = useRouter();
   const [name, setName] = useState(profile.name);
   const [address, setAddress] = useState(profile.address);
@@ -15,6 +22,13 @@ export default function SettingsForm({ profile }: { profile: ParentProfile }) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saved, setSaved] = useState(false);
+
+  async function saveAvatar(url: string) {
+    const supabase = createClient();
+    const { error } = await supabase.from("parents").update({ avatar_url: url }).eq("id", userId);
+    if (error) throw error;
+    router.refresh();
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -43,6 +57,15 @@ export default function SettingsForm({ profile }: { profile: ParentProfile }) {
 
   return (
     <form onSubmit={save} className="flex flex-col gap-4">
+      <div>
+        <label className="mb-1.5 block text-sm font-bold">프로필 사진</label>
+        <AvatarUpload
+          path={`${userId}/self.jpg`}
+          currentUrl={profile.avatarUrl}
+          initials={profile.name.slice(0, 1)}
+          onUploaded={saveAvatar}
+        />
+      </div>
       <div>
         <label className="mb-1.5 block text-sm font-bold">닉네임</label>
         <input
