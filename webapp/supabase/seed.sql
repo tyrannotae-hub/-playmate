@@ -6,14 +6,14 @@ insert into sports (id, name, emoji, category, traits) values
   ('ice-hockey', '아이스하키', '🏒', '빙상', array['활동적','팀워크','승부욕']),
   ('figure-skating', '피겨스케이팅', '⛸️', '빙상', array['집중력','개인종목','표현력']);
 
-insert into facilities (id, name, address, region_code) values
-  ('11111111-1111-1111-1111-111111111111', '아이스웍스 역삼점', '서울 강남구 역삼동', 'seoul-gangnam'),
-  ('22222222-2222-2222-2222-222222222222', '제니스 스포츠클럽 아이스링크', '서울 구로구', 'seoul-guro');
+insert into facilities (id, name, address, region_code, instagram_url) values
+  ('11111111-1111-1111-1111-111111111111', '아이스웍스 역삼점', '서울 강남구 역삼동', 'seoul-gangnam', 'https://www.instagram.com/iceworks_yeoksam'),
+  ('22222222-2222-2222-2222-222222222222', '제니스 스포츠클럽 아이스링크', '서울 구로구', 'seoul-guro', null);
 
-insert into instructors (id, name, facility_id, career_years, certification_verified, certified_by) values
-  ('33333333-3333-3333-3333-333333333333', '김OO', '11111111-1111-1111-1111-111111111111', 8, true, '대한아이스하키협회 지도자 자격증'),
-  ('44444444-4444-4444-4444-444444444444', '박OO', '22222222-2222-2222-2222-222222222222', 6, true, '대한아이스하키협회 지도자 자격증'),
-  ('55555555-5555-5555-5555-555555555555', '이OO', '11111111-1111-1111-1111-111111111111', 5, true, '대한빙상경기연맹 지도자 자격증');
+insert into instructors (id, name, facility_id, career_years, certification_verified, certified_by, bio, profile_image_url) values
+  ('33333333-3333-3333-3333-333333333333', '김OO', '11111111-1111-1111-1111-111111111111', 8, true, '대한아이스하키협회 지도자 자격증', '아이스하키 국가대표 출신으로, 8년간 유소년 선수들을 지도해왔습니다. 기초 체력부터 팀워크까지 단계별로 꼼꼼하게 가르칩니다.', 'https://i.pravatar.cc/300?img=12'),
+  ('44444444-4444-4444-4444-444444444444', '박OO', '22222222-2222-2222-2222-222222222222', 6, true, '대한아이스하키협회 지도자 자격증', null, null),
+  ('55555555-5555-5555-5555-555555555555', '이OO', '11111111-1111-1111-1111-111111111111', 5, true, '대한빙상경기연맹 지도자 자격증', '피겨스케이팅 전문 지도자로 개인별 맞춤 커리큘럼을 제공합니다. 아이들이 즐겁게 스케이팅과 친해질 수 있도록 돕습니다.', null);
 
 insert into teams_classes (id, name, sport_id, facility_id, instructor_id, age_min, age_max, class_type, price, price_unit) values
   ('66666666-6666-6666-6666-666666666666', '새싹 하키클럽', 'ice-hockey', '11111111-1111-1111-1111-111111111111', '33333333-3333-3333-3333-333333333333', 6, 9, 'team', 150000, '월'),
