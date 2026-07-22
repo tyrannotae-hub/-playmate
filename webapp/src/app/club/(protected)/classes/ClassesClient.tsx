@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, Sport } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass } from "@/lib/ui";
 import ClassCard from "./ClassCard";
 
 export default function ClassesClient({
@@ -125,7 +125,7 @@ export default function ClassesClient({
       </div>
 
       {adding && (
-        <form onSubmit={createClass} className={cardClass("mt-3 flex flex-col gap-3")}>
+        <form onSubmit={createClass} className="mt-3 flex flex-col gap-3 border-t border-line pt-4">
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">클래스 이름</label>
             <input
@@ -270,7 +270,7 @@ export default function ClassesClient({
         </form>
       )}
 
-      <div className="mt-4 flex flex-col gap-2.5">
+      <div className="mt-1">
         {initialClasses.map((c) => (
           <ClassCard key={c.id} item={c} sports={sports} facilityId={facilityId} />
         ))}

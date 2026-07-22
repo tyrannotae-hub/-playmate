@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getCurrentClubOwner, getMyClasses, getMyClubBookings } from "@/lib/club-data";
 import BookingRow from "@/components/club/BookingRow";
-import { cardClass } from "@/lib/ui";
 
 export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
@@ -17,22 +16,22 @@ export default async function ClubDashboardPage() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className={cardClass("text-center")}>
+      <div className="flex divide-x divide-line border-y border-line py-4 text-center">
+        <div className="flex-1">
           <p className="text-2xl font-extrabold">{classes.length}</p>
           <p className="mt-1 text-xs text-muted">운영 클래스</p>
         </div>
-        <div className={cardClass("text-center")}>
+        <div className="flex-1">
           <p className="text-2xl font-extrabold text-warn">{pending.length}</p>
           <p className="mt-1 text-xs text-muted">승인 대기</p>
         </div>
-        <div className={cardClass("text-center")}>
+        <div className="flex-1">
           <p className="text-2xl font-extrabold text-good">{confirmed.length}</p>
           <p className="mt-1 text-xs text-muted">확정 예약</p>
         </div>
       </div>
 
-      <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
+      <Link href="/club/home" className="mt-6 block transition hover:text-rink-deep">
         <p className="font-bold">클럽 홈 꾸미기</p>
         <p className="mt-1 text-sm text-muted">커버 이미지·소개·공지사항을 관리해요 →</p>
       </Link>
@@ -43,7 +42,7 @@ export default async function ClubDashboardPage() {
           전체 예약 보기 →
         </Link>
       </div>
-      <div className="mt-2.5 flex flex-col gap-2.5">
+      <div className="mt-1">
         {pending.map((b) => (
           <BookingRow key={b.id} booking={b} />
         ))}

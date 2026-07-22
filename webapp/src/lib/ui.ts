@@ -45,3 +45,11 @@ export function cardClass(className = "") {
     .filter(Boolean)
     .join(" ");
 }
+
+// 박스(테두리+그림자) 대신 얇은 구분선으로만 항목을 나누는 리스트 로우.
+// 클래스101/에이블리처럼 "카드 그리드"가 아니라 "구획을 나눈 게시물 목록" 느낌을 낼 때 사용.
+export function listRowClass(className = "") {
+  return ["border-b border-line py-4 first:pt-0 last:border-b-0", className]
+    .filter(Boolean)
+    .join(" ");
+}

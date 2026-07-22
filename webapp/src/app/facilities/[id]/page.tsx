@@ -4,7 +4,7 @@ import ClassCard from "@/components/ClassCard";
 import ScrollSection from "@/components/ScrollSection";
 import CoachCard from "./CoachCard";
 import { getFacilityHome } from "@/lib/data";
-import { cardClass } from "@/lib/ui";
+import { listRowClass } from "@/lib/ui";
 
 export default async function FacilityHomePage({
   params,
@@ -67,9 +67,7 @@ export default async function FacilityHomePage({
           {facility.description && (
             <div className="mt-6">
               <h2 className="mb-2.5 text-base font-bold">팀 소개</h2>
-              <div className={cardClass()}>
-                <p className="text-sm leading-relaxed whitespace-pre-line">{facility.description}</p>
-              </div>
+              <p className="text-sm leading-relaxed whitespace-pre-line text-muted">{facility.description}</p>
             </div>
           )}
         </div>
@@ -85,10 +83,10 @@ export default async function FacilityHomePage({
         <div className="px-4">
           {facility.notices.length > 0 && (
             <div className="mt-7">
-              <h2 className="mb-2.5 text-base font-bold">공지사항</h2>
-              <div className="flex flex-col gap-2.5">
+              <h2 className="mb-1 text-base font-bold">공지사항</h2>
+              <div>
                 {facility.notices.map((n) => (
-                  <div key={n.id} className={cardClass()}>
+                  <div key={n.id} className={listRowClass()}>
                     <p className="font-bold">{n.title}</p>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted">{n.content}</p>
                     <p className="mt-1.5 text-[11px] text-muted">
@@ -101,10 +99,10 @@ export default async function FacilityHomePage({
           )}
 
           <div className="mt-7">
-            <h2 className="mb-2.5 text-base font-bold">
+            <h2 className="mb-1 text-base font-bold">
               운영 중인 클래스 ({facility.classes.length})
             </h2>
-            <div className="flex flex-col gap-3">
+            <div>
               {facility.classes.map((c) => (
                 <ClassCard key={c.id} item={c} />
               ))}

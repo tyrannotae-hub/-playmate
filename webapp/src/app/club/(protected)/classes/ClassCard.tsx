@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, Sport } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass, listRowClass } from "@/lib/ui";
 import ClassMediaManager from "./ClassMediaManager";
 
 export default function ClassCard({
@@ -69,7 +69,7 @@ export default function ClassCard({
   }
 
   return (
-    <div className={cardClass()}>
+    <div className={listRowClass()}>
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-xs font-bold text-muted">

@@ -5,7 +5,7 @@ import StatusBadge from "@/components/StatusBadge";
 import LogoutButton from "./LogoutButton";
 import ChildrenSection from "./ChildrenSection";
 import { getCurrentParent, getMyBookings, getMyChildren, getMyProfile } from "@/lib/data";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass, listRowClass } from "@/lib/ui";
 
 export default async function MyPage() {
   const user = await getCurrentParent();
@@ -26,10 +26,10 @@ export default async function MyPage() {
         <p className="mb-2.5 mt-6 text-sm font-bold text-muted">내 자녀</p>
         <ChildrenSection initialChildren={children} />
 
-        <p className="mb-2.5 mt-7 text-sm font-bold text-muted">예약 내역</p>
-        <div className="flex flex-col gap-2.5">
+        <p className="mb-1 mt-7 text-sm font-bold text-muted">예약 내역</p>
+        <div>
           {bookings.map((b) => (
-            <div key={b.id} className={cardClass()}>
+            <div key={b.id} className={listRowClass()}>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="font-bold">{b.className}</p>

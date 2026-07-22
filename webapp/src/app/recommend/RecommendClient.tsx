@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import { Sport } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass, listRowClass } from "@/lib/ui";
 
 const TRAIT_OPTIONS = [
   "에너지 넘치고 활동적",
@@ -54,12 +54,12 @@ export default function RecommendClient({
             <br />
             추천해요
           </h2>
-          <div className="flex flex-col gap-3">
+          <div>
             {ranked.map(({ sport, score }) => (
               <Link
                 key={sport.id}
                 href={`/search?sport=${sport.id}`}
-                className={cardClass("block hover:border-rink")}
+                className={listRowClass("block transition hover:text-rink-deep")}
               >
                 <div className="flex items-center justify-between">
                   <div className="text-base font-bold">

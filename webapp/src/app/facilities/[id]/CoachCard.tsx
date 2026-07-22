@@ -1,9 +1,8 @@
 import { Coach } from "@/lib/types";
-import { cardClass } from "@/lib/ui";
 
 export default function CoachCard({ coach }: { coach: Coach }) {
   return (
-    <div className={cardClass("w-44 flex-shrink-0")}>
+    <div className="w-44 flex-shrink-0">
       <div
         className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-rink-soft bg-cover bg-center text-2xl"
         style={coach.profileImageUrl ? { backgroundImage: `url(${coach.profileImageUrl})` } : undefined}

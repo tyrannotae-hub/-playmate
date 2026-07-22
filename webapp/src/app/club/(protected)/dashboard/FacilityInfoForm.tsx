@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ClubFacility } from "@/lib/types";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass } from "@/lib/ui";
 
 export default function FacilityInfoForm({ facility }: { facility: ClubFacility }) {
   const [editing, setEditing] = useState(false);
@@ -38,7 +38,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
 
   if (!editing) {
     return (
-      <div className={cardClass()}>
+      <div>
         <p className="font-bold">{facility.name}</p>
         <p className="mt-1 text-sm text-muted">{address || "주소 미입력"}</p>
         <p className="mt-1 text-sm text-muted">{phone || "연락처 미입력"}</p>
@@ -58,7 +58,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
   }
 
   return (
-    <form onSubmit={save} className={cardClass("flex flex-col gap-3")}>
+    <form onSubmit={save} className="flex flex-col gap-3 border-t border-line pt-4">
       <div>
         <label className="mb-1.5 block text-xs font-bold text-muted">주소</label>
         <input

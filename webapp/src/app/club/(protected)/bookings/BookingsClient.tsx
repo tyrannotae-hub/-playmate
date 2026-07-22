@@ -35,7 +35,7 @@ export default function BookingsClient({ bookings }: { bookings: ClubBooking[] }
         ))}
       </div>
 
-      <div className="mt-4 flex flex-col gap-2.5">
+      <div className="mt-4">
         {filtered.map((b) => (
           <BookingRow key={b.id} booking={b} />
         ))}
