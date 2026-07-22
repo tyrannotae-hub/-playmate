@@ -12,7 +12,7 @@ export default async function MyPage() {
   if (!user) redirect("/login?next=/mypage");
 
   const [profile, children, bookings] = await Promise.all([
-    getMyProfile(),
+    getMyProfile(user.id),
     getMyChildren(),
     getMyBookings(),
   ]);

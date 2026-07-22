@@ -109,14 +109,16 @@ function toTeamClass(
 
 export async function getAllClasses(): Promise<TeamClass[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("teams_classes")
-    .select(
-      "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*), class_images(url, sort_order)"
-    );
+  const [{ data, error }, ratings] = await Promise.all([
+    supabase
+      .from("teams_classes")
+      .select(
+        "*, facility:facilities(id,name,address,region_code), instructor:instructors(id,name,career_years,certification_verified,certified_by), class_schedules(*), class_images(url, sort_order)"
+      ),
+    ratingMap(),
+  ]);
 
   if (error || !data) return [];
-  const ratings = await ratingMap();
   return (data as unknown as RawClass[]).map((r) => toTeamClass(r, ratings));
 }
 
@@ -188,18 +190,22 @@ export async function getCurrentParent() {
   return user;
 }
 
-export async function getMyProfile(): Promise<ParentProfile> {
+export async function getMyProfile(userId?: string): Promise<ParentProfile> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  if (!user) return { name: "", address: "", regionCode: "" };
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { name: "", address: "", regionCode: "" };
+    uid = user.id;
+  }
 
   const { data } = await supabase
     .from("parents")
     .select("name, address, region_code")
-    .eq("id", user.id)
+    .eq("id", uid)
     .maybeSingle();
 
   return {
@@ -260,21 +266,25 @@ export async function getBookingById(id: string): Promise<Booking | null> {
   return bookings.find((b) => b.id === id) ?? null;
 }
 
-export async function getMyWishlistIds(): Promise<string[]> {
+export async function getMyWishlistIds(userId?: string): Promise<string[]> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return [];
+
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+    uid = user.id;
+  }
 
   const { data } = await supabase.from("wishlists").select("team_class_id");
   return (data ?? []).map((w) => w.team_class_id);
 }
 
-export async function getMyWishlistClasses(): Promise<TeamClass[]> {
-  const ids = await getMyWishlistIds();
+export async function getMyWishlistClasses(userId?: string): Promise<TeamClass[]> {
+  const [ids, all] = await Promise.all([getMyWishlistIds(userId), getAllClasses()]);
   if (ids.length === 0) return [];
-  const all = await getAllClasses();
   const idSet = new Set(ids);
   return all.filter((c) => idSet.has(c.id));
 }

@@ -7,7 +7,7 @@ export default async function SettingsPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/mypage/settings");
 
-  const profile = await getMyProfile();
+  const profile = await getMyProfile(user.id);
 
   return (
     <>

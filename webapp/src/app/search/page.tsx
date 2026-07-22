@@ -9,7 +9,7 @@ export default async function SearchPage() {
     getCurrentParent(),
   ]);
   const [profile, wishedIds] = user
-    ? await Promise.all([getMyProfile(), getMyWishlistIds()])
+    ? await Promise.all([getMyProfile(user.id), getMyWishlistIds(user.id)])
     : [null, []];
 
   return (

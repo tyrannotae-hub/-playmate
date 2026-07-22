@@ -7,7 +7,7 @@ export default async function WishlistPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/wishlist");
 
-  const classes = await getMyWishlistClasses();
+  const classes = await getMyWishlistClasses(user.id);
 
   return (
     <>

@@ -14,7 +14,7 @@ export default async function HomePage() {
     getCurrentParent(),
   ]);
   const [children, wishedIds] = user
-    ? await Promise.all([getMyChildren(), getMyWishlistIds()])
+    ? await Promise.all([getMyChildren(), getMyWishlistIds(user.id)])
     : [[], []];
   const child = children[0];
   const wishedSet = new Set(wishedIds);

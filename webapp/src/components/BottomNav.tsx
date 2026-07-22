@@ -22,7 +22,6 @@ export default function BottomNav() {
             <Link
               key={href}
               href={href}
-              prefetch={false}
               className={`btn-label flex flex-1 flex-col items-center justify-center gap-1 transition ${
                 active ? "text-rink" : "text-muted"
               }`}

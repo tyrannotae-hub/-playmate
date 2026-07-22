@@ -18,7 +18,7 @@ export default async function ClassDetailPage({
   if (!item) notFound();
 
   const [reviews, user] = await Promise.all([getReviewsForClass(item.id), getCurrentParent()]);
-  const wishedIds = user ? await getMyWishlistIds() : [];
+  const wishedIds = user ? await getMyWishlistIds(user.id) : [];
   const wished = wishedIds.includes(item.id);
 
   return (
