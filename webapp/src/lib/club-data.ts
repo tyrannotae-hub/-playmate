@@ -30,7 +30,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
   const supabase = await createClient();
   const { data } = await supabase
     .from("facilities")
-    .select("id, name, address, phone, description, cover_image_url, instagram_url")
+    .select("id, name, address, phone, description, cover_image_url, instagram_url, owner_type")
     .eq("id", facilityId)
     .maybeSingle();
 
@@ -43,6 +43,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     description: data.description ?? "",
     coverImageUrl: data.cover_image_url ?? "",
     instagramUrl: data.instagram_url ?? "",
+    ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
   };
 }
 

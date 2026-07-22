@@ -53,7 +53,7 @@ export default function ClubLoginClient() {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value.trim())}
-            placeholder="클럽 아이디"
+            placeholder="아이디"
             autoCapitalize="none"
             className="w-full rounded-xl border border-line bg-surface px-4 py-3.5 text-sm"
           />
@@ -82,7 +82,7 @@ export default function ClubLoginClient() {
       </form>
 
       <p className="mt-6 text-xs leading-relaxed text-muted">
-        클럽 계정은 플레이메이트 담당자가 만들어드려요. 계정이 없으시면 문의해주세요.
+        클럽·개인 코치 계정은 플레이메이트 담당자가 만들어드려요. 계정이 없으시면 문의해주세요.
       </p>
     </main>
   );
