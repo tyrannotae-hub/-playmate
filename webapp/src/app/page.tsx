@@ -3,6 +3,7 @@ import TopNav from "@/components/TopNav";
 import ClassCardCompact from "@/components/ClassCardCompact";
 import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
+import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
 import { cardClass } from "@/lib/ui";
 
@@ -56,14 +57,16 @@ export default async function HomePage() {
           </ScrollSection>
         )}
 
-        <ScrollSection title="🔥 인기 클래스">
-          {popular.map((c) => (
-            <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
-          ))}
-          {popular.length === 0 && (
-            <p className="py-6 text-sm text-muted">곧 클래스가 열려요.</p>
+        <div className="mt-8">
+          <h2 className="mb-3 px-4 text-base font-bold">🔥 인기 클래스</h2>
+          {popular.length > 0 ? (
+            <div className="px-4">
+              <HoverExpand_001 classes={popular.slice(0, 8)} />
+            </div>
+          ) : (
+            <p className="px-4 py-6 text-sm text-muted">곧 클래스가 열려요.</p>
           )}
-        </ScrollSection>
+        </div>
 
         {newest.length > 0 && (
           <ScrollSection title="🆕 새로 등록된 클래스">
