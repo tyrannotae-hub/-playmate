@@ -4,7 +4,6 @@ import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import { getFacilityHome } from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
-import { cardClass } from "@/lib/ui";
 
 export const runtime = "edge";
 
@@ -47,7 +46,7 @@ function InstagramIcon() {
 
 function InstructorCard({ instructor }: { instructor: FacilityHome["instructors"][number] }) {
   return (
-    <div className={cardClass("flex gap-3")}>
+    <div className="flex gap-3 py-3 first:pt-0 last:pb-0">
       {instructor.profileImageUrl ? (
         <Image
           src={instructor.profileImageUrl}
@@ -131,7 +130,7 @@ export default async function FacilityHomePage({
               <p className="mb-2.5 text-sm font-bold text-muted">
                 {facility.ownerType === "solo_coach" ? "코치 소개" : "클럽 소개"}
               </p>
-              <div className={cardClass("text-sm leading-relaxed")}>{facility.description}</div>
+              <p className="text-sm leading-relaxed">{facility.description}</p>
             </div>
           )}
 
@@ -140,7 +139,7 @@ export default async function FacilityHomePage({
               <p className="mb-2.5 text-sm font-bold text-muted">
                 감독・코치 소개 ({facility.instructors.length})
               </p>
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col divide-y divide-line">
                 {facility.instructors.map((i) => (
                   <InstructorCard key={i.id} instructor={i} />
                 ))}
@@ -151,9 +150,9 @@ export default async function FacilityHomePage({
           {weeklySchedule.length > 0 && (
             <div className="mt-6 border-t border-line pt-6">
               <p className="mb-2.5 text-sm font-bold text-muted">주간 시간표</p>
-              <div className={cardClass("flex flex-col divide-y divide-line p-0")}>
+              <div className="flex flex-col divide-y divide-line">
                 {weeklySchedule.map(([day, slots]) => (
-                  <div key={day} className="flex gap-3 px-4 py-3">
+                  <div key={day} className="flex gap-3 py-3 first:pt-0 last:pb-0">
                     <p className="w-8 shrink-0 text-sm font-bold text-rink-deep">{day}</p>
                     <div className="flex flex-1 flex-col gap-1">
                       {slots.map((s, i) => (
@@ -172,9 +171,9 @@ export default async function FacilityHomePage({
           {facility.notices.length > 0 && (
             <div className="mt-6 border-t border-line pt-6">
               <p className="mb-2.5 text-sm font-bold text-muted">공지사항</p>
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col divide-y divide-line">
                 {facility.notices.map((n) => (
-                  <div key={n.id} className={cardClass()}>
+                  <div key={n.id} className="py-3 first:pt-0 last:pb-0">
                     <p className="font-bold">{n.title}</p>
                     <p className="mt-1.5 text-sm leading-relaxed text-muted">{n.content}</p>
                     <p className="mt-1.5 text-[11px] text-muted">

@@ -5,7 +5,7 @@ import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
 import { getClassById, getCurrentParent, getMyWishlistIds, getReviewsForClass } from "@/lib/data";
 import { sportEmoji } from "@/lib/sport-meta";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
 export const runtime = "edge";
@@ -48,7 +48,7 @@ export default async function ClassDetailPage({
             <DetailTabs item={item} reviews={reviews} />
           </div>
 
-          <div className={cardClass("mt-6")}>
+          <div className="mt-6 border-t border-line pt-6">
             <p className="text-lg font-extrabold tabular-nums">
               {item.priceUnit} {item.price.toLocaleString()}원
             </p>
