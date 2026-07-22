@@ -191,7 +191,7 @@ export default function ClassCard({
               required
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div className="flex gap-2">
@@ -200,7 +200,7 @@ export default function ClassCard({
               <select
                 value={editSportId}
                 onChange={(e) => setEditSportId(e.target.value)}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -214,7 +214,7 @@ export default function ClassCard({
               <select
                 value={editClassType}
                 onChange={(e) => setEditClassType(e.target.value as ClubClass["classType"])}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {Object.entries(CLASS_TYPE_LABEL).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -229,7 +229,7 @@ export default function ClassCard({
               담당 코치 (선택, 복수 선택 가능)
             </label>
             {instructors.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              <p className="rounded-md border border-dashed border-line px-3.5 py-3 text-xs text-muted">
                 먼저{" "}
                 <Link href="/club/instructors" className="font-bold text-rink-deep underline">
                   코치 관리
@@ -268,7 +268,7 @@ export default function ClassCard({
                 min={0}
                 value={editAgeMin}
                 onChange={(e) => setEditAgeMin(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="flex-1">
@@ -279,7 +279,7 @@ export default function ClassCard({
                 min={0}
                 value={editAgeMax}
                 onChange={(e) => setEditAgeMax(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -292,7 +292,7 @@ export default function ClassCard({
                 min={0}
                 value={editPrice}
                 onChange={(e) => setEditPrice(Number(e.target.value))}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="w-24">
@@ -301,7 +301,7 @@ export default function ClassCard({
                 required
                 value={editPriceUnit}
                 onChange={(e) => setEditPriceUnit(e.target.value)}
-                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function ClassCard({
         {item.schedules.map((s) => (
           <div
             key={s.id}
-            className="flex items-center justify-between rounded-xl bg-background px-3 py-2 text-xs"
+            className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
           >
             <span>
               {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
@@ -374,14 +374,14 @@ export default function ClassCard({
               value={dayLabel}
               onChange={(e) => setDayLabel(e.target.value)}
               placeholder="요일 (예: 화·목)"
-              className="w-1/2 rounded-xl border border-line bg-background px-3 py-2.5 text-xs"
+              className="w-1/2 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
             />
             <input
               required
               value={timeLabel}
               onChange={(e) => setTimeLabel(e.target.value)}
               placeholder="시간 (예: 16:00)"
-              className="w-1/2 rounded-xl border border-line bg-background px-3 py-2.5 text-xs"
+              className="w-1/2 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
             />
           </div>
           <input
@@ -391,7 +391,7 @@ export default function ClassCard({
             value={capacity}
             onChange={(e) => setCapacity(Number(e.target.value))}
             placeholder="정원"
-            className="w-full rounded-xl border border-line bg-background px-3 py-2.5 text-xs"
+            className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
           />
           {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">

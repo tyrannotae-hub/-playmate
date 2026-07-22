@@ -1,26 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { buttonClass } from "@/lib/ui";
-
-const ITEMS = [
-  { href: "/club/dashboard", label: "대시보드" },
-  { href: "/club/home", label: "홈 꾸미기" },
-  { href: "/club/instructors", label: "코치 관리" },
-  { href: "/club/classes", label: "클래스 관리" },
-  { href: "/club/bookings", label: "예약 관리" },
-];
+import ClubMenuDrawer from "./ClubMenuDrawer";
 
 export default function ClubNav({
   facilityName,
-  ownerType = "club",
 }: {
   facilityName: string;
   ownerType?: "club" | "solo_coach";
 }) {
-  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   async function logout() {
@@ -31,36 +22,29 @@ export default function ClubNav({
   }
 
   return (
-    <header className="shadow-card sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3.5">
-        <div>
-          <p className="btn-label text-xs font-bold text-muted">
-            {ownerType === "solo_coach" ? "코치 프로필 관리" : "클럽 관리"}
-          </p>
-          <p className="text-base font-extrabold">{facilityName}</p>
-        </div>
-        <nav className="flex items-center gap-1.5">
-          {ITEMS.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={buttonClass({
-                  variant: active ? "secondary" : "outline",
-                  size: "sm",
-                  full: false,
-                })}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          <button onClick={logout} className={buttonClass({ variant: "outline", size: "sm", full: false })}>
-            로그아웃
+    <>
+      <header className="shadow-card sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3.5">
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="메뉴 열기"
+            className="-ml-1.5 flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-line/50"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 5h14" />
+              <path d="M3 10h14" />
+              <path d="M3 15h14" />
+            </svg>
           </button>
-        </nav>
-      </div>
-    </header>
+          <div>
+            <p className="btn-label text-xs font-bold text-muted">클래스관리센터</p>
+            <p className="text-base font-extrabold">{facilityName}</p>
+          </div>
+        </div>
+      </header>
+
+      <ClubMenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={logout} />
+    </>
   );
 }

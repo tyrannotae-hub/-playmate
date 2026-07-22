@@ -64,7 +64,7 @@ export default function CoverImageUpload({
   return (
     <div>
       <div
-        className="flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl border border-line bg-surface-2 bg-cover bg-center"
+        className="flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-md border border-line bg-surface-2 bg-cover bg-center"
         style={preview ? { backgroundImage: `url(${preview})` } : undefined}
       >
         {!preview && <span className="text-sm text-muted">등록된 커버 이미지가 없어요</span>}
