@@ -1,5 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
-import { Booking, Child, FacilityHome, ParentProfile, Review, Sport, TeamClass } from "@/lib/types";
+import {
+  Booking,
+  Child,
+  FacilityHome,
+  FacilityInstructor,
+  ParentProfile,
+  Review,
+  Sport,
+  TeamClass,
+} from "@/lib/types";
 
 export async function getSports(): Promise<Sport[]> {
   const supabase = await createClient();
@@ -131,7 +140,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
   const supabase = await createClient();
   const { data: facility } = await supabase
     .from("facilities")
-    .select("id, name, address, phone, description, cover_image_url")
+    .select("id, name, address, phone, description, cover_image_url, instagram_url")
     .eq("id", facilityId)
     .maybeSingle();
 
@@ -143,6 +152,22 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
 
+  const { data: instructorRows } = await supabase
+    .from("instructors")
+    .select("id, name, career_years, certification_verified, certified_by, bio, profile_image_url")
+    .eq("facility_id", facilityId)
+    .order("career_years", { ascending: false });
+
+  const instructors: FacilityInstructor[] = (instructorRows ?? []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    careerYears: i.career_years ?? 0,
+    certified: i.certification_verified ?? false,
+    certifiedBy: i.certified_by ?? undefined,
+    bio: i.bio ?? "",
+    profileImageUrl: i.profile_image_url ?? "",
+  }));
+
   const allClasses = await getAllClasses();
   const classes = allClasses.filter((c) => c.facility.id === facilityId);
 
@@ -153,12 +178,14 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     phone: facility.phone ?? "",
     description: facility.description ?? "",
     coverImageUrl: facility.cover_image_url ?? "",
+    instagramUrl: facility.instagram_url ?? "",
     notices: (notices ?? []).map((n) => ({
       id: n.id,
       title: n.title,
       content: n.content,
       createdAt: n.created_at,
     })),
+    instructors,
     classes,
   };
 }

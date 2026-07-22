@@ -95,6 +95,7 @@ export type ClubFacility = {
   phone: string;
   description: string;
   coverImageUrl: string;
+  instagramUrl: string;
 };
 
 export type FacilityNotice = {
@@ -104,6 +105,16 @@ export type FacilityNotice = {
   createdAt: string;
 };
 
+export type FacilityInstructor = {
+  id: string;
+  name: string;
+  careerYears: number;
+  certified: boolean;
+  certifiedBy?: string;
+  bio: string;
+  profileImageUrl: string;
+};
+
 export type FacilityHome = {
   id: string;
   name: string;
@@ -111,7 +122,9 @@ export type FacilityHome = {
   phone: string;
   description: string;
   coverImageUrl: string;
+  instagramUrl: string;
   notices: FacilityNotice[];
+  instructors: FacilityInstructor[];
   classes: TeamClass[];
 };
 
