@@ -87,7 +87,7 @@ export default function SearchClient({
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="flex-1 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="flex-1 rounded-md border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="all">전체 지역</option>
             {regions.map((r) => (
@@ -99,7 +99,7 @@ export default function SearchClient({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="rounded-md border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="distance">거리순</option>
             <option value="rating">평점순</option>

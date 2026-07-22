@@ -81,14 +81,14 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="닉네임 (예: 민준맘, 비워두면 '학부모'로 표시)"
-          className="mt-4 w-full rounded-lg border border-line bg-surface p-3.5 text-sm"
+          className="mt-4 w-full rounded-md border border-line bg-surface p-3.5 text-sm"
         />
 
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="후기를 남겨주세요..."
-          className="mt-3 w-full rounded-lg border border-line bg-surface p-3.5 text-sm"
+          className="mt-3 w-full rounded-md border border-line bg-surface p-3.5 text-sm"
           rows={5}
         />
 

@@ -84,7 +84,7 @@ export default function DetailTabs({
             return (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-lg border border-line bg-surface p-4"
+                className="flex items-center justify-between rounded-md border border-line bg-surface p-4"
               >
                 <div>
                   <p className="font-bold">{s.dayLabel}</p>

@@ -53,7 +53,7 @@ export default async function MyPage() {
               {b.status === "completed" && (
                 <Link
                   href={`/review/${b.id}`}
-                  className="btn-label mt-3 inline-block rounded-lg bg-rink-soft px-3 py-1.5 text-xs font-bold text-rink-deep"
+                  className="btn-label mt-3 inline-block rounded-md bg-rink-soft px-3 py-1.5 text-xs font-bold text-rink-deep"
                 >
                   리뷰 쓰기
                 </Link>

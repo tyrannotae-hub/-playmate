@@ -3,6 +3,7 @@ import TopNav from "@/components/TopNav";
 import ClassCardCompact from "@/components/ClassCardCompact";
 import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
+import PromoBanner from "@/components/PromoBanner";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
 import { cardClass } from "@/lib/ui";
@@ -22,9 +23,9 @@ export default async function HomePage() {
   const wishedSet = new Set(wishedIds);
 
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 10);
-  const newest = [...classes]
-    .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
-    .slice(0, 10);
+  const browseClasses = [...classes].sort(
+    (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)
+  );
   const sportCounts: Record<string, number> = {};
   classes.forEach((c) => {
     sportCounts[c.sportId] = (sportCounts[c.sportId] ?? 0) + 1;
@@ -33,8 +34,9 @@ export default async function HomePage() {
   return (
     <>
       <TopNav />
-      <main className="pb-10 pt-2">
-        <div className="px-4">
+      <main className="pb-10">
+        <PromoBanner />
+        <div className="px-4 pt-4">
           <div className="mb-5 flex items-center gap-2.5">
             {child?.photoUrl && (
               <div
@@ -67,7 +69,7 @@ export default async function HomePage() {
           </ScrollSection>
         )}
 
-        <div className="mt-8">
+        <div className="mt-8" id="popular">
           <h2 className="mb-3 px-4 text-base font-bold">🔥 인기 클래스</h2>
           {popular.length > 0 ? (
             <div className="px-4">
@@ -78,12 +80,20 @@ export default async function HomePage() {
           )}
         </div>
 
-        {newest.length > 0 && (
-          <ScrollSection title="🆕 새로 등록된 클래스">
-            {newest.map((c) => (
-              <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
-            ))}
-          </ScrollSection>
+        {browseClasses.length > 0 && (
+          <div className="mt-8 px-4">
+            <h2 className="mb-3 text-base font-bold">📚 전체 클래스 둘러보기</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {browseClasses.map((c) => (
+                <ClassCardCompact
+                  key={c.id}
+                  item={c}
+                  wished={wishedSet.has(c.id)}
+                  variant="grid"
+                />
+              ))}
+            </div>
+          </div>
         )}
       </main>
     </>
