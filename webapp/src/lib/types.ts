@@ -34,7 +34,7 @@ export type TeamClass = {
   name: string;
   sportId: string;
   facility: Facility;
-  instructor: Instructor;
+  instructors: Instructor[];
   ageMin: number;
   ageMax: number;
   classType: "individual" | "group" | "team";
@@ -136,11 +136,16 @@ export type ClubSchedule = {
   booked: number;
 };
 
+export type ClubInstructorRef = {
+  id: string;
+  name: string;
+};
+
 export type ClubClass = {
   id: string;
   name: string;
   sportId: string;
-  instructorName: string;
+  instructors: ClubInstructorRef[];
   ageMin: number;
   ageMax: number;
   classType: "individual" | "group" | "team";

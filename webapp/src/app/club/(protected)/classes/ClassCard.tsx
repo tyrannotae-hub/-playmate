@@ -1,20 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ClubClass, Sport } from "@/lib/types";
+import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import ClassMediaManager from "./ClassMediaManager";
+
+const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
+  group: "그룹",
+  individual: "개인",
+  team: "팀",
+};
 
 export default function ClassCard({
   item,
   sports,
   facilityId,
+  instructors,
 }: {
   item: ClubClass;
   sports: Sport[];
   facilityId: string;
+  instructors: FacilityInstructor[];
 }) {
   const router = useRouter();
   const sport = sports.find((s) => s.id === item.sportId);
@@ -25,6 +34,81 @@ export default function ClassCard({
   const [capacity, setCapacity] = useState(6);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(item.name);
+  const [editSportId, setEditSportId] = useState(item.sportId);
+  const [editClassType, setEditClassType] = useState(item.classType);
+  const [editAgeMin, setEditAgeMin] = useState(item.ageMin);
+  const [editAgeMax, setEditAgeMax] = useState(item.ageMax);
+  const [editPrice, setEditPrice] = useState(item.price);
+  const [editPriceUnit, setEditPriceUnit] = useState(item.priceUnit);
+  const [editInstructorIds, setEditInstructorIds] = useState<string[]>(
+    item.instructors.map((i) => i.id)
+  );
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editErrorMsg, setEditErrorMsg] = useState("");
+
+  function toggleEditInstructor(id: string) {
+    setEditInstructorIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  }
+
+  async function saveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingEdit(true);
+    setEditErrorMsg("");
+    const supabase = createClient();
+
+    const { error: updateError } = await supabase
+      .from("teams_classes")
+      .update({
+        name: editName,
+        sport_id: editSportId,
+        class_type: editClassType,
+        age_min: editAgeMin,
+        age_max: editAgeMax,
+        price: editPrice,
+        price_unit: editPriceUnit,
+      })
+      .eq("id", item.id);
+
+    if (updateError) {
+      setSavingEdit(false);
+      setEditErrorMsg("저장에 실패했어요. 다시 시도해주세요.");
+      return;
+    }
+
+    const { error: deleteLinksError } = await supabase
+      .from("class_instructors")
+      .delete()
+      .eq("team_class_id", item.id);
+
+    if (deleteLinksError) {
+      setSavingEdit(false);
+      setEditErrorMsg("코치 배정 수정에 실패했어요.");
+      return;
+    }
+
+    if (editInstructorIds.length > 0) {
+      const { error: insertLinksError } = await supabase.from("class_instructors").insert(
+        editInstructorIds.map((instructorId) => ({
+          team_class_id: item.id,
+          instructor_id: instructorId,
+        }))
+      );
+      if (insertLinksError) {
+        setSavingEdit(false);
+        setEditErrorMsg("코치 배정 수정에 실패했어요.");
+        return;
+      }
+    }
+
+    setSavingEdit(false);
+    setEditing(false);
+    router.refresh();
+  }
 
   async function addSchedule(e: React.FormEvent) {
     e.preventDefault();
@@ -70,24 +154,184 @@ export default function ClassCard({
 
   return (
     <div className={cardClass()}>
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="text-xs font-bold text-muted">
-            {sport ? `${sport.emoji} ${sport.name}` : item.sportId} · {item.instructorName}
-          </p>
-          <p className="mt-0.5 font-bold">{item.name}</p>
-          <p className="mt-1 text-xs text-muted">
-            {item.ageMin}~{item.ageMax}세 · {item.price.toLocaleString()}원/{item.priceUnit}
-          </p>
+      {!editing ? (
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-xs font-bold text-muted">
+              {sport ? `${sport.emoji} ${sport.name}` : item.sportId} ·{" "}
+              {item.instructors.length > 0
+                ? item.instructors.map((i) => i.name).join(" · ")
+                : "코치 미정"}
+            </p>
+            <p className="mt-0.5 font-bold">{item.name}</p>
+            <p className="mt-1 text-xs text-muted">
+              {item.ageMin}~{item.ageMax}세 · {item.price.toLocaleString()}원/{item.priceUnit}
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-1.5">
+            <button
+              onClick={() => setEditing(true)}
+              className={buttonClass({ variant: "outline", size: "sm", full: false })}
+            >
+              정보 수정
+            </button>
+            <button
+              onClick={deleteClass}
+              className={buttonClass({ variant: "outline", size: "sm", full: false })}
+            >
+              삭제
+            </button>
+          </div>
         </div>
-        <button
-          onClick={deleteClass}
-          className={buttonClass({ variant: "outline", size: "sm", full: false })}
-        >
-          삭제
-        </button>
-      </div>
+      ) : (
+        <form onSubmit={saveEdit} className="flex flex-col gap-3">
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">클래스 이름</label>
+            <input
+              required
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="mb-1.5 block text-xs font-bold text-muted">종목</label>
+              <select
+                value={editSportId}
+                onChange={(e) => setEditSportId(e.target.value)}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              >
+                {sports.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.emoji} {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="mb-1.5 block text-xs font-bold text-muted">클래스 형태</label>
+              <select
+                value={editClassType}
+                onChange={(e) => setEditClassType(e.target.value as ClubClass["classType"])}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              >
+                {Object.entries(CLASS_TYPE_LABEL).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              담당 코치 (선택, 복수 선택 가능)
+            </label>
+            {instructors.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+                먼저{" "}
+                <Link href="/club/instructors" className="font-bold text-rink-deep underline">
+                  코치 관리
+                </Link>
+                에서 코치를 등록해주세요.
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {instructors.map((i) => {
+                  const selected = editInstructorIds.includes(i.id);
+                  return (
+                    <button
+                      key={i.id}
+                      type="button"
+                      onClick={() => toggleEditInstructor(i.id)}
+                      className={buttonClass({
+                        variant: selected ? "secondary" : "outline",
+                        size: "sm",
+                        full: false,
+                      })}
+                    >
+                      {selected ? "✓ " : ""}
+                      {i.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="mb-1.5 block text-xs font-bold text-muted">최소 나이</label>
+              <input
+                type="number"
+                required
+                min={0}
+                value={editAgeMin}
+                onChange={(e) => setEditAgeMin(Number(e.target.value))}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="mb-1.5 block text-xs font-bold text-muted">최대 나이</label>
+              <input
+                type="number"
+                required
+                min={0}
+                value={editAgeMax}
+                onChange={(e) => setEditAgeMax(Number(e.target.value))}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="mb-1.5 block text-xs font-bold text-muted">가격</label>
+              <input
+                type="number"
+                required
+                min={0}
+                value={editPrice}
+                onChange={(e) => setEditPrice(Number(e.target.value))}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+            <div className="w-24">
+              <label className="mb-1.5 block text-xs font-bold text-muted">단위</label>
+              <input
+                required
+                value={editPriceUnit}
+                onChange={(e) => setEditPriceUnit(e.target.value)}
+                className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+          </div>
+          {editErrorMsg && <p className="text-xs text-negative">{editErrorMsg}</p>}
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={savingEdit}
+              className={buttonClass({
+                variant: "custom",
+                size: "sm",
+                full: false,
+                className: "flex-1 bg-rink text-white",
+              })}
+            >
+              {savingEdit ? "저장 중..." : "저장"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              className={buttonClass({ variant: "outline", size: "sm", full: false, className: "px-4" })}
+            >
+              취소
+            </button>
+          </div>
+        </form>
+      )}
 
+      {!editing && (
+      <>
       <div className="mt-3 flex flex-col gap-1.5">
         {item.schedules.map((s) => (
           <div
@@ -187,6 +431,8 @@ export default function ClassCard({
           initialImages={item.images}
           initialDescription={item.description}
         />
+      )}
+      </>
       )}
     </div>
   );

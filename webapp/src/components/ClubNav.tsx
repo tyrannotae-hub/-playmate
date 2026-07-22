@@ -8,6 +8,7 @@ import { buttonClass } from "@/lib/ui";
 const ITEMS = [
   { href: "/club/dashboard", label: "대시보드" },
   { href: "/club/home", label: "홈 꾸미기" },
+  { href: "/club/instructors", label: "코치 관리" },
   { href: "/club/classes", label: "클래스 관리" },
   { href: "/club/bookings", label: "예약 관리" },
 ];

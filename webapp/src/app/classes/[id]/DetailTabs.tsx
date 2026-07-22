@@ -36,18 +36,27 @@ export default function DetailTabs({
 
       {tab === "프로필" && (
         <div className="flex flex-col gap-3">
-          <div className={cardClass()}>
-            <p className="text-xs font-bold text-muted">담당 코치</p>
-            <p className="mt-1 text-base font-bold">{item.instructor.name}</p>
-            {item.instructor.certified && (
-              <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
-                🏅 {item.instructor.certifiedBy} 인증완료
-              </p>
-            )}
-            <p className="mt-2 text-sm text-muted">
-              경력 {item.instructor.careerYears}년
-            </p>
-          </div>
+          {item.instructors.length > 0 ? (
+            item.instructors.map((instructor) => (
+              <div key={instructor.id} className={cardClass()}>
+                <p className="text-xs font-bold text-muted">담당 코치</p>
+                <p className="mt-1 text-base font-bold">{instructor.name}</p>
+                {instructor.certified && (
+                  <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+                    🏅 {instructor.certifiedBy} 인증완료
+                  </p>
+                )}
+                <p className="mt-2 text-sm text-muted">
+                  경력 {instructor.careerYears}년
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className={cardClass()}>
+              <p className="text-xs font-bold text-muted">담당 코치</p>
+              <p className="mt-1 text-base font-bold">미정</p>
+            </div>
+          )}
           <div className={cardClass()}>
             <p className="text-xs font-bold text-muted">시설</p>
             <p className="mt-1 text-base font-bold">{item.facility.name}</p>
