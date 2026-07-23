@@ -9,7 +9,7 @@ import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
-const DAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+const DAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
 const TIME_SLOTS = ["전체", "오전", "오후", "저녁"] as const;
 type TimeSlot = (typeof TIME_SLOTS)[number];
 
@@ -28,7 +28,7 @@ export default function DayFilterBrowser({
   wishedIds?: string[];
 }) {
   const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
-  const todayIdx = new Date().getDay();
+  const todayIdx = (new Date().getDay() + 6) % 7; // getDay()는 일요일이 0이라 월요일 시작 인덱스로 보정
 
   const [day, setDay] = useState<(typeof DAYS)[number]>(DAYS[todayIdx]);
   const [time, setTime] = useState<TimeSlot>("전체");
@@ -58,17 +58,17 @@ export default function DayFilterBrowser({
     <div className="mt-8">
       <h2 className="mb-3 px-4 text-base font-bold">📅 무슨 요일이 편하세요?</h2>
 
-      <div className="flex gap-2 overflow-x-auto px-4 pb-1">
+      <div className="flex gap-1.5 overflow-x-auto px-4 pb-1">
         {DAYS.map((d, i) => (
           <button
             key={d}
             onClick={() => setDay(d)}
-            className={`flex h-12 w-12 flex-shrink-0 flex-col items-center justify-center rounded-full text-sm font-bold transition ${
+            className={`flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-md text-sm font-bold transition ${
               day === d ? "bg-rink text-white" : "border border-line text-muted"
             }`}
           >
             {d}
-            <span className="text-[9px] font-normal leading-none">{i === todayIdx ? "오늘" : ""}</span>
+            {i === todayIdx && <span className="text-[8px] font-normal leading-none">오늘</span>}
           </button>
         ))}
       </div>
