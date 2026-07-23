@@ -164,14 +164,24 @@ function toTeamClass(
   };
 }
 
+// teams_classes 조회는 공통 select/조인이 무거워서(강사·스케줄·이미지 전부 join),
+// 단일 클래스나 특정 시설만 필요할 때도 전체를 긁어와 필터링하지 않도록
+// eq 필터를 옵션으로 받는 공용 헬퍼로 뺌 (getClassById/getFacilityHome에서 재사용).
+function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter?: { id?: string; facilityId?: string }) {
+  let query = supabase
+    .from("teams_classes")
+    .select(
+      "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
+    );
+  if (filter?.id) query = query.eq("id", filter.id);
+  if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);
+  return query;
+}
+
 export async function getAllClasses(): Promise<TeamClass[]> {
   const supabase = await createClient();
   const [{ data, error }, ratings, wishCounts, instructorWishCounts] = await Promise.all([
-    supabase
-      .from("teams_classes")
-      .select(
-        "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
-      ),
+    classesQuery(supabase),
     ratingMap(),
     wishCountMap(),
     instructorWishCountMap(),
@@ -184,34 +194,54 @@ export async function getAllClasses(): Promise<TeamClass[]> {
 }
 
 export async function getClassById(id: string): Promise<TeamClass | null> {
-  const all = await getAllClasses();
-  return all.find((c) => c.id === id) ?? null;
+  const supabase = await createClient();
+  const [{ data, error }, ratings, wishCounts, instructorWishCounts] = await Promise.all([
+    classesQuery(supabase, { id }),
+    ratingMap(),
+    wishCountMap(),
+    instructorWishCountMap(),
+  ]);
+
+  if (error || !data || data.length === 0) return null;
+  return toTeamClass(data[0] as unknown as RawClass, ratings, wishCounts, instructorWishCounts);
 }
 
 export async function getFacilityHome(facilityId: string): Promise<FacilityHome | null> {
   const supabase = await createClient();
-  const { data: facility } = await supabase
-    .from("facilities")
-    .select("id, name, address, phone, description, cover_image_url, instagram_url, owner_type")
-    .eq("id", facilityId)
-    .maybeSingle();
 
-  if (!facility) return null;
-
-  const { data: notices } = await supabase
-    .from("facility_notices")
-    .select("id, title, content, created_at")
-    .eq("facility_id", facilityId)
-    .order("created_at", { ascending: false });
-
-  const [{ data: instructorRows }, instructorWishCounts] = await Promise.all([
+  // 시설/공지/강사/클래스는 서로 독립적인 쿼리라 순차 await 대신 한 번에 병렬 처리.
+  // 클래스도 getAllClasses() 전체를 긁어와 필터링하던 것을 이 시설분만 조회하도록 변경.
+  const [
+    { data: facility },
+    { data: notices },
+    { data: instructorRows },
+    instructorWishCounts,
+    { data: classRows, error: classError },
+    ratings,
+    wishCounts,
+  ] = await Promise.all([
+    supabase
+      .from("facilities")
+      .select("id, name, address, phone, description, cover_image_url, instagram_url, owner_type")
+      .eq("id", facilityId)
+      .maybeSingle(),
+    supabase
+      .from("facility_notices")
+      .select("id, title, content, created_at")
+      .eq("facility_id", facilityId)
+      .order("created_at", { ascending: false }),
     supabase
       .from("instructors")
       .select("id, name, career_years, certification_verified, certified_by, bio, profile_image_url")
       .eq("facility_id", facilityId)
       .order("career_years", { ascending: false }),
     instructorWishCountMap(),
+    classesQuery(supabase, { facilityId }),
+    ratingMap(),
+    wishCountMap(),
   ]);
+
+  if (!facility) return null;
 
   const instructors: FacilityInstructor[] = (instructorRows ?? []).map((i) => ({
     id: i.id,
@@ -224,8 +254,12 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     wishCount: instructorWishCounts.get(i.id) ?? 0,
   }));
 
-  const allClasses = await getAllClasses();
-  const classes = allClasses.filter((c) => c.facility.id === facilityId);
+  const classes =
+    classError || !classRows
+      ? []
+      : (classRows as unknown as RawClass[]).map((r) =>
+          toTeamClass(r, ratings, wishCounts, instructorWishCounts)
+        );
 
   return {
     id: facility.id,
