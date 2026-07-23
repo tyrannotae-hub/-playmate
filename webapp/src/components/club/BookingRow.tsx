@@ -34,8 +34,8 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
   return (
     <div className={cardClass()}>
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="font-bold">{booking.className}</p>
+        <div className="min-w-0">
+          <p className="break-words font-bold">{booking.className}</p>
           <p className="mt-0.5 text-xs text-muted">
             {booking.childName} ({booking.childAge}세)
           </p>
@@ -44,7 +44,9 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
             신청일 {new Date(booking.requestedAt).toLocaleDateString("ko-KR")}
           </p>
         </div>
-        <StatusBadge status={booking.status} />
+        <div className="shrink-0">
+          <StatusBadge status={booking.status} />
+        </div>
       </div>
 
       {errorMsg && <p className="mt-2 text-xs text-negative">{errorMsg}</p>}

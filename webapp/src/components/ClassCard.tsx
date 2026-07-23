@@ -14,14 +14,14 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
       className={cardClass("block transition hover:border-rink")}
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-muted">
-            <span>{sportEmoji(item.sportId)}</span>
-            <span>{item.facility.name}</span>
+            <span className="shrink-0">{sportEmoji(item.sportId)}</span>
+            <span className="min-w-0 break-all">{item.facility.name}</span>
           </div>
-          <h3 className="text-base font-bold">{item.name}</h3>
+          <h3 className="break-words text-base font-bold">{item.name}</h3>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <div className="flex items-center gap-1 text-sm font-semibold text-rink-deep">
             ★ {item.rating}
             <span className="font-normal text-muted">({item.reviewCount})</span>
