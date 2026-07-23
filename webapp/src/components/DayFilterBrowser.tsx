@@ -62,7 +62,7 @@ export default function DayFilterBrowser({
     <div className="mt-8">
       <h2 className="mb-3 px-4 text-base font-bold">📅 무슨 요일이 편하세요?</h2>
 
-      <div className="flex gap-1.5 overflow-x-auto px-4 pb-1">
+      <div className="flex gap-2 overflow-x-auto px-4 pb-1">
         <select
           value={sportId}
           onChange={(e) => setSportId(e.target.value)}
@@ -75,21 +75,18 @@ export default function DayFilterBrowser({
             </option>
           ))}
         </select>
-        {DAYS.map((d, i) => (
-          <button
-            key={d}
-            onClick={() => setDay(d)}
-            className={`flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-md text-sm font-bold transition ${
-              day === d ? "bg-rink text-white" : "border border-line text-muted"
-            }`}
-          >
-            {d}
-            {i === todayIdx && <span className="text-[8px] font-normal leading-none">오늘</span>}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
+        >
+          <option value="all">전체 지역</option>
+          {regions.map((r) => (
+            <option key={r.code} value={r.code}>
+              {r.label}
+            </option>
+          ))}
+        </select>
         {TIME_SLOTS.map((t) => (
           <button
             key={t}
@@ -104,18 +101,21 @@ export default function DayFilterBrowser({
             {t}
           </button>
         ))}
-        <select
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-          className="flex-shrink-0 rounded-md border border-line bg-surface px-3 py-2 text-xs font-bold"
-        >
-          <option value="all">전체 지역</option>
-          {regions.map((r) => (
-            <option key={r.code} value={r.code}>
-              {r.label}
-            </option>
-          ))}
-        </select>
+      </div>
+
+      <div className="mt-3 flex gap-3 overflow-x-auto px-4 pb-1">
+        {DAYS.map((d, i) => (
+          <button
+            key={d}
+            onClick={() => setDay(d)}
+            className={`flex h-9 flex-shrink-0 flex-col items-center justify-center rounded-full px-3.5 text-sm font-bold transition ${
+              day === d ? "bg-rink text-white" : "text-muted"
+            }`}
+          >
+            {d}
+            {i === todayIdx && <span className="text-[8px] font-normal leading-none">오늘</span>}
+          </button>
+        ))}
       </div>
 
       <div className="mt-4 flex flex-col divide-y divide-line border-y border-line px-4">
