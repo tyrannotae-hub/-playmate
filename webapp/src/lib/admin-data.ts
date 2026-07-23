@@ -22,16 +22,22 @@ export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("club_signup_requests")
-    .select("id, username, name, owner_type, status, created_at, reviewed_at")
+    .select(
+      "id, username, name, owner_type, status, created_at, reviewed_at, sport:sports(name)"
+    )
     .order("created_at", { ascending: false });
 
-  return (data ?? []).map((r) => ({
-    id: r.id,
-    username: r.username,
-    name: r.name,
-    ownerType: r.owner_type as "club" | "solo_coach",
-    status: r.status as "pending" | "approved" | "rejected",
-    createdAt: r.created_at,
-    reviewedAt: r.reviewed_at ?? undefined,
-  }));
+  return (data ?? []).map((r) => {
+    const sport = r.sport as unknown as { name: string } | null;
+    return {
+      id: r.id,
+      username: r.username,
+      name: r.name,
+      ownerType: r.owner_type as "club" | "solo_coach",
+      status: r.status as "pending" | "approved" | "rejected",
+      createdAt: r.created_at,
+      reviewedAt: r.reviewed_at ?? undefined,
+      sportName: sport?.name,
+    };
+  });
 }

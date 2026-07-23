@@ -213,6 +213,7 @@ export type ClubSignupRequest = {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   reviewedAt?: string;
+  sportName?: string;
 };
 
 export type NotificationType =

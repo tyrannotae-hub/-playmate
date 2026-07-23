@@ -14,7 +14,6 @@ import {
   getMyWishlistIds,
   getSports,
 } from "@/lib/data";
-import { cardClass } from "@/lib/ui";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -61,9 +60,30 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <Link href="/recommend" className={cardClass("block transition hover:border-rink")}>
-            <div className="text-xs font-bold text-muted">종목을 모르겠어요</div>
-            <div className="mt-1 text-sm font-extrabold text-rink-deep">추천받기 →</div>
+          <Link
+            href="/recommend"
+            className="flex items-center gap-3 rounded-md bg-rink-deep px-4 py-4 text-white transition hover:opacity-90"
+          >
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M9.5 9.5a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.3" />
+              <path d="M12 17.5v.1" />
+            </svg>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold">아직 종목을 못 정하셨나요?</p>
+              <p className="text-xs text-white/75">우리 아이에게 맞는 운동 추천받기</p>
+            </div>
+            <span className="shrink-0 text-lg">→</span>
           </Link>
         </div>
 

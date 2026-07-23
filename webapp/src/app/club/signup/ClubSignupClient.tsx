@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { Sport } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
 
 const EMAIL_DOMAIN = "club.playmate.local";
@@ -11,12 +12,13 @@ function isValidPassword(pw: string): boolean {
   return pw.length >= 8 && /[A-Za-z]/.test(pw) && /[0-9]/.test(pw);
 }
 
-export default function ClubSignupClient() {
+export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
   const [ownerType, setOwnerType] = useState<"club" | "solo_coach">("club");
+  const [sportId, setSportId] = useState(sports[0]?.id ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -61,6 +63,7 @@ export default function ClubSignupClient() {
       username,
       name: name.trim(),
       owner_type: ownerType,
+      sport_id: sportId || null,
     });
 
     // 로그인 상태로 둬봤자 club_owners 행이 없어서 아무 화면도 못 들어가니, 결과와 무관하게
@@ -140,6 +143,18 @@ export default function ClubSignupClient() {
             placeholder={ownerType === "club" ? "클럽/팀 이름" : "코치 이름"}
             className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
           />
+          <select
+            required
+            value={sportId}
+            onChange={(e) => setSportId(e.target.value)}
+            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+          >
+            {sports.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             required
