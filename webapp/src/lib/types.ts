@@ -214,4 +214,5 @@ export type ClubBooking = {
   childAge: number;
   status: BookingStatus;
   requestedAt: string;
+  contactPhone?: string;
 };

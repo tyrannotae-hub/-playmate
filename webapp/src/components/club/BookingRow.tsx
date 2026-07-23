@@ -40,6 +40,9 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
             {booking.childName} ({booking.childAge}세)
           </p>
           <p className="mt-1 text-xs text-muted">{booking.scheduleLabel}</p>
+          {booking.contactPhone && (
+            <p className="mt-1 text-xs text-muted">연락처 {booking.contactPhone}</p>
+          )}
           <p className="mt-1 text-[11px] text-muted">
             신청일 {new Date(booking.requestedAt).toLocaleDateString("ko-KR")}
           </p>
