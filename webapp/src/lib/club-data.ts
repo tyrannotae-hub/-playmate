@@ -147,7 +147,7 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
+      "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, booking_type, trial_date, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
     )
     .eq("team_class.facility_id", facilityId)
     .order("requested_at", { ascending: false });
@@ -173,6 +173,8 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
       heightCm: b.height_cm ?? undefined,
       shoeSizeMm: b.shoe_size_mm ?? undefined,
       residence: b.residence ?? undefined,
+      bookingType: (b.booking_type as "trial" | "enrollment" | null) ?? "enrollment",
+      trialDate: b.trial_date ?? undefined,
     };
   });
 }

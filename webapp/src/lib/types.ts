@@ -247,4 +247,6 @@ export type ClubBooking = {
   heightCm?: number;
   shoeSizeMm?: number;
   residence?: string;
+  bookingType: "trial" | "enrollment";
+  trialDate?: string;
 };
