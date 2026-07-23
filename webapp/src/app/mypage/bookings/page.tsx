@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import StatusBadge from "@/components/StatusBadge";
 import CancelBookingButton from "../CancelBookingButton";
+import ChangeBookingButton from "../ChangeBookingButton";
 import { getCurrentParent, getMyBookings } from "@/lib/data";
 import { cardClass } from "@/lib/ui";
 
@@ -41,7 +42,10 @@ export default async function MyBookingsPage() {
                 </Link>
               )}
               {(b.status === "requested" || b.status === "confirmed") && (
-                <CancelBookingButton bookingId={b.id} />
+                <>
+                  <CancelBookingButton bookingId={b.id} />
+                  <ChangeBookingButton booking={b} />
+                </>
               )}
             </div>
           ))}

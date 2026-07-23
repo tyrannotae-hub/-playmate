@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { yearsSince } from "@/lib/data";
 import {
+  BookingStatus,
   ClubBooking,
   ClubClass,
   ClubFacility,
@@ -148,39 +149,80 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   });
 }
 
+const CLUB_BOOKING_SELECT =
+  "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, child:children(name, birth_date), team_class:teams_classes!inner(id, name, facility_id), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)";
+
+type RawClubBooking = {
+  id: string;
+  status: BookingStatus;
+  requested_at: string;
+  contact_phone: string | null;
+  gender: string | null;
+  height_cm: number | null;
+  shoe_size_mm: number | null;
+  residence: string | null;
+  booking_type: string | null;
+  trial_date: string | null;
+  change_requested_at: string | null;
+  requested_trial_date: string | null;
+  change_note: string | null;
+  child: { name: string; birth_date: string } | null;
+  team_class: { id: string; name: string } | null;
+  class_schedule: { day_label: string; time_label: string } | null;
+  requested_schedule: { day_label: string; time_label: string } | null;
+};
+
+function toClubBooking(b: RawClubBooking): ClubBooking {
+  return {
+    id: b.id,
+    classId: b.team_class?.id ?? "",
+    className: b.team_class?.name ?? "",
+    scheduleLabel: b.class_schedule
+      ? `${b.class_schedule.day_label} ${b.class_schedule.time_label}`
+      : "",
+    childName: b.child?.name ?? "",
+    childAge: b.child ? yearsSince(b.child.birth_date) : 0,
+    status: b.status,
+    requestedAt: b.requested_at,
+    contactPhone: b.contact_phone ?? undefined,
+    gender: (b.gender as "male" | "female" | null) ?? undefined,
+    heightCm: b.height_cm ?? undefined,
+    shoeSizeMm: b.shoe_size_mm ?? undefined,
+    residence: b.residence ?? undefined,
+    bookingType: (b.booking_type as "trial" | "enrollment" | null) ?? "enrollment",
+    trialDate: b.trial_date ?? undefined,
+    changeRequestedAt: b.change_requested_at ?? undefined,
+    requestedScheduleLabel: b.requested_schedule
+      ? `${b.requested_schedule.day_label} ${b.requested_schedule.time_label}`
+      : undefined,
+    requestedTrialDate: b.requested_trial_date ?? undefined,
+    changeNote: b.change_note ?? undefined,
+  };
+}
+
 export async function getMyClubBookings(facilityId: string): Promise<ClubBooking[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("bookings")
-    .select(
-      "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, booking_type, trial_date, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
-    )
+    .select(CLUB_BOOKING_SELECT)
     .eq("team_class.facility_id", facilityId)
     .order("requested_at", { ascending: false });
 
-  return (data ?? []).map((b) => {
-    const teamClass = b.team_class as unknown as { name: string } | null;
-    const schedule = b.class_schedule as unknown as {
-      day_label: string;
-      time_label: string;
-    } | null;
-    const child = b.child as unknown as { name: string; birth_date: string } | null;
+  return ((data ?? []) as unknown as RawClubBooking[]).map(toClubBooking);
+}
 
-    return {
-      id: b.id,
-      className: teamClass?.name ?? "",
-      scheduleLabel: schedule ? `${schedule.day_label} ${schedule.time_label}` : "",
-      childName: child?.name ?? "",
-      childAge: child ? yearsSince(child.birth_date) : 0,
-      status: b.status,
-      requestedAt: b.requested_at,
-      contactPhone: b.contact_phone ?? undefined,
-      gender: (b.gender as "male" | "female" | null) ?? undefined,
-      heightCm: b.height_cm ?? undefined,
-      shoeSizeMm: b.shoe_size_mm ?? undefined,
-      residence: b.residence ?? undefined,
-      bookingType: (b.booking_type as "trial" | "enrollment" | null) ?? "enrollment",
-      trialDate: b.trial_date ?? undefined,
-    };
-  });
+export async function getClubBookingById(
+  facilityId: string,
+  bookingId: string
+): Promise<ClubBooking | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("bookings")
+    .select(CLUB_BOOKING_SELECT)
+    .eq("team_class.facility_id", facilityId)
+    .eq("id", bookingId)
+    .maybeSingle();
+
+  if (!data) return null;
+  return toClubBooking(data as unknown as RawClubBooking);
 }

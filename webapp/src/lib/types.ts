@@ -88,11 +88,18 @@ export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled
 export type Booking = {
   id: string;
   classId: string;
+  scheduleId: string;
   className: string;
   facilityName: string;
   childName: string;
   status: BookingStatus;
   scheduleLabel: string;
+  bookingType: "trial" | "enrollment";
+  trialDate?: string;
+  changeRequestedAt?: string;
+  requestedScheduleLabel?: string;
+  requestedTrialDate?: string;
+  changeNote?: string;
 };
 
 export type ActiveClass = {
@@ -259,6 +266,7 @@ export type AppNotification = {
 
 export type ClubBooking = {
   id: string;
+  classId: string;
   className: string;
   scheduleLabel: string;
   childName: string;
@@ -272,4 +280,8 @@ export type ClubBooking = {
   residence?: string;
   bookingType: "trial" | "enrollment";
   trialDate?: string;
+  changeRequestedAt?: string;
+  requestedScheduleLabel?: string;
+  requestedTrialDate?: string;
+  changeNote?: string;
 };

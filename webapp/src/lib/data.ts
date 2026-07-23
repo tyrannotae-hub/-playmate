@@ -494,7 +494,7 @@ export async function getMyBookings(): Promise<Booking[]> {
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, status, team_class_id, child:children(name), team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules(day_label, time_label)"
+      "id, status, team_class_id, class_schedule_id, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, child:children(name), team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)"
     )
     .order("requested_at", { ascending: false });
 
@@ -507,16 +507,29 @@ export async function getMyBookings(): Promise<Booking[]> {
       day_label: string;
       time_label: string;
     } | null;
+    const requestedSchedule = b.requested_schedule as unknown as {
+      day_label: string;
+      time_label: string;
+    } | null;
     const child = b.child as unknown as { name: string } | null;
 
     return {
       id: b.id,
       classId: b.team_class_id,
+      scheduleId: b.class_schedule_id,
       className: teamClass?.name ?? "",
       facilityName: teamClass?.facility?.name ?? "",
       childName: child?.name ?? "",
       status: b.status,
       scheduleLabel: schedule ? `${schedule.day_label} ${schedule.time_label}` : "",
+      bookingType: (b.booking_type as "trial" | "enrollment" | null) ?? "enrollment",
+      trialDate: b.trial_date ?? undefined,
+      changeRequestedAt: b.change_requested_at ?? undefined,
+      requestedScheduleLabel: requestedSchedule
+        ? `${requestedSchedule.day_label} ${requestedSchedule.time_label}`
+        : undefined,
+      requestedTrialDate: b.requested_trial_date ?? undefined,
+      changeNote: b.change_note ?? undefined,
     };
   });
 }

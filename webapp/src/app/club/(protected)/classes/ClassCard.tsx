@@ -233,6 +233,12 @@ export default function ClassCard({
                 {item.trialPrice != null && ` · ${item.trialPrice.toLocaleString()}원`}
               </span>
             )}
+            <Link
+              href={`/club/bookings?classId=${item.id}`}
+              className="mt-1.5 block text-xs font-bold text-rink-deep"
+            >
+              이 클래스 예약 현황 보기 →
+            </Link>
           </div>
           <div className="flex shrink-0 gap-1.5">
             <button
