@@ -11,8 +11,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(payload.title || "PlayMate", {
       body: payload.body || "",
-      icon: "/icon",
-      badge: "/icon",
+      icon: "/icon.png",
+      badge: "/icon.png",
       data: { url: payload.url || "/mypage" },
     })
   );
