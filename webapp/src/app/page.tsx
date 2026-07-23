@@ -1,7 +1,6 @@
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import ClassCardCompact from "@/components/ClassCardCompact";
-import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
@@ -73,9 +72,10 @@ export default async function HomePage() {
         )}
 
         {sports.length > 0 && (
-          <ScrollSection title="🏷️ 종목별로 둘러보기">
+          <div className="mt-8 px-4">
+            <h2 className="mb-3 text-base font-bold">🏷️ 종목별로 둘러보기</h2>
             <SportCategoryRow sports={sports} counts={sportCounts} />
-          </ScrollSection>
+          </div>
         )}
 
         <div className="mt-8" id="popular">

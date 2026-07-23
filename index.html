@@ -173,40 +173,22 @@
   .founder p{font-size:16px;line-height:1.85;color:var(--ink);}
   .founder .role{margin-top:14px;font-size:13px;color:var(--muted);font-weight:600;}
 
-  /* ---------- form ---------- */
+  /* ---------- cta ---------- */
   .form-section{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .tabs{display:flex;gap:8px;margin-bottom:28px;}
-  input[name="audience"]{position:absolute;opacity:0;pointer-events:none;}
-  .tab-label{
-    padding:10px 18px;border-radius:999px;border:1.5px solid var(--line);
-    font-size:14px;font-weight:700;cursor:pointer;color:var(--muted);
-    transition:all .15s ease;
+  .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:640px){.cta-grid{grid-template-columns:1fr;}}
+  .cta-card{
+    display:block;background:var(--paper);border:1.5px solid var(--line);border-radius:16px;
+    padding:28px;text-decoration:none;color:inherit;transition:transform .15s ease,border-color .15s ease;
   }
-  #aud-parent:checked ~ .form-wrap .tabs label[for="aud-parent"],
-  #aud-partner:checked ~ .form-wrap .tabs label[for="aud-partner"]{
-    background:var(--ink);color:var(--paper);border-color:var(--ink);
+  .cta-card:hover{transform:translateY(-2px);border-color:var(--rink);}
+  .cta-icon{
+    display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;
+    border-radius:12px;background:var(--rink-soft);color:var(--rink-deep);margin-bottom:16px;
   }
-  .panel{display:none;}
-  #aud-parent:checked ~ .form-wrap #panel-parent,
-  #aud-partner:checked ~ .form-wrap #panel-partner{display:block;}
-
-  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  @media (max-width:600px){.field-grid{grid-template-columns:1fr;}}
-  .field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-  .field.full{grid-column:1/-1;}
-  label.flabel{font-size:13px;font-weight:700;color:var(--ink);}
-  input[type="text"],input[type="tel"],select,textarea{
-    font:inherit;font-size:15px;padding:12px 14px;border-radius:9px;
-    border:1.5px solid var(--line);background:var(--paper);color:var(--ink);
-    width:100%;
-  }
-  textarea{resize:vertical;min-height:88px;}
-  input:focus,select:focus,textarea:focus{border-color:var(--rink);}
-  .submit-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:6px;}
-  .privacy-note{font-size:12.5px;color:var(--muted);max-width:52ch;line-height:1.6;}
-  .form-status{margin-top:12px;font-size:13.5px;font-weight:600;min-height:1.2em;}
-  .form-status[data-state="ok"]{color:var(--rink-deep);}
-  .form-status[data-state="error"]{color:var(--energy);}
+  .cta-card h3{font-size:18px;font-weight:800;margin-bottom:8px;}
+  .cta-card p{font-size:14.5px;color:var(--muted);line-height:1.7;}
+  .cta-link{display:inline-block;margin-top:16px;font-size:14px;font-weight:700;color:var(--rink-deep);}
 
   /* ---------- footer ---------- */
   footer{padding:44px 0 60px;}
@@ -221,7 +203,7 @@
 <header class="nav">
   <div class="nav-inner">
     <div class="logo">PlayMate<span class="dot">.</span></div>
-    <a class="nav-cta" href="#signup">사전 등록</a>
+    <a class="nav-cta" href="https://playmate-theta.vercel.app/login" target="_blank" rel="noopener">회원가입</a>
   </div>
 </header>
 
@@ -233,14 +215,14 @@
     <circle cx="260" cy="260" r="4" fill="currentColor" stroke="none" style="color:var(--energy)"/>
   </svg>
   <div class="wrap">
-    <div class="eyebrow">Pre-Launch · 서울 강남 · 구로</div>
+    <div class="eyebrow">Now Live · 서울 강남 · 구로</div>
     <h1>아이에게 맞는 운동을 찾는<br>가장 빠른 길</h1>
     <p class="sub">체육시설·강사·클럽팀을 비교하고, 실제 등록한 학부모의 후기를 확인하고, 등록까지 한 번에. 아이스하키부터 시작합니다.</p>
     <div class="hero-ctas">
-      <a class="btn btn-primary" href="#signup" onclick="selectAudience('parent')">사전 등록하기</a>
-      <a class="btn btn-ghost" href="#signup" onclick="selectAudience('partner')">시설·강사 입점 문의</a>
+      <a class="btn btn-primary" href="https://playmate-theta.vercel.app/login" target="_blank" rel="noopener">학부모·학생 회원가입</a>
+      <a class="btn btn-ghost" href="https://playmate-theta.vercel.app/club/login" target="_blank" rel="noopener">시설·강사 입점하기</a>
     </div>
-    <p class="hero-note">아직 준비 중이에요 — 오픈하면 가장 먼저 알려드릴게요.</p>
+    <p class="hero-note">지금 바로 가입하고 이용할 수 있어요.</p>
   </div>
 </section>
 
@@ -341,83 +323,28 @@
 <section class="form-section" id="signup">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="section-tag">Get Notified</span>
-      <h2>가장 먼저 만나보세요</h2>
-      <p>오픈 소식과 등록 가능한 클래스를 가장 먼저 알려드립니다.</p>
+      <span class="section-tag">Get Started</span>
+      <h2>지금 바로 시작하세요</h2>
+      <p>플레이메이트는 이미 이용할 수 있어요. 아래에서 본인에게 맞는 쪽으로 가입해주세요.</p>
     </div>
 
-    <input type="radio" id="aud-parent" name="audience" checked>
-    <input type="radio" id="aud-partner" name="audience">
-
-    <div class="form-wrap reveal">
-      <div class="tabs">
-        <label class="tab-label" for="aud-parent">학부모로 등록</label>
-        <label class="tab-label" for="aud-partner">시설·강사로 등록</label>
-      </div>
-
-      <div class="panel" id="panel-parent">
-        <form id="form-parent" onsubmit="return submitLead(event,'parent')">
-          <div class="field-grid">
-            <div class="field">
-              <label class="flabel" for="p-name">보호자 성함</label>
-              <input type="text" id="p-name" required placeholder="예: 김민수">
-            </div>
-            <div class="field">
-              <label class="flabel" for="p-phone">휴대폰 번호</label>
-              <input type="tel" id="p-phone" required placeholder="010-0000-0000">
-            </div>
-            <div class="field">
-              <label class="flabel" for="p-age">자녀 나이</label>
-              <input type="text" id="p-age" placeholder="예: 7세">
-            </div>
-            <div class="field">
-              <label class="flabel" for="p-sport">관심 종목</label>
-              <select id="p-sport">
-                <option>아이스하키</option>
-                <option>피겨스케이팅</option>
-                <option>아직 모르겠어요</option>
-              </select>
-            </div>
-          </div>
-          <div class="submit-row">
-            <button type="submit" class="btn btn-primary">사전 등록 완료하기</button>
-            <span class="privacy-note">제출하신 연락처는 서비스 안내 목적으로만 사용되며, 목적 달성 후 파기됩니다.</span>
-          </div>
-          <p class="form-status" id="status-parent" role="status"></p>
-        </form>
-      </div>
-
-      <div class="panel" id="panel-partner">
-        <form id="form-partner" onsubmit="return submitLead(event,'partner')">
-          <div class="field-grid">
-            <div class="field">
-              <label class="flabel" for="s-name">시설/클럽명</label>
-              <input type="text" id="s-name" required placeholder="예: OO 아이스하키클럽">
-            </div>
-            <div class="field">
-              <label class="flabel" for="s-contact">담당자 성함</label>
-              <input type="text" id="s-contact" required placeholder="예: 이OO">
-            </div>
-            <div class="field">
-              <label class="flabel" for="s-phone">연락처</label>
-              <input type="tel" id="s-phone" required placeholder="010-0000-0000">
-            </div>
-            <div class="field">
-              <label class="flabel" for="s-region">위치(지역)</label>
-              <input type="text" id="s-region" placeholder="예: 서울 강남구">
-            </div>
-            <div class="field full">
-              <label class="flabel" for="s-msg">문의 내용</label>
-              <textarea id="s-msg" placeholder="소속 클럽/팀 규모, 궁금한 점 등을 자유롭게 적어주세요"></textarea>
-            </div>
-          </div>
-          <div class="submit-row">
-            <button type="submit" class="btn btn-primary">입점 문의 보내기</button>
-            <span class="privacy-note">제출하신 연락처는 입점 안내 목적으로만 사용되며, 목적 달성 후 파기됩니다.</span>
-          </div>
-          <p class="form-status" id="status-partner" role="status"></p>
-        </form>
-      </div>
+    <div class="cta-grid reveal">
+      <a class="cta-card" href="https://playmate-theta.vercel.app/login" target="_blank" rel="noopener">
+        <span class="cta-icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.2-3.7 4-5.5 7.5-5.5s6.3 1.8 7.5 5.5"/></svg>
+        </span>
+        <h3>학부모·학생이에요</h3>
+        <p>운동 종목을 비교하고, 후기를 확인하고, 바로 예약까지 해보세요.</p>
+        <span class="cta-link">회원가입 하러 가기 →</span>
+      </a>
+      <a class="cta-card" href="https://playmate-theta.vercel.app/club/login" target="_blank" rel="noopener">
+        <span class="cta-icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L15 14l5 2v4a2 2 0 0 1-2 2C9.4 22 2 14.6 2 6a2 2 0 0 1 2-2z"/></svg>
+        </span>
+        <h3>시설·강사·클럽이에요</h3>
+        <p>클래스를 등록하고, 예약을 관리하고, 학부모에게 노출해보세요.</p>
+        <span class="cta-link">입점 신청 하러 가기 →</span>
+      </a>
     </div>
   </div>
 </section>
@@ -436,63 +363,6 @@
 </footer>
 
 <script>
-  var SUPABASE_URL = 'https://unazmttaqqukrlupmnhr.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_Zs2HO6B1ywX9_bpk1kT_9A_pO9M0Gte';
-
-  function selectAudience(who){
-    document.getElementById(who === 'parent' ? 'aud-parent' : 'aud-partner').checked = true;
-  }
-
-  function setStatus(el, state, message){
-    el.dataset.state = state;
-    el.textContent = message;
-  }
-
-  function submitLead(e, type){
-    e.preventDefault();
-    var statusEl = document.getElementById(type === 'parent' ? 'status-parent' : 'status-partner');
-    var btn = e.target.querySelector('button[type="submit"]');
-    var payload = { audience: type };
-
-    if(type === 'parent'){
-      payload.name = document.getElementById('p-name').value;
-      payload.phone = document.getElementById('p-phone').value;
-      payload.child_age = document.getElementById('p-age').value;
-      payload.interest_sport = document.getElementById('p-sport').value;
-    } else {
-      payload.facility_name = document.getElementById('s-name').value;
-      payload.contact_name = document.getElementById('s-contact').value;
-      payload.phone = document.getElementById('s-phone').value;
-      payload.region = document.getElementById('s-region').value;
-      payload.message = document.getElementById('s-msg').value;
-    }
-
-    btn.disabled = true;
-    setStatus(statusEl, '', '제출하는 중...');
-
-    fetch(SUPABASE_URL + '/rest/v1/leads', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: 'Bearer ' + SUPABASE_ANON_KEY
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(function(res){
-        btn.disabled = false;
-        if(!res.ok){ throw new Error('submit failed'); }
-        e.target.reset();
-        setStatus(statusEl, 'ok', '제출됐어요! 오픈하면 가장 먼저 알려드릴게요.');
-      })
-      .catch(function(){
-        btn.disabled = false;
-        setStatus(statusEl, 'error', '제출에 실패했어요. 잠시 후 다시 시도해주세요.');
-      });
-
-    return false;
-  }
-
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
