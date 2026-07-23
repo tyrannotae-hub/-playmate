@@ -9,6 +9,7 @@ const ITEMS = [
   { href: "/club/instructors", label: "코치 관리" },
   { href: "/club/classes", label: "클래스 관리" },
   { href: "/club/bookings", label: "예약 관리" },
+  { href: "/club/settings", label: "계정 설정" },
 ];
 
 export default function ClubMenuDrawer({
