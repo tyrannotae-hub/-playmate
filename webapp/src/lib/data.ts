@@ -52,6 +52,7 @@ type RawClass = {
       career_years: number | null;
       certification_verified: boolean;
       certified_by: string | null;
+      profile_image_url: string | null;
     } | null;
   }[];
   class_schedules: RawSchedule[];
@@ -101,6 +102,7 @@ function toTeamClass(
         careerYears: i.career_years ?? 0,
         certified: i.certification_verified ?? false,
         certifiedBy: i.certified_by ?? undefined,
+        profileImageUrl: i.profile_image_url ?? undefined,
       })),
     ageMin: row.age_min,
     ageMax: row.age_max,
@@ -131,7 +133,7 @@ export async function getAllClasses(): Promise<TeamClass[]> {
     supabase
       .from("teams_classes")
       .select(
-        "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by)), class_schedules(*), class_images(url, sort_order)"
+        "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
       ),
     ratingMap(),
   ]);

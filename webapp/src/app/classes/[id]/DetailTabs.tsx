@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Review, TeamClass } from "@/lib/types";
 
 const TABS = ["프로필", "상세소개", "시간표", "리뷰"] as const;
@@ -37,17 +38,30 @@ export default function DetailTabs({
         <div className="flex flex-col divide-y divide-line">
           {item.instructors.length > 0 ? (
             item.instructors.map((instructor) => (
-              <div key={instructor.id} className="py-3 first:pt-0 last:pb-0">
-                <p className="text-xs font-bold text-muted">담당 코치</p>
-                <p className="mt-1 text-base font-bold">{instructor.name}</p>
-                {instructor.certified && (
-                  <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
-                    🏅 {instructor.certifiedBy} 인증완료
-                  </p>
+              <div key={instructor.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+                {instructor.profileImageUrl && (
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-surface-2">
+                    <Image
+                      src={instructor.profileImageUrl}
+                      alt=""
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
                 )}
-                <p className="mt-2 text-sm text-muted">
-                  경력 {instructor.careerYears}년
-                </p>
+                <div>
+                  <p className="text-xs font-bold text-muted">담당 코치</p>
+                  <p className="mt-1 text-base font-bold">{instructor.name}</p>
+                  {instructor.certified && (
+                    <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+                      🏅 {instructor.certifiedBy} 인증완료
+                    </p>
+                  )}
+                  <p className="mt-2 text-sm text-muted">
+                    경력 {instructor.careerYears}년
+                  </p>
+                </div>
               </div>
             ))
           ) : (

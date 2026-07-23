@@ -19,6 +19,7 @@ export type Instructor = {
   careerYears: number;
   certified: boolean;
   certifiedBy?: string;
+  profileImageUrl?: string;
 };
 
 export type ClassSchedule = {
