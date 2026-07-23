@@ -200,7 +200,7 @@ export async function getReviewsForClass(classId: string): Promise<Review[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("reviews")
-    .select("id, rating, content, created_at, author_label")
+    .select("id, rating, content, photo_urls, created_at, author_label")
     .eq("target_type", "team_class")
     .eq("target_id", classId)
     .order("created_at", { ascending: false });
@@ -211,6 +211,7 @@ export async function getReviewsForClass(classId: string): Promise<Review[]> {
     parentName: r.author_label,
     rating: r.rating,
     content: r.content ?? "",
+    photoUrls: r.photo_urls ?? [],
     createdAt: r.created_at,
   }));
 }
