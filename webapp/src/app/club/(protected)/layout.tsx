@@ -18,7 +18,7 @@ export default async function ClubProtectedLayout({
         facilityName={facility?.name ?? "내 클럽"}
         ownerType={facility?.ownerType ?? "club"}
       />
-      <main className="px-4 pb-10 pt-5">{children}</main>
+      <main className="mx-auto max-w-3xl px-4 pb-10 pt-5">{children}</main>
     </>
   );
 }

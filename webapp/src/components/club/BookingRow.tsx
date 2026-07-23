@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
-import { cardClass } from "@/lib/ui";
+import { buttonClass, cardClass } from "@/lib/ui";
 
 export default function BookingRow({ booking }: { booking: ClubBooking }) {
   const router = useRouter();
@@ -69,14 +69,19 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
           <button
             disabled={submitting}
             onClick={() => updateStatus("confirmed")}
-            className="btn-label flex-1 rounded-full bg-rink py-2.5 text-xs font-bold text-white disabled:opacity-40"
+            className={buttonClass({
+              variant: "custom",
+              size: "sm",
+              full: false,
+              className: "flex-1 bg-rink text-white",
+            })}
           >
             승인
           </button>
           <button
             disabled={submitting}
             onClick={() => updateStatus("cancelled")}
-            className="btn-label flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
+            className={buttonClass({ variant: "outline", size: "sm", full: false, className: "flex-1" })}
           >
             거절
           </button>
@@ -88,14 +93,19 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
           <button
             disabled={submitting}
             onClick={() => updateStatus("completed")}
-            className="btn-label flex-1 rounded-full bg-good py-2.5 text-xs font-bold text-white disabled:opacity-40"
+            className={buttonClass({
+              variant: "custom",
+              size: "sm",
+              full: false,
+              className: "flex-1 bg-good text-white",
+            })}
           >
             완료 처리
           </button>
           <button
             disabled={submitting}
             onClick={() => updateStatus("cancelled")}
-            className="btn-label flex-1 rounded-full border border-line py-2.5 text-xs font-bold text-muted disabled:opacity-40"
+            className={buttonClass({ variant: "outline", size: "sm", full: false, className: "flex-1" })}
           >
             취소
           </button>
