@@ -11,6 +11,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
   const [phone, setPhone] = useState(facility.phone);
   const [description, setDescription] = useState(facility.description);
   const [instagramUrl, setInstagramUrl] = useState(facility.instagramUrl);
+  const [collectContactPhone, setCollectContactPhone] = useState(facility.collectContactPhone);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [saved, setSaved] = useState(false);
@@ -23,7 +24,13 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
 
     const { error } = await supabase
       .from("facilities")
-      .update({ address, phone, description, instagram_url: instagramUrl || null })
+      .update({
+        address,
+        phone,
+        description,
+        instagram_url: instagramUrl || null,
+        collect_contact_phone: collectContactPhone,
+      })
       .eq("id", facility.id);
 
     setSubmitting(false);
@@ -45,6 +52,9 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         {description && <p className="mt-2 whitespace-pre-line text-sm">{description}</p>}
         <p className="mt-1 break-all text-sm text-muted">
           {instagramUrl || "인스타그램 링크 미입력"}
+        </p>
+        <p className="mt-1 text-sm text-muted">
+          예약 시 연락처 받기: {collectContactPhone ? "켜짐" : "꺼짐"}
         </p>
         <div className="mt-3 flex items-center gap-2">
           <button
@@ -95,6 +105,20 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
+      <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+        <span className="text-sm font-bold">
+          예약 시 연락처 받기
+          <span className="mt-0.5 block text-xs font-normal text-muted">
+            켜면 학부모 예약 신청 화면에 연락처 입력란이 보여요
+          </span>
+        </span>
+        <input
+          type="checkbox"
+          checked={collectContactPhone}
+          onChange={(e) => setCollectContactPhone(e.target.checked)}
+          className="h-5 w-5 flex-shrink-0 accent-rink"
+        />
+      </label>
       {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
       <div className="flex gap-2">
         <button

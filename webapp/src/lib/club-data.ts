@@ -30,7 +30,9 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
   const supabase = await createClient();
   const { data } = await supabase
     .from("facilities")
-    .select("id, name, address, phone, description, cover_image_url, instagram_url, owner_type")
+    .select(
+      "id, name, address, phone, description, cover_image_url, instagram_url, owner_type, collect_contact_phone"
+    )
     .eq("id", facilityId)
     .maybeSingle();
 
@@ -44,6 +46,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     coverImageUrl: data.cover_image_url ?? "",
     instagramUrl: data.instagram_url ?? "",
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
+    collectContactPhone: data.collect_contact_phone ?? true,
   };
 }
 
@@ -140,7 +143,7 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, status, requested_at, contact_phone, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
+      "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
     )
     .eq("team_class.facility_id", facilityId)
     .order("requested_at", { ascending: false });
@@ -162,6 +165,10 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
       status: b.status,
       requestedAt: b.requested_at,
       contactPhone: b.contact_phone ?? undefined,
+      gender: (b.gender as "male" | "female" | null) ?? undefined,
+      heightCm: b.height_cm ?? undefined,
+      shoeSizeMm: b.shoe_size_mm ?? undefined,
+      residence: b.residence ?? undefined,
     };
   });
 }

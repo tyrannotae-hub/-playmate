@@ -11,6 +11,7 @@ export type Facility = {
   name: string;
   region: string;
   address: string;
+  collectContactPhone: boolean;
 };
 
 export type Instructor = {
@@ -132,6 +133,7 @@ export type ClubFacility = {
   coverImageUrl: string;
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
+  collectContactPhone: boolean;
 };
 
 export type FacilityNotice = {
@@ -216,4 +218,8 @@ export type ClubBooking = {
   status: BookingStatus;
   requestedAt: string;
   contactPhone?: string;
+  gender?: "male" | "female";
+  heightCm?: number;
+  shoeSizeMm?: number;
+  residence?: string;
 };

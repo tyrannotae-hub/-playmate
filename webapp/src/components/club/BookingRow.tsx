@@ -37,9 +37,19 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
         <div className="min-w-0">
           <p className="break-words font-bold">{booking.className}</p>
           <p className="mt-0.5 text-xs text-muted">
-            {booking.childName} ({booking.childAge}세)
+            {booking.childName} ({booking.childAge}세{booking.gender ? `, ${booking.gender === "male" ? "남" : "여"}` : ""})
           </p>
           <p className="mt-1 text-xs text-muted">{booking.scheduleLabel}</p>
+          {(booking.heightCm || booking.shoeSizeMm) && (
+            <p className="mt-1 text-xs text-muted">
+              {booking.heightCm && `키 ${booking.heightCm}cm`}
+              {booking.heightCm && booking.shoeSizeMm && " · "}
+              {booking.shoeSizeMm && `발사이즈 ${booking.shoeSizeMm}mm`}
+            </p>
+          )}
+          {booking.residence && (
+            <p className="mt-1 text-xs text-muted">거주지 {booking.residence}</p>
+          )}
           {booking.contactPhone && (
             <p className="mt-1 text-xs text-muted">연락처 {booking.contactPhone}</p>
           )}

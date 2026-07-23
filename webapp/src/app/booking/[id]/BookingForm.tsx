@@ -7,6 +7,7 @@ import { Child, TeamClass } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
 
 type Phase = "add-child" | "form" | "requested" | "error";
+type Gender = "male" | "female";
 
 export default function BookingForm({
   item,
@@ -22,7 +23,12 @@ export default function BookingForm({
   const [childId, setChildId] = useState(initialChildren[0]?.id ?? "");
   const [childName, setChildName] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<Gender>("male");
+  const [heightCm, setHeightCm] = useState("");
+  const [shoeSizeMm, setShoeSizeMm] = useState("");
+  const [residence, setResidence] = useState("");
   const [contactPhone, setContactPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -56,13 +62,22 @@ export default function BookingForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!consent) {
+      setErrorMsg("개인정보 수집·이용에 동의해주세요.");
+      return;
+    }
     setSubmitting(true);
     setErrorMsg("");
     const supabase = createClient();
     const { error } = await supabase.rpc("request_booking", {
       p_child_id: childId,
       p_schedule_id: item.schedules[0].id,
-      p_contact_phone: contactPhone || null,
+      p_contact_phone: item.facility.collectContactPhone ? contactPhone || null : null,
+      p_gender: gender,
+      p_height_cm: heightCm ? Number(heightCm) : null,
+      p_shoe_size_mm: shoeSizeMm ? Number(shoeSizeMm) : null,
+      p_residence: residence || null,
+      p_consent: consent,
     });
     setSubmitting(false);
 
@@ -165,7 +180,7 @@ export default function BookingForm({
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
           <div>
-            <label className="mb-1.5 block text-sm font-bold">신청 자녀</label>
+            <label className="mb-1.5 block text-sm font-bold">수강생(자녀)</label>
             <select
               value={childId}
               onChange={(e) => setChildId(e.target.value)}
@@ -180,21 +195,101 @@ export default function BookingForm({
           </div>
 
           <div>
+            <label className="mb-1.5 block text-sm font-bold">성별</label>
+            <div className="flex gap-2">
+              {(["male", "female"] as const).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setGender(g)}
+                  className={buttonClass({
+                    variant: gender === g ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  {g === "male" ? "남" : "여"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1.5 block text-sm font-bold">
+                키(cm) <span className="font-normal text-muted">(선택)</span>
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={heightCm}
+                onChange={(e) => setHeightCm(e.target.value)}
+                placeholder="120"
+                className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-bold">
+                발사이즈(mm) <span className="font-normal text-muted">(선택)</span>
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={shoeSizeMm}
+                onChange={(e) => setShoeSizeMm(e.target.value)}
+                placeholder="180"
+                className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
             <label className="mb-1.5 block text-sm font-bold">
-              연락처 <span className="font-normal text-muted">(선택)</span>
+              거주지 <span className="font-normal text-muted">(선택)</span>
             </label>
             <input
-              type="tel"
-              value={contactPhone}
-              onChange={(e) => setContactPhone(e.target.value)}
-              placeholder="010-1234-5678"
+              value={residence}
+              onChange={(e) => setResidence(e.target.value)}
+              placeholder="예: 서울 강남구"
               className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
             />
           </div>
 
+          {item.facility.collectContactPhone && (
+            <div>
+              <label className="mb-1.5 block text-sm font-bold">
+                보호자 연락처 <span className="font-normal text-muted">(선택)</span>
+              </label>
+              <input
+                type="tel"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="010-1234-5678"
+                className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+              />
+            </div>
+          )}
+
           <p className="rounded-md bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
             ⚠️ 결제는 현장/계좌이체로 시설과 직접 진행됩니다
           </p>
+
+          <label className="flex items-start gap-2.5 rounded-md border border-line px-3.5 py-3">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 accent-rink"
+            />
+            <span className="text-xs leading-relaxed text-muted">
+              (필수) 개인정보 수집·이용에 동의합니다.
+              <br />
+              수집 목적: 신청자에 대한 서비스 안내 · 보유 기간: 수집일로부터 1년
+            </span>
+          </label>
+
+          {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}
 
           <button
             type="submit"
