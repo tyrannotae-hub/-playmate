@@ -95,10 +95,22 @@ async function wishCountMap() {
   return map;
 }
 
+async function instructorWishCountMap() {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_instructor_wishlist_counts");
+
+  const map = new Map<string, number>();
+  ((data ?? []) as { instructor_id: string; count: number }[]).forEach((row) => {
+    map.set(row.instructor_id, row.count);
+  });
+  return map;
+}
+
 function toTeamClass(
   row: RawClass,
   ratings: Map<string, { sum: number; count: number }>,
-  wishCounts: Map<string, number>
+  wishCounts: Map<string, number>,
+  instructorWishCounts: Map<string, number>
 ): TeamClass {
   const agg = ratings.get(row.id);
   const rating = agg ? Math.round((agg.sum / agg.count) * 10) / 10 : 0;
@@ -126,6 +138,7 @@ function toTeamClass(
         certified: i.certification_verified ?? false,
         certifiedBy: i.certified_by ?? undefined,
         profileImageUrl: i.profile_image_url ?? undefined,
+        wishCount: instructorWishCounts.get(i.id) ?? 0,
       })),
     ageMin: row.age_min,
     ageMax: row.age_max,
@@ -153,7 +166,7 @@ function toTeamClass(
 
 export async function getAllClasses(): Promise<TeamClass[]> {
   const supabase = await createClient();
-  const [{ data, error }, ratings, wishCounts] = await Promise.all([
+  const [{ data, error }, ratings, wishCounts, instructorWishCounts] = await Promise.all([
     supabase
       .from("teams_classes")
       .select(
@@ -161,10 +174,13 @@ export async function getAllClasses(): Promise<TeamClass[]> {
       ),
     ratingMap(),
     wishCountMap(),
+    instructorWishCountMap(),
   ]);
 
   if (error || !data) return [];
-  return (data as unknown as RawClass[]).map((r) => toTeamClass(r, ratings, wishCounts));
+  return (data as unknown as RawClass[]).map((r) =>
+    toTeamClass(r, ratings, wishCounts, instructorWishCounts)
+  );
 }
 
 export async function getClassById(id: string): Promise<TeamClass | null> {
@@ -188,11 +204,14 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
 
-  const { data: instructorRows } = await supabase
-    .from("instructors")
-    .select("id, name, career_years, certification_verified, certified_by, bio, profile_image_url")
-    .eq("facility_id", facilityId)
-    .order("career_years", { ascending: false });
+  const [{ data: instructorRows }, instructorWishCounts] = await Promise.all([
+    supabase
+      .from("instructors")
+      .select("id, name, career_years, certification_verified, certified_by, bio, profile_image_url")
+      .eq("facility_id", facilityId)
+      .order("career_years", { ascending: false }),
+    instructorWishCountMap(),
+  ]);
 
   const instructors: FacilityInstructor[] = (instructorRows ?? []).map((i) => ({
     id: i.id,
@@ -202,6 +221,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     certifiedBy: i.certified_by ?? undefined,
     bio: i.bio ?? "",
     profileImageUrl: i.profile_image_url ?? "",
+    wishCount: instructorWishCounts.get(i.id) ?? 0,
   }));
 
   const allClasses = await getAllClasses();
@@ -250,14 +270,17 @@ export async function getReviewsForClass(classId: string): Promise<Review[]> {
 // 홈 화면 "우리 지도자들" 섹션용: 프로필 사진이 있는 인증 강사 위주로 노출
 export async function getFeaturedInstructors(): Promise<FeaturedInstructor[]> {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("instructors")
-    .select(
-      "id, name, career_years, certification_verified, certified_by, profile_image_url, facility:facilities(id, name)"
-    )
-    .not("profile_image_url", "is", null)
-    .order("career_years", { ascending: false })
-    .limit(10);
+  const [{ data }, instructorWishCounts] = await Promise.all([
+    supabase
+      .from("instructors")
+      .select(
+        "id, name, career_years, certification_verified, certified_by, profile_image_url, facility:facilities(id, name)"
+      )
+      .not("profile_image_url", "is", null)
+      .order("career_years", { ascending: false })
+      .limit(10),
+    instructorWishCountMap(),
+  ]);
 
   return (data ?? []).map((i) => {
     const facility = i.facility as unknown as { id: string; name: string } | null;
@@ -270,6 +293,7 @@ export async function getFeaturedInstructors(): Promise<FeaturedInstructor[]> {
       profileImageUrl: i.profile_image_url ?? "",
       facilityId: facility?.id ?? "",
       facilityName: facility?.name ?? "",
+      wishCount: instructorWishCounts.get(i.id) ?? 0,
     };
   });
 }
@@ -478,6 +502,22 @@ export async function getMyWishlistClasses(userId?: string): Promise<TeamClass[]
   if (ids.length === 0) return [];
   const idSet = new Set(ids);
   return all.filter((c) => idSet.has(c.id));
+}
+
+export async function getMyInstructorWishlistIds(userId?: string): Promise<string[]> {
+  const supabase = await createClient();
+
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+    uid = user.id;
+  }
+
+  const { data } = await supabase.from("instructor_wishlists").select("instructor_id");
+  return (data ?? []).map((w) => w.instructor_id);
 }
 
 export async function getMyNotifications(userId?: string): Promise<AppNotification[]> {

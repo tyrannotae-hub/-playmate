@@ -20,6 +20,7 @@ export type Instructor = {
   certified: boolean;
   certifiedBy?: string;
   profileImageUrl?: string;
+  wishCount: number;
 };
 
 export type ClassSchedule = {
@@ -119,6 +120,7 @@ export type FeaturedInstructor = {
   profileImageUrl: string;
   facilityId: string;
   facilityName: string;
+  wishCount: number;
 };
 
 export type ClubOwner = {
@@ -153,6 +155,7 @@ export type FacilityInstructor = {
   certifiedBy?: string;
   bio: string;
   profileImageUrl: string;
+  wishCount: number;
 };
 
 export type FacilityHome = {

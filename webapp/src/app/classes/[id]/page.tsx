@@ -3,7 +3,13 @@ import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
-import { getClassById, getCurrentParent, getMyWishlistIds, getReviewsForClass } from "@/lib/data";
+import {
+  getClassById,
+  getCurrentParent,
+  getMyInstructorWishlistIds,
+  getMyWishlistIds,
+  getReviewsForClass,
+} from "@/lib/data";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
@@ -20,7 +26,9 @@ export default async function ClassDetailPage({
   if (!item) notFound();
 
   const [reviews, user] = await Promise.all([getReviewsForClass(item.id), getCurrentParent()]);
-  const wishedIds = user ? await getMyWishlistIds(user.id) : [];
+  const [wishedIds, wishedInstructorIds] = user
+    ? await Promise.all([getMyWishlistIds(user.id), getMyInstructorWishlistIds(user.id)])
+    : [[], []];
   const wished = wishedIds.includes(item.id);
 
   return (
@@ -45,7 +53,7 @@ export default async function ClassDetailPage({
           </p>
 
           <div className="mt-5">
-            <DetailTabs item={item} reviews={reviews} />
+            <DetailTabs item={item} reviews={reviews} wishedInstructorIds={wishedInstructorIds} />
           </div>
 
           <div className="mt-6 border-t border-line pt-6">

@@ -4,7 +4,13 @@ import SportIcon from "@/components/icons/SportIcon";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
-import { getAllClasses, getCurrentParent, getMyWishlistIds, getSports } from "@/lib/data";
+import {
+  getAllClasses,
+  getCurrentParent,
+  getMyInstructorWishlistIds,
+  getMyWishlistIds,
+  getSports,
+} from "@/lib/data";
 import { FeaturedInstructor } from "@/lib/types";
 
 export const runtime = "edge";
@@ -26,7 +32,9 @@ export default async function SportDetailPage({
   const sport = sports.find((s) => s.id === sportId);
   if (!sport) notFound();
 
-  const wishedIds = user ? await getMyWishlistIds(user.id) : [];
+  const [wishedIds, wishedInstructorIds] = user
+    ? await Promise.all([getMyWishlistIds(user.id), getMyInstructorWishlistIds(user.id)])
+    : [[], []];
 
   const classes = allClasses.filter((c) => c.sportId === sportId);
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 8);
@@ -44,6 +52,7 @@ export default async function SportDetailPage({
         profileImageUrl: i.profileImageUrl,
         facilityId: c.facility.id,
         facilityName: c.facility.name,
+        wishCount: i.wishCount,
       });
     });
   });
@@ -77,7 +86,7 @@ export default async function SportDetailPage({
         {instructors.length > 0 && (
           <div className="mt-8">
             <h2 className="mb-3 px-4 text-lg font-bold">지금 인기있는 코치</h2>
-            <InstructorHoverGrid instructors={instructors} />
+            <InstructorHoverGrid instructors={instructors} wishedInstructorIds={wishedInstructorIds} />
           </div>
         )}
 

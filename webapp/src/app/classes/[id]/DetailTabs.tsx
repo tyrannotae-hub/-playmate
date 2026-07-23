@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Review, TeamClass } from "@/lib/types";
+import InstructorWishlistButton from "@/components/InstructorWishlistButton";
 
 const TABS = ["프로필", "상세소개", "시간표", "리뷰"] as const;
 type Tab = (typeof TABS)[number];
@@ -10,11 +11,14 @@ type Tab = (typeof TABS)[number];
 export default function DetailTabs({
   item,
   reviews,
+  wishedInstructorIds = [],
 }: {
   item: TeamClass;
   reviews: Review[];
+  wishedInstructorIds?: string[];
 }) {
   const [tab, setTab] = useState<Tab>("프로필");
+  const wishedInstructorSet = new Set(wishedInstructorIds);
 
   return (
     <div>
@@ -50,9 +54,19 @@ export default function DetailTabs({
                     />
                   </div>
                 )}
-                <div>
-                  <p className="text-xs font-bold text-muted">담당 코치</p>
-                  <p className="mt-1 text-base font-bold">{instructor.name}</p>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold text-muted">담당 코치</p>
+                      <p className="mt-1 text-base font-bold">{instructor.name}</p>
+                    </div>
+                    <InstructorWishlistButton
+                      instructorId={instructor.id}
+                      initialWished={wishedInstructorSet.has(instructor.id)}
+                      initialCount={instructor.wishCount}
+                      size="sm"
+                    />
+                  </div>
                   {instructor.certified && (
                     <p className="btn-label mt-2 inline-flex items-center gap-1.5 rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
                       🏅 {instructor.certifiedBy} 인증완료
