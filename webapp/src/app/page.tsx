@@ -5,16 +5,25 @@ import ScrollSection from "@/components/ScrollSection";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
-import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSports } from "@/lib/data";
+import InstructorHoverGrid from "@/components/InstructorHoverGrid";
+import {
+  getAllClasses,
+  getCurrentParent,
+  getFeaturedInstructors,
+  getMyChildren,
+  getMyWishlistIds,
+  getSports,
+} from "@/lib/data";
 import { cardClass } from "@/lib/ui";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [classes, sports, user] = await Promise.all([
+  const [classes, sports, instructors, user] = await Promise.all([
     getAllClasses(),
     getSports(),
+    getFeaturedInstructors(),
     getCurrentParent(),
   ]);
   const [children, wishedIds] = user
@@ -80,6 +89,13 @@ export default async function HomePage() {
             <p className="px-4 py-6 text-sm text-muted">곧 클래스가 열려요.</p>
           )}
         </div>
+
+        {instructors.length > 0 && (
+          <div className="mt-8">
+            <h2 className="mb-3 px-4 text-base font-bold">🙋 우리 지도자들</h2>
+            <InstructorHoverGrid instructors={instructors} />
+          </div>
+        )}
 
         {browseClasses.length > 0 && (
           <div className="mt-8 px-4">

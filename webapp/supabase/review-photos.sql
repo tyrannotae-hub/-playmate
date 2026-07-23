@@ -11,6 +11,12 @@ insert into storage.buckets (id, name, public)
 values ('review-photos', 'review-photos', true)
 on conflict (id) do nothing;
 
+-- 재실행해도 안전하도록 기존 정책이 있으면 먼저 지우고 다시 생성
+drop policy if exists "review photos readable by all" on storage.objects;
+drop policy if exists "parent uploads own review photo" on storage.objects;
+drop policy if exists "parent updates own review photo" on storage.objects;
+drop policy if exists "parent deletes own review photo" on storage.objects;
+
 create policy "review photos readable by all" on storage.objects
   for select using (bucket_id = 'review-photos');
 

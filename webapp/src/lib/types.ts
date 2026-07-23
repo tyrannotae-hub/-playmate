@@ -105,6 +105,17 @@ export type MyReview = {
   createdAt: string;
 };
 
+export type FeaturedInstructor = {
+  id: string;
+  name: string;
+  careerYears: number;
+  certified: boolean;
+  certifiedBy?: string;
+  profileImageUrl: string;
+  facilityId: string;
+  facilityName: string;
+};
+
 export type ClubOwner = {
   id: string;
   name: string;

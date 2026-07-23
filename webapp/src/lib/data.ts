@@ -6,6 +6,7 @@ import {
   Child,
   FacilityHome,
   FacilityInstructor,
+  FeaturedInstructor,
   MyReview,
   ParentProfile,
   Review,
@@ -217,6 +218,33 @@ export async function getReviewsForClass(classId: string): Promise<Review[]> {
     photoUrls: r.photo_urls ?? [],
     createdAt: r.created_at,
   }));
+}
+
+// 홈 화면 "우리 지도자들" 섹션용: 프로필 사진이 있는 인증 강사 위주로 노출
+export async function getFeaturedInstructors(): Promise<FeaturedInstructor[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("instructors")
+    .select(
+      "id, name, career_years, certification_verified, certified_by, profile_image_url, facility:facilities(id, name)"
+    )
+    .not("profile_image_url", "is", null)
+    .order("career_years", { ascending: false })
+    .limit(10);
+
+  return (data ?? []).map((i) => {
+    const facility = i.facility as unknown as { id: string; name: string } | null;
+    return {
+      id: i.id,
+      name: i.name,
+      careerYears: i.career_years ?? 0,
+      certified: i.certification_verified ?? false,
+      certifiedBy: i.certified_by ?? undefined,
+      profileImageUrl: i.profile_image_url ?? "",
+      facilityId: facility?.id ?? "",
+      facilityName: facility?.name ?? "",
+    };
+  });
 }
 
 export async function getCurrentParent() {
