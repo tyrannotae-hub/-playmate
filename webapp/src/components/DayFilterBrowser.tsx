@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { TeamClass } from "@/lib/types";
+import { Sport, TeamClass } from "@/lib/types";
 import { sportEmoji } from "@/lib/sport-meta";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
@@ -22,9 +22,11 @@ function timeSlotOf(timeLabel: string): Exclude<TimeSlot, "전체"> {
 
 export default function DayFilterBrowser({
   classes,
+  sports = [],
   wishedIds = [],
 }: {
   classes: TeamClass[];
+  sports?: Sport[];
   wishedIds?: string[];
 }) {
   const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
@@ -33,6 +35,7 @@ export default function DayFilterBrowser({
   const [day, setDay] = useState<(typeof DAYS)[number]>(DAYS[todayIdx]);
   const [time, setTime] = useState<TimeSlot>("전체");
   const [region, setRegion] = useState("all");
+  const [sportId, setSportId] = useState("all");
 
   const regions = useMemo(() => {
     const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
@@ -50,15 +53,28 @@ export default function DayFilterBrowser({
       .filter((row): row is { item: TeamClass; schedule: TeamClass["schedules"][number] } => {
         if (!row) return false;
         if (region !== "all" && row.item.facility.region !== region) return false;
+        if (sportId !== "all" && row.item.sportId !== sportId) return false;
         return true;
       });
-  }, [classes, day, time, region]);
+  }, [classes, day, time, region, sportId]);
 
   return (
     <div className="mt-8">
       <h2 className="mb-3 px-4 text-base font-bold">📅 무슨 요일이 편하세요?</h2>
 
       <div className="flex gap-1.5 overflow-x-auto px-4 pb-1">
+        <select
+          value={sportId}
+          onChange={(e) => setSportId(e.target.value)}
+          className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
+        >
+          <option value="all">전체 종목</option>
+          {sports.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.emoji} {s.name}
+            </option>
+          ))}
+        </select>
         {DAYS.map((d, i) => (
           <button
             key={d}

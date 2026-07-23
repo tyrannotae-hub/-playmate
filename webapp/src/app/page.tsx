@@ -62,19 +62,15 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Link href="/recommend" className={cardClass("transition hover:border-rink")}>
-              <div className="text-xs font-bold text-muted">종목을 모르겠어요</div>
-              <div className="mt-1 text-sm font-extrabold text-rink-deep">추천받기 →</div>
-            </Link>
-            <Link href="/search" className={cardClass("transition hover:border-rink")}>
-              <div className="text-xs font-bold text-muted">종목을 이미 알아요</div>
-              <div className="mt-1 text-sm font-extrabold text-rink-deep">바로 검색 →</div>
-            </Link>
-          </div>
+          <Link href="/recommend" className={cardClass("block transition hover:border-rink")}>
+            <div className="text-xs font-bold text-muted">종목을 모르겠어요</div>
+            <div className="mt-1 text-sm font-extrabold text-rink-deep">추천받기 →</div>
+          </Link>
         </div>
 
-        {classes.length > 0 && <DayFilterBrowser classes={classes} wishedIds={wishedIds} />}
+        {classes.length > 0 && (
+          <DayFilterBrowser classes={classes} sports={sports} wishedIds={wishedIds} />
+        )}
 
         {sports.length > 0 && (
           <ScrollSection title="🏷️ 종목별로 둘러보기">
