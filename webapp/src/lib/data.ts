@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import {
+  ActiveClass,
   AppNotification,
   Booking,
   Child,
   FacilityHome,
   FacilityInstructor,
+  MyReview,
   ParentProfile,
   Review,
   Sport,
@@ -301,6 +303,103 @@ export async function getMyBookings(): Promise<Booking[]> {
 export async function getBookingById(id: string): Promise<Booking | null> {
   const bookings = await getMyBookings();
   return bookings.find((b) => b.id === id) ?? null;
+}
+
+// 마이페이지 최상단 "수강중인 클래스" 섹션용: confirmed 상태 예약의 클래스만 (userId 옵션으로 중복 auth.getUser() 방지)
+export async function getMyActiveClasses(userId?: string): Promise<ActiveClass[]> {
+  const supabase = await createClient();
+
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+    uid = user.id;
+  }
+
+  const { data } = await supabase
+    .from("bookings")
+    .select(
+      "id, team_class_id, team_class:teams_classes(name, sport_id, class_images(url, sort_order), facility:facilities(name)), class_schedule:class_schedules(day_label, time_label)"
+    )
+    .eq("status", "confirmed")
+    .order("requested_at", { ascending: false });
+
+  return (data ?? []).map((b) => {
+    const teamClass = b.team_class as unknown as {
+      name: string;
+      sport_id: string;
+      class_images: { url: string; sort_order: number }[];
+      facility: { name: string } | null;
+    } | null;
+    const schedule = b.class_schedule as unknown as {
+      day_label: string;
+      time_label: string;
+    } | null;
+
+    return {
+      bookingId: b.id,
+      classId: b.team_class_id,
+      name: teamClass?.name ?? "",
+      facilityName: teamClass?.facility?.name ?? "",
+      sportId: teamClass?.sport_id ?? "",
+      images: [...(teamClass?.class_images ?? [])]
+        .sort((a, c) => a.sort_order - c.sort_order)
+        .map((img) => img.url),
+      scheduleLabel: schedule ? `${schedule.day_label} ${schedule.time_label}` : "",
+    };
+  });
+}
+
+// 마이페이지 "내 리뷰" 섹션용: reviews.target_id는 target_type별 폴리모픽 참조라 FK 임베드가 안 되므로 2단계 조회
+export async function getMyReviews(userId?: string): Promise<MyReview[]> {
+  const supabase = await createClient();
+
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+    uid = user.id;
+  }
+
+  const { data } = await supabase
+    .from("reviews")
+    .select("id, target_id, rating, content, created_at")
+    .eq("target_type", "team_class")
+    .eq("parent_id", uid)
+    .order("created_at", { ascending: false });
+
+  const reviews = data ?? [];
+  if (reviews.length === 0) return [];
+
+  const classIds = [...new Set(reviews.map((r) => r.target_id))];
+  const { data: classRows } = await supabase
+    .from("teams_classes")
+    .select("id, name, facility:facilities(name)")
+    .in("id", classIds);
+
+  const classMap = new Map(
+    (classRows ?? []).map((c) => {
+      const facility = c.facility as unknown as { name: string } | null;
+      return [c.id, { name: c.name, facilityName: facility?.name ?? "" }] as const;
+    })
+  );
+
+  return reviews.map((r) => {
+    const cls = classMap.get(r.target_id);
+    return {
+      id: r.id,
+      classId: r.target_id,
+      className: cls?.name ?? "",
+      facilityName: cls?.facilityName ?? "",
+      rating: r.rating,
+      content: r.content ?? "",
+      createdAt: r.created_at,
+    };
+  });
 }
 
 export async function getMyWishlistIds(userId?: string): Promise<string[]> {
