@@ -1,10 +1,5 @@
 import Link from "next/link";
-import {
-  getCurrentClubOwner,
-  getMyClasses,
-  getMyClubBookings,
-  getMyFacility,
-} from "@/lib/club-data";
+import { getCurrentClubOwner, getMyClubBookings, getMyFacility } from "@/lib/club-data";
 import BookingRow from "@/components/club/BookingRow";
 import { cardClass } from "@/lib/ui";
 
@@ -12,32 +7,46 @@ export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
   if (!owner) return null;
 
-  const [facility, classes, bookings] = await Promise.all([
+  const [facility, bookings] = await Promise.all([
     getMyFacility(owner.facilityId),
-    getMyClasses(owner.facilityId),
     getMyClubBookings(owner.facilityId),
   ]);
   const isSoloCoach = facility?.ownerType === "solo_coach";
 
   const pending = bookings.filter((b) => b.status === "requested");
   const confirmed = bookings.filter((b) => b.status === "confirmed");
+  const completed = bookings.filter((b) => b.status === "completed");
+  const cancelled = bookings.filter((b) => b.status === "cancelled");
 
   return (
     <>
+      <p className="mb-2.5 text-sm font-bold text-muted">예약 현황</p>
       <div className="grid grid-cols-3 gap-2.5">
         <div className={cardClass("text-center")}>
-          <p className="text-2xl font-extrabold">{classes.length}</p>
-          <p className="mt-1 text-xs text-muted">운영 클래스</p>
-        </div>
-        <div className={cardClass("text-center")}>
           <p className="text-2xl font-extrabold text-warn">{pending.length}</p>
-          <p className="mt-1 text-xs text-muted">승인 대기</p>
+          <p className="mt-1 text-xs text-muted">확인중</p>
         </div>
         <div className={cardClass("text-center")}>
           <p className="text-2xl font-extrabold text-good">{confirmed.length}</p>
-          <p className="mt-1 text-xs text-muted">확정 예약</p>
+          <p className="mt-1 text-xs text-muted">승인</p>
+        </div>
+        <div className={cardClass("text-center")}>
+          <p className="text-2xl font-extrabold">{completed.length}</p>
+          <p className="mt-1 text-xs text-muted">완료</p>
         </div>
       </div>
+
+      <p className="mb-2.5 mt-6 text-sm font-bold text-muted">취소·변경 현황</p>
+      <Link
+        href="/club/bookings"
+        className={cardClass("flex items-center justify-between transition hover:border-rink")}
+      >
+        <span>
+          <span className="block text-2xl font-extrabold text-muted">{cancelled.length}</span>
+          <span className="mt-1 block text-xs text-muted">취소된 예약</span>
+        </span>
+        <span className="text-xs font-bold text-rink">전체 보기 →</span>
+      </Link>
 
       <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
         <p className="font-bold">{isSoloCoach ? "프로필 꾸미기" : "클럽 홈 꾸미기"}</p>
