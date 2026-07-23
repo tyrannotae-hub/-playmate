@@ -2,46 +2,51 @@
 -- 되돌릴 수 없으니 실행 전 대상이 맞는지 한번 더 확인하세요.
 --
 -- 삭제 대상:
---   1) 아이스웍스 역삼점 시설 + 거기 딸린 클래스/스케줄/예약/리뷰 전부
---   2) testclub123, testcoach456 로그인 계정 (club_owners는 auth.users에
---      on delete cascade 걸려있어서 auth.users만 지우면 같이 지워짐)
---
--- 주의: testcoach456(개인 코치 셀프 온보딩 계정)에 연결된 "본인 명의 시설"과
--- 거기 등록된 테스트 클래스는 이 스크립트가 지우지 않습니다 — 로그인 계정만
--- 지워지고 시설/클래스 데이터는 주인 없는 상태로 검색에 남을 수 있어요.
--- 그것까지 지우고 싶으면 별도로 알려주세요.
+--   1) testclub123, testcoach456 로그인 계정
+--   2) 아이스웍스 역삼점 시설 + 거기 딸린 클래스/스케줄/예약/리뷰 전부
+--   3) testcoach456(개인 코치 셀프 온보딩) 본인 명의 시설 + 거기 딸린
+--      클래스/스케줄/예약/리뷰 전부
 
 do $$
 declare
-  v_facility_id uuid;
+  v_iceworks_id uuid;
+  v_solo_coach_facility_id uuid;
 begin
-  select id into v_facility_id from facilities where name = '아이스웍스 역삼점';
+  select id into v_iceworks_id from facilities where name = '아이스웍스 역삼점';
+  select facility_id into v_solo_coach_facility_id from club_owners where username = 'testcoach456';
 
-  if v_facility_id is not null then
-    -- 리뷰 (해당 시설 클래스에 달린 예약의 리뷰)
+  -- 로그인 계정 먼저 삭제 (club_owners는 auth.users에 on delete cascade라 같이 지워짐 —
+  -- 이래야 club_owners.facility_id가 시설을 참조하고 있어서 생기는 FK 에러를 피할 수 있음)
+  delete from auth.users where id in (
+    select id from club_owners where username in ('testclub123', 'testcoach456')
+  );
+
+  -- 시설 2곳(아이스웍스 역삼점 + testcoach456 개인 시설)에 딸린 데이터 전부 삭제
+  if v_iceworks_id is not null then
     delete from reviews where booking_id in (
       select b.id from bookings b
       join teams_classes tc on tc.id = b.team_class_id
-      where tc.facility_id = v_facility_id
+      where tc.facility_id = v_iceworks_id
     );
-
-    -- 예약 (class_schedules/teams_classes를 지우기 전에 먼저 지워야 FK 에러 안 남)
     delete from bookings where team_class_id in (
-      select id from teams_classes where facility_id = v_facility_id
+      select id from teams_classes where facility_id = v_iceworks_id
     );
+    delete from teams_classes where facility_id = v_iceworks_id;
+    delete from instructors where facility_id = v_iceworks_id;
+    delete from facilities where id = v_iceworks_id;
+  end if;
 
-    -- 클래스 (schedules/class_instructors/class_images/wishlists는 on delete cascade로 자동 삭제)
-    delete from teams_classes where facility_id = v_facility_id;
-
-    -- 강사
-    delete from instructors where facility_id = v_facility_id;
-
-    -- 시설 (facility_notices는 on delete cascade로 자동 삭제)
-    delete from facilities where id = v_facility_id;
+  if v_solo_coach_facility_id is not null then
+    delete from reviews where booking_id in (
+      select b.id from bookings b
+      join teams_classes tc on tc.id = b.team_class_id
+      where tc.facility_id = v_solo_coach_facility_id
+    );
+    delete from bookings where team_class_id in (
+      select id from teams_classes where facility_id = v_solo_coach_facility_id
+    );
+    delete from teams_classes where facility_id = v_solo_coach_facility_id;
+    delete from instructors where facility_id = v_solo_coach_facility_id;
+    delete from facilities where id = v_solo_coach_facility_id;
   end if;
 end $$;
-
--- 테스트 로그인 계정 (club_owners는 auth.users 삭제 시 cascade로 같이 삭제됨)
-delete from auth.users where id in (
-  select id from club_owners where username in ('testclub123', 'testcoach456')
-);
