@@ -9,6 +9,7 @@ import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export default async function ClassDetailPage({
   params,

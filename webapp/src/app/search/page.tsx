@@ -3,6 +3,7 @@ import SearchClient from "./SearchClient";
 import { getAllClasses, getCurrentParent, getMyProfile, getMyWishlistIds, getSports } from "@/lib/data";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export default async function SearchPage() {
   const [classes, sports, user] = await Promise.all([

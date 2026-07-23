@@ -9,6 +9,7 @@ import { getAllClasses, getCurrentParent, getMyChildren, getMyWishlistIds, getSp
 import { cardClass } from "@/lib/ui";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [classes, sports, user] = await Promise.all([
