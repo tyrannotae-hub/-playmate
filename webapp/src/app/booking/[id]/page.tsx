@@ -3,6 +3,7 @@ import BookingForm from "./BookingForm";
 import { getClassById, getCurrentParent, getMyChildren } from "@/lib/data";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export default async function BookingPage({
   params,
@@ -11,10 +12,8 @@ export default async function BookingPage({
 }) {
   const { id } = await params;
 
-  const user = await getCurrentParent();
+  const [user, item] = await Promise.all([getCurrentParent(), getClassById(id)]);
   if (!user) redirect(`/login?next=/booking/${id}`);
-
-  const item = await getClassById(id);
   if (!item) notFound();
 
   const children = await getMyChildren();

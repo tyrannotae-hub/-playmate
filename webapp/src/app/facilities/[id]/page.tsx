@@ -98,11 +98,8 @@ export default async function FacilityHomePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await getCurrentParent();
-  const [facility, wishedInstructorIds] = await Promise.all([
-    getFacilityHome(id),
-    user ? getMyInstructorWishlistIds(user.id) : Promise.resolve([]),
-  ]);
+  const [user, facility] = await Promise.all([getCurrentParent(), getFacilityHome(id)]);
+  const wishedInstructorIds = user ? await getMyInstructorWishlistIds(user.id) : [];
   if (!facility) notFound();
 
   const wishedInstructorSet = new Set(wishedInstructorIds);

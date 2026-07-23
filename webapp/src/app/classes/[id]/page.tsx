@@ -22,10 +22,13 @@ export default async function ClassDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item = await getClassById(id);
+  const [item, reviews, user] = await Promise.all([
+    getClassById(id),
+    getReviewsForClass(id),
+    getCurrentParent(),
+  ]);
   if (!item) notFound();
 
-  const [reviews, user] = await Promise.all([getReviewsForClass(item.id), getCurrentParent()]);
   const [wishedIds, wishedInstructorIds] = user
     ? await Promise.all([getMyWishlistIds(user.id), getMyInstructorWishlistIds(user.id)])
     : [[], []];
