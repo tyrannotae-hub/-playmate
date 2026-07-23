@@ -1,0 +1,135 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { TeamClass } from "@/lib/types";
+import { sportEmoji } from "@/lib/sport-meta";
+import { regionLabel } from "@/lib/region-meta";
+import { buttonClass } from "@/lib/ui";
+import WishlistButton from "@/components/WishlistButton";
+
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+const TIME_SLOTS = ["전체", "오전", "오후", "저녁"] as const;
+type TimeSlot = (typeof TIME_SLOTS)[number];
+
+function timeSlotOf(timeLabel: string): Exclude<TimeSlot, "전체"> {
+  const startHour = parseInt(timeLabel.split(":")[0], 10);
+  if (startHour < 12) return "오전";
+  if (startHour < 18) return "오후";
+  return "저녁";
+}
+
+export default function DayFilterBrowser({
+  classes,
+  wishedIds = [],
+}: {
+  classes: TeamClass[];
+  wishedIds?: string[];
+}) {
+  const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
+  const todayIdx = new Date().getDay();
+
+  const [day, setDay] = useState<(typeof DAYS)[number]>(DAYS[todayIdx]);
+  const [time, setTime] = useState<TimeSlot>("전체");
+  const [region, setRegion] = useState("all");
+
+  const regions = useMemo(() => {
+    const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
+    return codes.map((code) => ({ code, label: regionLabel(code) }));
+  }, [classes]);
+
+  const matches = useMemo(() => {
+    return classes
+      .map((c) => {
+        const schedule = c.schedules.find(
+          (s) => s.dayLabel.includes(day) && (time === "전체" || timeSlotOf(s.timeLabel) === time)
+        );
+        return schedule ? { item: c, schedule } : null;
+      })
+      .filter((row): row is { item: TeamClass; schedule: TeamClass["schedules"][number] } => {
+        if (!row) return false;
+        if (region !== "all" && row.item.facility.region !== region) return false;
+        return true;
+      });
+  }, [classes, day, time, region]);
+
+  return (
+    <div className="mt-8">
+      <h2 className="mb-3 px-4 text-base font-bold">📅 무슨 요일이 편하세요?</h2>
+
+      <div className="flex gap-2 overflow-x-auto px-4 pb-1">
+        {DAYS.map((d, i) => (
+          <button
+            key={d}
+            onClick={() => setDay(d)}
+            className={`flex h-12 w-12 flex-shrink-0 flex-col items-center justify-center rounded-full text-sm font-bold transition ${
+              day === d ? "bg-rink text-white" : "border border-line text-muted"
+            }`}
+          >
+            {d}
+            <span className="text-[9px] font-normal leading-none">{i === todayIdx ? "오늘" : ""}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+        {TIME_SLOTS.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTime(t)}
+            className={buttonClass({
+              variant: time === t ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-shrink-0",
+            })}
+          >
+            {t}
+          </button>
+        ))}
+        <select
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          className="flex-shrink-0 rounded-md border border-line bg-surface px-3 py-2 text-xs font-bold"
+        >
+          <option value="all">전체 지역</option>
+          {regions.map((r) => (
+            <option key={r.code} value={r.code}>
+              {r.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mt-4 flex flex-col divide-y divide-line border-y border-line px-4">
+        {matches.map(({ item, schedule }) => (
+          <Link
+            key={item.id}
+            href={`/classes/${item.id}`}
+            className="flex items-center gap-3 py-3"
+          >
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md bg-rink-soft text-xl">
+              {item.images[0] ? (
+                <Image src={item.images[0]} alt="" fill sizes="56px" className="object-cover" />
+              ) : (
+                sportEmoji(item.sportId)
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-rink-deep">
+                {day}요일 {schedule.timeLabel}
+              </p>
+              <p className="truncate text-sm font-bold">{item.name}</p>
+              <p className="truncate text-xs text-muted">{item.facility.name}</p>
+            </div>
+            <WishlistButton classId={item.id} initialWished={wishedSet.has(item.id)} size="sm" />
+          </Link>
+        ))}
+        {matches.length === 0 && (
+          <p className="py-6 text-center text-sm text-muted">이 조건에 맞는 클래스가 없어요.</p>
+        )}
+      </div>
+    </div>
+  );
+}

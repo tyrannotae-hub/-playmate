@@ -6,6 +6,7 @@ import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
+import DayFilterBrowser from "@/components/DayFilterBrowser";
 import {
   getAllClasses,
   getCurrentParent,
@@ -72,6 +73,8 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+
+        {classes.length > 0 && <DayFilterBrowser classes={classes} wishedIds={wishedIds} />}
 
         {sports.length > 0 && (
           <ScrollSection title="🏷️ 종목별로 둘러보기">
