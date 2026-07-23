@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import SportIcon from "@/components/icons/SportIcon";
+import ClassSearchBox from "@/components/ClassSearchBox";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
@@ -65,9 +66,13 @@ export default async function SportDetailPage({
           </div>
         </div>
 
+        <div className="mt-4">
+          <ClassSearchBox classes={classes} />
+        </div>
+
         {popular.length > 0 && (
           <div className="mt-8" id="popular">
-            <h2 className="mb-3 px-4 text-lg font-bold">지금 인기있는 팀</h2>
+            <h2 className="mb-3 px-4 text-lg font-bold">지금 인기있는 클래스</h2>
             <div className="px-4">
               <HoverExpand_001 classes={popular} />
             </div>

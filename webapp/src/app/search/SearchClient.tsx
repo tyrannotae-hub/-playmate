@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
+import ClassSearchBox from "@/components/ClassSearchBox";
 import SportIcon from "@/components/icons/SportIcon";
 import { Sport, TeamClass } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
@@ -56,6 +57,10 @@ export default function SearchClient({
         back
       />
       <main className="pb-10 pt-3">
+        <div className="mb-3">
+          <ClassSearchBox classes={classes} />
+        </div>
+
         <div className="mb-3 flex gap-2 overflow-x-auto px-4 pb-1">
           <button
             onClick={() => setSportId("all")}
