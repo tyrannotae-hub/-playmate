@@ -104,7 +104,7 @@ export default function NoticesManager({
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="font-bold">{n.title}</p>
-                <p className="mt-1 text-sm text-muted">{n.content}</p>
+                <p className="mt-1 whitespace-pre-line text-sm text-muted">{n.content}</p>
                 <p className="mt-1.5 text-[11px] text-muted">
                   {new Date(n.createdAt).toLocaleDateString("ko-KR")}
                 </p>

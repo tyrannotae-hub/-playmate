@@ -108,7 +108,7 @@ export default async function MyPage() {
                 </span>
               </div>
               <p className="mt-0.5 text-xs text-muted">{r.facilityName}</p>
-              {r.content && <p className="mt-2 text-sm">{r.content}</p>}
+              {r.content && <p className="mt-2 whitespace-pre-line text-sm">{r.content}</p>}
             </div>
           ))}
           {reviews.length === 0 && (

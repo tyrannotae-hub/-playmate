@@ -119,7 +119,7 @@ export default function DetailTabs({
                   <p className="text-sm font-bold">{r.parentName}</p>
                   <p className="text-sm font-bold text-rink-deep">★ {r.rating}</p>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{r.content}</p>
+                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">{r.content}</p>
                 {r.photoUrls.length > 0 && (
                   <div className="mt-3 flex gap-2 overflow-x-auto">
                     {r.photoUrls.map((url) => (

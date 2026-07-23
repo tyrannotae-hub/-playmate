@@ -69,7 +69,7 @@ function InstructorCard({ instructor }: { instructor: FacilityHome["instructors"
           </p>
         )}
         {instructor.bio && (
-          <p className="mt-2 text-sm leading-relaxed text-muted">{instructor.bio}</p>
+          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">{instructor.bio}</p>
         )}
       </div>
     </div>
@@ -130,7 +130,7 @@ export default async function FacilityHomePage({
               <p className="mb-2.5 text-sm font-bold text-muted">
                 {facility.ownerType === "solo_coach" ? "코치 소개" : "클럽 소개"}
               </p>
-              <p className="text-sm leading-relaxed">{facility.description}</p>
+              <p className="whitespace-pre-line text-sm leading-relaxed">{facility.description}</p>
             </div>
           )}
 
@@ -175,7 +175,7 @@ export default async function FacilityHomePage({
                 {facility.notices.map((n) => (
                   <div key={n.id} className="py-3 first:pt-0 last:pb-0">
                     <p className="font-bold">{n.title}</p>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted">{n.content}</p>
+                    <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-muted">{n.content}</p>
                     <p className="mt-1.5 text-[11px] text-muted">
                       {new Date(n.createdAt).toLocaleDateString("ko-KR")}
                     </p>

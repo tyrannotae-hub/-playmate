@@ -42,8 +42,8 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <p className="font-bold">{facility.name}</p>
         <p className="mt-1 text-sm text-muted">{address || "주소 미입력"}</p>
         <p className="mt-1 text-sm text-muted">{phone || "연락처 미입력"}</p>
-        {description && <p className="mt-2 text-sm">{description}</p>}
-        <p className="mt-1 text-sm text-muted">
+        {description && <p className="mt-2 whitespace-pre-line text-sm">{description}</p>}
+        <p className="mt-1 break-all text-sm text-muted">
           {instagramUrl || "인스타그램 링크 미입력"}
         </p>
         <div className="mt-3 flex items-center gap-2">
