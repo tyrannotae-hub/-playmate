@@ -5,13 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FeaturedInstructor } from "@/lib/types";
+import InstructorWishlistButton from "@/components/InstructorWishlistButton";
 
 export default function InstructorHoverGrid({
   instructors,
+  wishedInstructorIds = [],
 }: {
   instructors: FeaturedInstructor[];
+  wishedInstructorIds?: string[];
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const wishedSet = new Set(wishedInstructorIds);
 
   return (
     <div className="flex gap-3 overflow-x-auto px-4 pb-1">
@@ -36,6 +40,15 @@ export default function InstructorHoverGrid({
               sizes="128px"
               className="object-cover"
             />
+
+            <div className="absolute right-1.5 top-1.5 z-10">
+              <InstructorWishlistButton
+                instructorId={item.id}
+                initialWished={wishedSet.has(item.id)}
+                initialCount={item.wishCount}
+                size="sm"
+              />
+            </div>
 
             <AnimatePresence>
               {active && (

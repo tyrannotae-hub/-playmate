@@ -81,6 +81,8 @@ export async function getMyInstructors(facilityId: string): Promise<FacilityInst
     certifiedBy: i.certified_by ?? undefined,
     bio: i.bio ?? "",
     profileImageUrl: i.profile_image_url ?? "",
+    // 클럽 대시보드(본인 지도자 관리 화면)에서는 찜 개수를 노출하지 않아 0으로 둔다.
+    wishCount: 0,
   }));
 }
 

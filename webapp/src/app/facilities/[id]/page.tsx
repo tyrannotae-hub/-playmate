@@ -2,10 +2,12 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
-import { getFacilityHome } from "@/lib/data";
+import InstructorWishlistButton from "@/components/InstructorWishlistButton";
+import { getCurrentParent, getFacilityHome, getMyInstructorWishlistIds } from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 const DAY_ORDER = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -44,7 +46,13 @@ function InstagramIcon() {
   );
 }
 
-function InstructorCard({ instructor }: { instructor: FacilityHome["instructors"][number] }) {
+function InstructorCard({
+  instructor,
+  wished,
+}: {
+  instructor: FacilityHome["instructors"][number];
+  wished: boolean;
+}) {
   return (
     <div className="flex gap-3 py-3 first:pt-0 last:pb-0">
       {instructor.profileImageUrl ? (
@@ -61,7 +69,15 @@ function InstructorCard({ instructor }: { instructor: FacilityHome["instructors"
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <p className="font-bold">{instructor.name}</p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="font-bold">{instructor.name}</p>
+          <InstructorWishlistButton
+            instructorId={instructor.id}
+            initialWished={wished}
+            initialCount={instructor.wishCount}
+            size="sm"
+          />
+        </div>
         <p className="mt-0.5 text-sm text-muted">경력 {instructor.careerYears}년</p>
         {instructor.certified && (
           <p className="btn-label mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
@@ -82,9 +98,14 @@ export default async function FacilityHomePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const facility = await getFacilityHome(id);
+  const user = await getCurrentParent();
+  const [facility, wishedInstructorIds] = await Promise.all([
+    getFacilityHome(id),
+    user ? getMyInstructorWishlistIds(user.id) : Promise.resolve([]),
+  ]);
   if (!facility) notFound();
 
+  const wishedInstructorSet = new Set(wishedInstructorIds);
   const weeklySchedule = buildWeeklySchedule(facility.classes);
 
   return (
@@ -141,7 +162,7 @@ export default async function FacilityHomePage({
               </p>
               <div className="flex flex-col divide-y divide-line">
                 {facility.instructors.map((i) => (
-                  <InstructorCard key={i.id} instructor={i} />
+                  <InstructorCard key={i.id} instructor={i} wished={wishedInstructorSet.has(i.id)} />
                 ))}
               </div>
             </div>

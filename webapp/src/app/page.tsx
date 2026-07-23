@@ -11,6 +11,7 @@ import {
   getCurrentParent,
   getFeaturedInstructors,
   getMyChildren,
+  getMyInstructorWishlistIds,
   getMyWishlistIds,
   getSports,
 } from "@/lib/data";
@@ -25,9 +26,13 @@ export default async function HomePage() {
     getFeaturedInstructors(),
     getCurrentParent(),
   ]);
-  const [children, wishedIds] = user
-    ? await Promise.all([getMyChildren(), getMyWishlistIds(user.id)])
-    : [[], []];
+  const [children, wishedIds, wishedInstructorIds] = user
+    ? await Promise.all([
+        getMyChildren(),
+        getMyWishlistIds(user.id),
+        getMyInstructorWishlistIds(user.id),
+      ])
+    : [[], [], []];
   const child = children[0];
   const wishedSet = new Set(wishedIds);
 
@@ -112,7 +117,7 @@ export default async function HomePage() {
         {instructors.length > 0 && (
           <div className="mt-8">
             <h2 className="mb-3 px-4 text-lg font-bold">우리 지도자들</h2>
-            <InstructorHoverGrid instructors={instructors} />
+            <InstructorHoverGrid instructors={instructors} wishedInstructorIds={wishedInstructorIds} />
           </div>
         )}
 
