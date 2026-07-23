@@ -84,6 +84,26 @@ export type Booking = {
   scheduleLabel: string;
 };
 
+export type ActiveClass = {
+  bookingId: string;
+  classId: string;
+  name: string;
+  facilityName: string;
+  sportId: string;
+  images: string[];
+  scheduleLabel: string;
+};
+
+export type MyReview = {
+  id: string;
+  classId: string;
+  className: string;
+  facilityName: string;
+  rating: number;
+  content: string;
+  createdAt: string;
+};
+
 export type ClubOwner = {
   id: string;
   name: string;
