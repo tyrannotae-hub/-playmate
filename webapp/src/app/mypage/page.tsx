@@ -1,21 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import TopNav from "@/components/TopNav";
-import StatusBadge from "@/components/StatusBadge";
 import ActiveClassCard from "@/components/ActiveClassCard";
 import LogoutButton from "./LogoutButton";
 import ChildrenSection from "./ChildrenSection";
-import CancelBookingButton from "./CancelBookingButton";
 import PushSubscribeButton from "@/components/PushSubscribeButton";
-import {
-  getCurrentParent,
-  getMyActiveClasses,
-  getMyBookings,
-  getMyChildren,
-  getMyProfile,
-  getMyReviews,
-} from "@/lib/data";
-import { buttonClass, cardClass } from "@/lib/ui";
+import { getCurrentParent, getMyActiveClasses, getMyChildren, getMyProfile } from "@/lib/data";
+import { buttonClass } from "@/lib/ui";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -24,12 +15,10 @@ export default async function MyPage() {
   const user = await getCurrentParent();
   if (!user) redirect("/login?next=/mypage");
 
-  const [profile, children, activeClasses, bookings, reviews] = await Promise.all([
+  const [profile, children, activeClasses] = await Promise.all([
     getMyProfile(user.id),
     getMyChildren(),
     getMyActiveClasses(user.id),
-    getMyBookings(),
-    getMyReviews(user.id),
   ]);
 
   return (
@@ -64,56 +53,27 @@ export default async function MyPage() {
         <p className="mb-2.5 mt-7 text-sm font-bold text-muted">내 자녀</p>
         <ChildrenSection parentId={user.id} initialChildren={children} />
 
-        <p className="mb-2.5 mt-7 text-sm font-bold text-muted">예약 내역</p>
-        <div className="flex flex-col gap-2.5">
-          {bookings.map((b) => (
-            <div key={b.id} className={cardClass()}>
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="font-bold">{b.className}</p>
-                  <p className="mt-0.5 text-xs text-muted">
-                    {b.facilityName} · {b.childName}
-                  </p>
-                  <p className="mt-1 text-xs text-muted">{b.scheduleLabel}</p>
-                </div>
-                <StatusBadge status={b.status} />
-              </div>
-              {b.status === "completed" && (
-                <Link
-                  href={`/review/${b.id}`}
-                  className="btn-label mt-3 inline-block rounded-md bg-rink-soft px-3 py-1.5 text-xs font-bold text-rink-deep"
-                >
-                  리뷰 쓰기
-                </Link>
-              )}
-              {(b.status === "requested" || b.status === "confirmed") && (
-                <CancelBookingButton bookingId={b.id} />
-              )}
-            </div>
-          ))}
-          {bookings.length === 0 && (
-            <p className="py-4 text-sm text-muted">아직 예약 내역이 없어요.</p>
-          )}
-        </div>
-
-        <p className="mb-2.5 mt-7 text-sm font-bold text-muted">내 리뷰</p>
-        <div className="flex flex-col gap-2.5">
-          {reviews.map((r) => (
-            <div key={r.id} className={cardClass()}>
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-bold">{r.className}</p>
-                <span className="text-xs font-bold">
-                  <span className="text-energy">{"★".repeat(r.rating)}</span>
-                  <span className="text-line">{"★".repeat(5 - r.rating)}</span>
-                </span>
-              </div>
-              <p className="mt-0.5 text-xs text-muted">{r.facilityName}</p>
-              {r.content && <p className="mt-2 whitespace-pre-line text-sm">{r.content}</p>}
-            </div>
-          ))}
-          {reviews.length === 0 && (
-            <p className="py-4 text-sm text-muted">아직 작성한 리뷰가 없어요.</p>
-          )}
+        <div className="mt-7 flex flex-col divide-y divide-line border-y border-line">
+          <Link
+            href="/mypage/bookings"
+            className="flex items-center gap-3 py-3.5 transition hover:bg-surface-2"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2 text-muted">
+              <CalendarIcon />
+            </span>
+            <span className="flex-1 text-sm font-bold">예약 내역 전체보기</span>
+            <ChevronIcon />
+          </Link>
+          <Link
+            href="/mypage/reviews"
+            className="flex items-center gap-3 py-3.5 transition hover:bg-surface-2"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2 text-muted">
+              <StarIcon />
+            </span>
+            <span className="flex-1 text-sm font-bold">내가 쓴 리뷰 전체보기</span>
+            <ChevronIcon />
+          </Link>
         </div>
 
         <div className="mt-8 flex gap-2">
@@ -127,5 +87,30 @@ export default async function MyPage() {
         </div>
       </main>
     </>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3.5" y="5" width="17" height="16" rx="2" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3.5 14.8 9.2 21 10.1 16.5 14.5 17.6 20.7 12 17.7 6.4 20.7 7.5 14.5 3 10.1 9.2 9.2Z" />
+    </svg>
+  );
+}
+
+function ChevronIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-line">
+      <path d="m9 6 6 6-6 6" />
+    </svg>
   );
 }
