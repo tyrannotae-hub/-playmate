@@ -6,6 +6,7 @@ import ActiveClassCard from "@/components/ActiveClassCard";
 import LogoutButton from "./LogoutButton";
 import ChildrenSection from "./ChildrenSection";
 import CancelBookingButton from "./CancelBookingButton";
+import PushSubscribeButton from "@/components/PushSubscribeButton";
 import {
   getCurrentParent,
   getMyActiveClasses,
@@ -43,6 +44,10 @@ export default async function MyPage() {
             />
           )}
           <h2 className="text-lg font-extrabold">{profile.name}</h2>
+        </div>
+
+        <div className="mt-4">
+          <PushSubscribeButton />
         </div>
 
         {activeClasses.length > 0 && (
