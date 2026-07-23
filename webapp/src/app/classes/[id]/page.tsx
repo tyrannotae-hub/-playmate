@@ -34,7 +34,7 @@ export default async function ClassDetailPage({
             <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
               {item.facility.name} →
             </Link>
-            <WishlistButton classId={item.id} initialWished={wished} />
+            <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
           </div>
           <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
           <p className="mt-1.5 text-sm text-muted">

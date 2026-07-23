@@ -7,13 +7,16 @@ import { createClient } from "@/lib/supabase/client";
 export default function WishlistButton({
   classId,
   initialWished,
+  initialCount = 0,
   size = "md",
 }: {
   classId: string;
   initialWished: boolean;
+  initialCount?: number;
   size?: "md" | "sm";
 }) {
   const [wished, setWished] = useState(initialWished);
+  const [count, setCount] = useState(initialCount);
   const [pending, setPending] = useState(false);
   const router = useRouter();
 
@@ -39,14 +42,16 @@ export default function WishlistButton({
         .eq("parent_id", user.id)
         .eq("team_class_id", classId);
       setWished(false);
+      setCount((c) => Math.max(0, c - 1));
     } else {
       await supabase.from("wishlists").insert({ parent_id: user.id, team_class_id: classId });
       setWished(true);
+      setCount((c) => c + 1);
     }
     setPending(false);
   }
 
-  const dim = size === "sm" ? "h-7 w-7 text-sm" : "h-9 w-9 text-lg";
+  const dim = size === "sm" ? "h-7 text-sm" : "h-9 text-lg";
 
   return (
     <button
@@ -55,9 +60,12 @@ export default function WishlistButton({
       disabled={pending}
       aria-label={wished ? "찜 해제" : "찜하기"}
       aria-pressed={wished}
-      className={`flex ${dim} flex-shrink-0 items-center justify-center rounded-full bg-surface/90 shadow-card transition disabled:opacity-60`}
+      className={`flex ${dim} flex-shrink-0 items-center gap-1 rounded-full bg-surface/90 px-2 shadow-card transition disabled:opacity-60`}
     >
       <span className={wished ? "text-negative" : "text-muted"}>{wished ? "♥" : "♡"}</span>
+      {count > 0 && (
+        <span className="text-[11px] font-bold leading-none text-muted">{count}</span>
+      )}
     </button>
   );
 }

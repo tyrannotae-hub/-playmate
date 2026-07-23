@@ -44,6 +44,7 @@ export type TeamClass = {
   distanceKm: number;
   rating: number;
   reviewCount: number;
+  wishCount: number;
   schedules: ClassSchedule[];
   description: string;
   images: string[];

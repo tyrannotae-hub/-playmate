@@ -28,7 +28,12 @@ export default function ClassCardCompact({
           <SportIcon sportId={item.sportId} size={30} />
         )}
         <div className="absolute right-1.5 top-1.5">
-          <WishlistButton classId={item.id} initialWished={wished} size="sm" />
+          <WishlistButton
+            classId={item.id}
+            initialWished={wished}
+            initialCount={item.wishCount}
+            size="sm"
+          />
         </div>
       </div>
       <p className="mt-2 truncate text-[11px] font-semibold text-muted">{item.facility.name}</p>

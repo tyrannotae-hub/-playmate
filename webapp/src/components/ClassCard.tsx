@@ -26,7 +26,12 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
             ★ {item.rating}
             <span className="font-normal text-muted">({item.reviewCount})</span>
           </div>
-          <WishlistButton classId={item.id} initialWished={wished} size="sm" />
+          <WishlistButton
+            classId={item.id}
+            initialWished={wished}
+            initialCount={item.wishCount}
+            size="sm"
+          />
         </div>
       </div>
 

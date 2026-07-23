@@ -84,9 +84,21 @@ async function ratingMap() {
   return map;
 }
 
+async function wishCountMap() {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_wishlist_counts");
+
+  const map = new Map<string, number>();
+  ((data ?? []) as { team_class_id: string; count: number }[]).forEach((row) => {
+    map.set(row.team_class_id, row.count);
+  });
+  return map;
+}
+
 function toTeamClass(
   row: RawClass,
-  ratings: Map<string, { sum: number; count: number }>
+  ratings: Map<string, { sum: number; count: number }>,
+  wishCounts: Map<string, number>
 ): TeamClass {
   const agg = ratings.get(row.id);
   const rating = agg ? Math.round((agg.sum / agg.count) * 10) / 10 : 0;
@@ -123,6 +135,7 @@ function toTeamClass(
     distanceKm: DISTANCE_KM[row.facility?.name ?? ""] ?? 1.5,
     rating,
     reviewCount: agg?.count ?? 0,
+    wishCount: wishCounts.get(row.id) ?? 0,
     schedules: row.class_schedules.map((s) => ({
       id: s.id,
       dayLabel: s.day_label,
@@ -140,17 +153,18 @@ function toTeamClass(
 
 export async function getAllClasses(): Promise<TeamClass[]> {
   const supabase = await createClient();
-  const [{ data, error }, ratings] = await Promise.all([
+  const [{ data, error }, ratings, wishCounts] = await Promise.all([
     supabase
       .from("teams_classes")
       .select(
         "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
       ),
     ratingMap(),
+    wishCountMap(),
   ]);
 
   if (error || !data) return [];
-  return (data as unknown as RawClass[]).map((r) => toTeamClass(r, ratings));
+  return (data as unknown as RawClass[]).map((r) => toTeamClass(r, ratings, wishCounts));
 }
 
 export async function getClassById(id: string): Promise<TeamClass | null> {

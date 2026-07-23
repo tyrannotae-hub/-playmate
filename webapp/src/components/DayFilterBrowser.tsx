@@ -141,7 +141,12 @@ export default function DayFilterBrowser({
               <p className="truncate text-sm font-bold">{item.name}</p>
               <p className="truncate text-xs text-muted">{item.facility.name}</p>
             </div>
-            <WishlistButton classId={item.id} initialWished={wishedSet.has(item.id)} size="sm" />
+            <WishlistButton
+              classId={item.id}
+              initialWished={wishedSet.has(item.id)}
+              initialCount={item.wishCount}
+              size="sm"
+            />
           </Link>
         ))}
         {matches.length === 0 && (
