@@ -58,7 +58,7 @@ export default function WishlistButton({
       type="button"
       onClick={toggle}
       disabled={pending}
-      aria-label={wished ? "찜 해제" : "찜하기"}
+      aria-label={wished ? "좋아요 취소" : "좋아요"}
       aria-pressed={wished}
       className={`flex ${dim} flex-shrink-0 items-center gap-1 rounded-full bg-surface/90 px-2 shadow-card transition disabled:opacity-60`}
     >
