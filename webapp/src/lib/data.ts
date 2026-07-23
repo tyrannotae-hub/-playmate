@@ -520,6 +520,37 @@ export async function getMyInstructorWishlistIds(userId?: string): Promise<strin
   return (data ?? []).map((w) => w.instructor_id);
 }
 
+export async function getMyWishlistedInstructors(userId?: string): Promise<FeaturedInstructor[]> {
+  const supabase = await createClient();
+  const [ids, instructorWishCounts] = await Promise.all([
+    getMyInstructorWishlistIds(userId),
+    instructorWishCountMap(),
+  ]);
+  if (ids.length === 0) return [];
+
+  const { data } = await supabase
+    .from("instructors")
+    .select(
+      "id, name, career_years, certification_verified, certified_by, profile_image_url, facility:facilities(id, name)"
+    )
+    .in("id", ids);
+
+  return (data ?? []).map((i) => {
+    const facility = i.facility as unknown as { id: string; name: string } | null;
+    return {
+      id: i.id,
+      name: i.name,
+      careerYears: i.career_years ?? 0,
+      certified: i.certification_verified ?? false,
+      certifiedBy: i.certified_by ?? undefined,
+      profileImageUrl: i.profile_image_url ?? "",
+      facilityId: facility?.id ?? "",
+      facilityName: facility?.name ?? "",
+      wishCount: instructorWishCounts.get(i.id) ?? 0,
+    };
+  });
+}
+
 export async function getMyNotifications(userId?: string): Promise<AppNotification[]> {
   const supabase = await createClient();
 
