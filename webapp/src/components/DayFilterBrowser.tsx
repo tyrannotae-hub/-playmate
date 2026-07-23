@@ -60,7 +60,7 @@ export default function DayFilterBrowser({
 
   return (
     <div className="mt-8">
-      <h2 className="mb-3 px-4 text-base font-bold">📅 무슨 요일이 편하세요?</h2>
+      <h2 className="mb-3 px-4 text-lg font-bold">무슨 요일이 편하세요?</h2>
 
       <div className="flex gap-2 overflow-x-auto px-4 pb-1">
         <select

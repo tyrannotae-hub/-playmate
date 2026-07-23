@@ -67,19 +67,19 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {classes.length > 0 && (
-          <DayFilterBrowser classes={classes} sports={sports} wishedIds={wishedIds} />
-        )}
-
         {sports.length > 0 && (
           <div className="mt-8 px-4">
-            <h2 className="mb-3 text-base font-bold">🏷️ 종목별로 둘러보기</h2>
+            <h2 className="mb-3 text-lg font-bold">종목별로 둘러보기</h2>
             <SportCategoryRow sports={sports} counts={sportCounts} />
           </div>
         )}
 
+        {classes.length > 0 && (
+          <DayFilterBrowser classes={classes} sports={sports} wishedIds={wishedIds} />
+        )}
+
         <div className="mt-8" id="popular">
-          <h2 className="mb-3 px-4 text-base font-bold">🔥 인기 클래스</h2>
+          <h2 className="mb-3 px-4 text-lg font-bold">인기 클래스</h2>
           {popular.length > 0 ? (
             <div className="px-4">
               <HoverExpand_001 classes={popular.slice(0, 8)} />
@@ -91,14 +91,14 @@ export default async function HomePage() {
 
         {instructors.length > 0 && (
           <div className="mt-8">
-            <h2 className="mb-3 px-4 text-base font-bold">🙋 우리 지도자들</h2>
+            <h2 className="mb-3 px-4 text-lg font-bold">우리 지도자들</h2>
             <InstructorHoverGrid instructors={instructors} />
           </div>
         )}
 
         {browseClasses.length > 0 && (
           <div className="mt-8 px-4">
-            <h2 className="mb-3 text-base font-bold">📚 전체 클래스 둘러보기</h2>
+            <h2 className="mb-3 text-lg font-bold">전체 클래스 둘러보기</h2>
             <div className="grid grid-cols-2 gap-3">
               {browseClasses.map((c) => (
                 <ClassCardCompact
