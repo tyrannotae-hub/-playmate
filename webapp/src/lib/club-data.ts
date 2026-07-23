@@ -91,7 +91,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, allow_trial, trial_price, show_price, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -138,6 +138,12 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       collectHeight: row.collect_height ?? false,
       collectShoeSize: row.collect_shoe_size ?? false,
       collectResidence: row.collect_residence ?? false,
+      allowTrial: row.allow_trial ?? false,
+      trialPrice: row.trial_price ?? undefined,
+      showPrice: row.show_price ?? true,
+      trialDates: (row.class_trial_dates as unknown as { trial_date: string }[]).map(
+        (d) => d.trial_date
+      ),
     };
   });
 }

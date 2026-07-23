@@ -8,6 +8,7 @@ import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import SportIcon from "@/components/icons/SportIcon";
 import ClassMediaManager from "./ClassMediaManager";
+import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
 
 const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
   group: "그룹",
@@ -50,8 +51,17 @@ export default function ClassCard({
   const [editCollectHeight, setEditCollectHeight] = useState(item.collectHeight);
   const [editCollectShoeSize, setEditCollectShoeSize] = useState(item.collectShoeSize);
   const [editCollectResidence, setEditCollectResidence] = useState(item.collectResidence);
+  const [editShowPrice, setEditShowPrice] = useState(item.showPrice);
+  const [editAllowTrial, setEditAllowTrial] = useState(item.allowTrial);
+  const [editTrialPrice, setEditTrialPrice] = useState(
+    item.trialPrice != null ? String(item.trialPrice) : ""
+  );
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
+
+  const [addingTrialDate, setAddingTrialDate] = useState(false);
+  const [newTrialDate, setNewTrialDate] = useState("");
+  const [trialDateErrorMsg, setTrialDateErrorMsg] = useState("");
 
   function toggleEditInstructor(id: string) {
     setEditInstructorIds((prev) =>
@@ -78,6 +88,9 @@ export default function ClassCard({
         collect_height: editCollectHeight,
         collect_shoe_size: editCollectShoeSize,
         collect_residence: editCollectResidence,
+        show_price: editShowPrice,
+        allow_trial: editAllowTrial,
+        trial_price: editAllowTrial && editTrialPrice ? Number(editTrialPrice) : null,
       })
       .eq("id", item.id);
 
@@ -148,6 +161,38 @@ export default function ClassCard({
     if (!error) router.refresh();
   }
 
+  async function addTrialDate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newTrialDate) return;
+    setAddingTrialDate(true);
+    setTrialDateErrorMsg("");
+    const supabase = createClient();
+
+    const { error } = await supabase
+      .from("class_trial_dates")
+      .insert({ team_class_id: item.id, trial_date: newTrialDate });
+
+    setAddingTrialDate(false);
+    if (error) {
+      setTrialDateErrorMsg(
+        error.code === "23505" ? "이미 등록된 날짜예요." : "날짜 추가에 실패했어요."
+      );
+      return;
+    }
+    setNewTrialDate("");
+    router.refresh();
+  }
+
+  async function deleteTrialDate(trialDate: string) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("class_trial_dates")
+      .delete()
+      .eq("team_class_id", item.id)
+      .eq("trial_date", trialDate);
+    if (!error) router.refresh();
+  }
+
   async function deleteClass() {
     if (!confirm(`"${item.name}" 클래스를 삭제할까요?`)) return;
     const supabase = createClient();
@@ -179,8 +224,15 @@ export default function ClassCard({
             </p>
             <p className="mt-0.5 break-words font-bold">{item.name}</p>
             <p className="mt-1 text-xs text-muted">
-              {item.ageMin}~{item.ageMax}세 · {item.price.toLocaleString()}원/{item.priceUnit}
+              {item.ageMin}~{item.ageMax}세 ·{" "}
+              {item.showPrice ? `${item.price.toLocaleString()}원/${item.priceUnit}` : "가격 비공개"}
             </p>
+            {item.allowTrial && (
+              <span className="mt-1 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
+                원데이 체험 가능
+                {item.trialPrice != null && ` · ${item.trialPrice.toLocaleString()}원`}
+              </span>
+            )}
           </div>
           <div className="flex shrink-0 gap-1.5">
             <button
@@ -319,6 +371,49 @@ export default function ClassCard({
               />
             </div>
           </div>
+          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              가격 공개
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                끄면 학부모 화면에 가격 대신 &quot;가격 문의&quot;로 표시돼요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={editShowPrice}
+              onChange={(e) => setEditShowPrice(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              원데이 체험 받기
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                켜면 학부모가 예약 시 체험(1회)을 선택할 수 있어요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={editAllowTrial}
+              onChange={(e) => setEditAllowTrial(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+          {editAllowTrial && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">
+                체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={editTrialPrice}
+                onChange={(e) => setEditTrialPrice(e.target.value)}
+                placeholder="예: 30000"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+          )}
           <div>
             <p className="mb-1.5 text-xs font-bold text-muted">
               예약 신청 시 추가로 받을 정보 (성별·나이·연락처는 항상 받아요)
@@ -458,6 +553,52 @@ export default function ClassCard({
             </button>
           </div>
         </form>
+      )}
+
+      {item.allowTrial && (
+        <div className="mt-3 border-t border-line pt-3">
+          <p className="mb-1.5 text-xs font-bold text-muted">원데이 체험 가능 날짜</p>
+          <div className="flex flex-col gap-1.5">
+            {item.trialDates
+              .slice()
+              .sort()
+              .map((d) => (
+                <div
+                  key={d}
+                  className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
+                >
+                  <span>{formatIsoDateToKoreanShort(d)}</span>
+                  <button
+                    onClick={() => deleteTrialDate(d)}
+                    className="font-bold text-muted"
+                    aria-label="체험 날짜 삭제"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            {item.trialDates.length === 0 && (
+              <p className="text-xs text-muted">등록된 체험 날짜가 없어요.</p>
+            )}
+          </div>
+          <form onSubmit={addTrialDate} className="mt-2 flex gap-2">
+            <input
+              type="date"
+              required
+              value={newTrialDate}
+              onChange={(e) => setNewTrialDate(e.target.value)}
+              className="flex-1 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+            />
+            <button
+              type="submit"
+              disabled={addingTrialDate}
+              className={buttonClass({ variant: "outline", size: "sm", full: false })}
+            >
+              추가
+            </button>
+          </form>
+          {trialDateErrorMsg && <p className="mt-1 text-xs text-negative">{trialDateErrorMsg}</p>}
+        </div>
       )}
 
       <button

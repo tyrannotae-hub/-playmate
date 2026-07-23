@@ -35,11 +35,16 @@ export default function ClassCardCompact({
             size="sm"
           />
         </div>
+        {item.allowTrial && (
+          <span className="absolute left-1.5 top-1.5 rounded-md bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
+            원데이
+          </span>
+        )}
       </div>
       <p className="mt-2 truncate text-[11px] font-semibold text-muted">{item.facility.name}</p>
       <p className="truncate text-sm font-bold">{item.name}</p>
       <p className="mt-0.5 text-xs text-muted tabular-nums">
-        {item.priceUnit} {item.price.toLocaleString()}원
+        {item.showPrice ? `${item.priceUnit} ${item.price.toLocaleString()}원` : "가격 문의"}
       </p>
     </Link>
   );

@@ -47,6 +47,10 @@ type RawClass = {
   collect_height: boolean | null;
   collect_shoe_size: boolean | null;
   collect_residence: boolean | null;
+  allow_trial: boolean | null;
+  trial_price: number | null;
+  show_price: boolean | null;
+  class_trial_dates: { trial_date: string }[];
   facility: {
     id: string;
     name: string;
@@ -128,6 +132,10 @@ function toTeamClass(
     collectHeight: row.collect_height ?? false,
     collectShoeSize: row.collect_shoe_size ?? false,
     collectResidence: row.collect_residence ?? false,
+    allowTrial: row.allow_trial ?? false,
+    trialPrice: row.trial_price ?? undefined,
+    showPrice: row.show_price ?? true,
+    trialDates: row.class_trial_dates.map((d) => d.trial_date),
     instructors: row.class_instructors
       .map((ci) => ci.instructor)
       .filter((i): i is NonNullable<typeof i> => !!i)
@@ -171,7 +179,7 @@ function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter
   let query = supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
+      "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date)"
     );
   if (filter?.id) query = query.eq("id", filter.id);
   if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);

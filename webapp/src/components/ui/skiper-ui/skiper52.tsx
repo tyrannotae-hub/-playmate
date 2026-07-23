@@ -68,7 +68,10 @@ const HoverExpand_001 = ({
                       {item.name}
                     </p>
                     <p className="truncate whitespace-nowrap text-xs text-white/80 tabular-nums">
-                      {item.facility.name} · {item.priceUnit} {item.price.toLocaleString()}원
+                      {item.facility.name} ·{" "}
+                      {item.showPrice
+                        ? `${item.priceUnit} ${item.price.toLocaleString()}원`
+                        : "가격 문의"}
                     </p>
                   </Link>
                 </motion.div>

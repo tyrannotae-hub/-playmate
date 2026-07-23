@@ -53,6 +53,10 @@ export type TeamClass = {
   collectHeight: boolean;
   collectShoeSize: boolean;
   collectResidence: boolean;
+  allowTrial: boolean;
+  trialPrice?: number;
+  showPrice: boolean;
+  trialDates: string[];
 };
 
 export type Review = {
@@ -201,6 +205,10 @@ export type ClubClass = {
   collectHeight: boolean;
   collectShoeSize: boolean;
   collectResidence: boolean;
+  allowTrial: boolean;
+  trialPrice?: number;
+  showPrice: boolean;
+  trialDates: string[];
 };
 
 export type Admin = {

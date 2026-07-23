@@ -5,7 +5,7 @@ import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 import { Child, TeamClass } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
-import { formatKoreanShortDate, upcomingDatesForDayLabel } from "@/lib/schedule-dates";
+import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
 
 type Phase = "add-child" | "form" | "requested" | "error";
 type Gender = "male" | "female";
@@ -37,14 +37,12 @@ export default function BookingForm({
   const [errorMsg, setErrorMsg] = useState("");
 
   const trialDateOptions = useMemo(() => {
-    const dates = upcomingDatesForDayLabel(item.schedules[0].dayLabel, 4);
-    return dates.map((d) => ({
-      iso: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-        d.getDate()
-      ).padStart(2, "0")}`,
-      label: formatKoreanShortDate(d),
-    }));
-  }, [item.schedules]);
+    const todayIso = new Date().toISOString().slice(0, 10);
+    return item.trialDates
+      .filter((iso) => iso >= todayIso)
+      .sort()
+      .map((iso) => ({ iso, label: formatIsoDateToKoreanShort(iso) }));
+  }, [item.trialDates]);
 
   async function addChild(e: React.FormEvent) {
     e.preventDefault();
@@ -199,33 +197,35 @@ export default function BookingForm({
         </p>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
-          <div>
-            <label className="mb-1.5 block text-sm font-bold">신청 유형</label>
-            <div className="flex gap-2">
-              {(
-                [
-                  { value: "trial" as const, label: "체험(1회)" },
-                  { value: "enrollment" as const, label: "정기 등록" },
-                ]
-              ).map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setBookingType(opt.value)}
-                  className={buttonClass({
-                    variant: bookingType === opt.value ? "secondary" : "outline",
-                    size: "sm",
-                    full: false,
-                    className: "flex-1",
-                  })}
-                >
-                  {opt.label}
-                </button>
-              ))}
+          {item.allowTrial && (
+            <div>
+              <label className="mb-1.5 block text-sm font-bold">신청 유형</label>
+              <div className="flex gap-2">
+                {(
+                  [
+                    { value: "trial" as const, label: "체험(1회)" },
+                    { value: "enrollment" as const, label: "정기 등록" },
+                  ]
+                ).map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setBookingType(opt.value)}
+                    className={buttonClass({
+                      variant: bookingType === opt.value ? "secondary" : "outline",
+                      size: "sm",
+                      full: false,
+                      className: "flex-1",
+                    })}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {bookingType === "trial" && (
+          {item.allowTrial && bookingType === "trial" && (
             <div>
               <label className="mb-1.5 block text-sm font-bold">체험 참여 날짜</label>
               {trialDateOptions.length > 0 ? (
@@ -244,6 +244,11 @@ export default function BookingForm({
               ) : (
                 <p className="text-xs text-muted">
                   선택 가능한 날짜가 없어요. 시설에 직접 문의해주세요.
+                </p>
+              )}
+              {item.trialPrice != null && (
+                <p className="mt-1.5 text-xs text-muted">
+                  체험 가격: {item.trialPrice.toLocaleString()}원
                 </p>
               )}
             </div>

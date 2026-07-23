@@ -20,6 +20,11 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
             <span className="min-w-0 break-all">{item.facility.name}</span>
           </div>
           <h3 className="break-words text-base font-bold">{item.name}</h3>
+          {item.allowTrial && (
+            <span className="mt-1 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
+              원데이 체험 가능
+            </span>
+          )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <div className="flex items-center gap-1 text-sm font-semibold text-rink-deep">
@@ -39,7 +44,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
         <span>{item.distanceKm.toFixed(1)}km</span>
         <span aria-hidden>·</span>
         <span>
-          {item.priceUnit} {item.price.toLocaleString()}원
+          {item.showPrice ? `${item.priceUnit} ${item.price.toLocaleString()}원` : "가격 문의"}
         </span>
         <span aria-hidden>·</span>
         <span

@@ -38,6 +38,9 @@ export default function ClassesClient({
   const [collectHeight, setCollectHeight] = useState(false);
   const [collectShoeSize, setCollectShoeSize] = useState(false);
   const [collectResidence, setCollectResidence] = useState(false);
+  const [showPrice, setShowPrice] = useState(true);
+  const [allowTrial, setAllowTrial] = useState(false);
+  const [trialPrice, setTrialPrice] = useState("");
 
   function toggleInstructor(id: string) {
     setInstructorIds((prev) =>
@@ -65,6 +68,9 @@ export default function ClassesClient({
         collect_height: collectHeight,
         collect_shoe_size: collectShoeSize,
         collect_residence: collectResidence,
+        show_price: showPrice,
+        allow_trial: allowTrial,
+        trial_price: allowTrial && trialPrice ? Number(trialPrice) : null,
       })
       .select("id")
       .single();
@@ -107,6 +113,9 @@ export default function ClassesClient({
     setCollectHeight(false);
     setCollectShoeSize(false);
     setCollectResidence(false);
+    setShowPrice(true);
+    setAllowTrial(false);
+    setTrialPrice("");
     router.refresh();
   }
 
@@ -250,6 +259,54 @@ export default function ClassesClient({
               />
             </div>
           </div>
+
+          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              가격 공개
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                끄면 학부모 화면에 가격 대신 &quot;가격 문의&quot;로 표시돼요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={showPrice}
+              onChange={(e) => setShowPrice(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+
+          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              원데이 체험 받기
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                켜면 학부모가 예약 시 체험(1회)을 선택할 수 있어요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={allowTrial}
+              onChange={(e) => setAllowTrial(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+          {allowTrial && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">
+                체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={trialPrice}
+                onChange={(e) => setTrialPrice(e.target.value)}
+                placeholder="예: 30000"
+                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+              />
+              <p className="mt-1.5 text-xs text-muted">
+                체험 가능 날짜는 클래스 등록 후 &quot;정보 수정&quot;에서 추가할 수 있어요.
+              </p>
+            </div>
+          )}
 
           <p className="mt-1 text-xs font-bold text-muted">첫 수업 시간대 (선택, 나중에 추가 가능)</p>
           <div className="flex gap-2">

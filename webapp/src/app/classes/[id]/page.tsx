@@ -54,6 +54,11 @@ export default async function ClassDetailPage({
               : "아직 리뷰가 없어요"}{" "}
             · {item.facility.address}
           </p>
+          {item.allowTrial && (
+            <span className="mt-2 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
+              원데이 체험 가능
+            </span>
+          )}
 
           <div className="mt-5">
             <DetailTabs item={item} reviews={reviews} wishedInstructorIds={wishedInstructorIds} />
@@ -61,8 +66,15 @@ export default async function ClassDetailPage({
 
           <div className="mt-6 border-t border-line pt-6">
             <p className="text-lg font-extrabold tabular-nums">
-              {item.priceUnit} {item.price.toLocaleString()}원
+              {item.showPrice
+                ? `${item.priceUnit} ${item.price.toLocaleString()}원`
+                : "가격 문의"}
             </p>
+            {item.allowTrial && item.trialPrice != null && (
+              <p className="mt-1 text-sm text-muted tabular-nums">
+                원데이 체험 {item.trialPrice.toLocaleString()}원
+              </p>
+            )}
             <p className="mt-1 text-xs text-muted">현장 결제 또는 계좌이체로 진행돼요</p>
           </div>
         </div>
