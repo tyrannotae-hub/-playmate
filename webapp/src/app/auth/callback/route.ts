@@ -10,8 +10,19 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      const { data: profile } = await supabase
+        .from("parents")
+        .select("name")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+      if (!profile?.name) {
+        return NextResponse.redirect(
+          `${origin}/onboarding/nickname?next=${encodeURIComponent(next)}`
+        );
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

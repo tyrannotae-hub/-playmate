@@ -41,10 +41,22 @@ export default function LoginClient() {
       return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setSubmitting(false);
-    if (error) {
+    const { data: signedIn, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error || !signedIn.user) {
+      setSubmitting(false);
       setErrorMsg("아이디 또는 비밀번호가 올바르지 않아요.");
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("parents")
+      .select("name")
+      .eq("id", signedIn.user.id)
+      .maybeSingle();
+
+    setSubmitting(false);
+    if (!profile?.name) {
+      router.push(`/onboarding/nickname?next=${encodeURIComponent(next)}`);
       return;
     }
     router.push(next);
@@ -80,8 +92,7 @@ export default function LoginClient() {
       );
       return;
     }
-    router.push(next);
-    router.refresh();
+    router.push(`/onboarding/nickname?next=${encodeURIComponent(next)}`);
   }
 
   async function loginWithKakao() {
