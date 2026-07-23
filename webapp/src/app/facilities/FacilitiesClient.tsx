@@ -21,11 +21,14 @@ export default function FacilitiesClient({
   facilities,
   sports,
   initialRegion = "",
+  wishedFacilityIds = [],
 }: {
   facilities: FacilitySummary[];
   sports: Sport[];
   initialRegion?: string;
+  wishedFacilityIds?: string[];
 }) {
+  const wishedFacilitySet = useMemo(() => new Set(wishedFacilityIds), [wishedFacilityIds]);
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
 
@@ -108,7 +111,7 @@ export default function FacilitiesClient({
 
         <div className="grid grid-cols-2 gap-4 px-4">
           {results.map((f) => (
-            <FacilityCard key={f.id} item={f} variant="grid" />
+            <FacilityCard key={f.id} item={f} variant="grid" wished={wishedFacilitySet.has(f.id)} />
           ))}
           {results.length === 0 && (
             <p className="col-span-2 py-10 text-center text-sm text-muted">

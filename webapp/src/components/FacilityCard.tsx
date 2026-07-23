@@ -3,14 +3,17 @@ import Link from "next/link";
 import { FacilitySummary } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
 import SportIcon from "@/components/icons/SportIcon";
+import FacilityWishlistButton from "@/components/FacilityWishlistButton";
 
 export default function FacilityCard({
   item,
   variant = "scroll",
+  wished = false,
 }: {
   item: FacilitySummary;
   /** "scroll": 가로 스크롤용 고정폭(w-40) / "grid": 그리드용 유동폭(w-full) */
   variant?: "scroll" | "grid";
+  wished?: boolean;
 }) {
   return (
     <Link
@@ -26,6 +29,14 @@ export default function FacilityCard({
         <span className="absolute left-1.5 top-1.5 rounded-md bg-foreground/80 px-1.5 py-0.5 text-[10px] font-bold text-background">
           {item.ownerType === "solo_coach" ? "개인 코치" : "클럽"}
         </span>
+        <div className="absolute right-1.5 top-1.5">
+          <FacilityWishlistButton
+            facilityId={item.id}
+            initialWished={wished}
+            initialCount={item.wishCount}
+            size="sm"
+          />
+        </div>
       </div>
       <p className="mt-2 truncate text-sm font-bold">{item.name}</p>
       <p className="mt-0.5 truncate text-xs text-muted">

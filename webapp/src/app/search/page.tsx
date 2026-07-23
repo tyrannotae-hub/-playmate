@@ -4,6 +4,7 @@ import {
   facilitiesFromClasses,
   getAllClasses,
   getCurrentParent,
+  getMyFacilityWishlistIds,
   getMyProfile,
   getMyWishlistIds,
   getSports,
@@ -18,9 +19,13 @@ export default async function SearchPage() {
     getSports(),
     getCurrentParent(),
   ]);
-  const [profile, wishedIds] = user
-    ? await Promise.all([getMyProfile(user.id), getMyWishlistIds(user.id)])
-    : [null, []];
+  const [profile, wishedIds, wishedFacilityIds] = user
+    ? await Promise.all([
+        getMyProfile(user.id),
+        getMyWishlistIds(user.id),
+        getMyFacilityWishlistIds(user.id),
+      ])
+    : [null, [], []];
   const facilities = await facilitiesFromClasses(classes);
 
   return (
@@ -31,6 +36,7 @@ export default async function SearchPage() {
         sports={sports}
         initialRegion={profile?.regionCode ?? ""}
         wishedIds={wishedIds}
+        wishedFacilityIds={wishedFacilityIds}
       />
     </Suspense>
   );

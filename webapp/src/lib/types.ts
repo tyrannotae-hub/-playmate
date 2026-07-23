@@ -127,6 +127,7 @@ export type FacilitySummary = {
   rating: number;
   reviewCount: number;
   popularity: number;
+  wishCount: number;
 };
 
 export type FeaturedInstructor = {

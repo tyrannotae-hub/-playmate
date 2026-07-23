@@ -11,6 +11,7 @@ import {
   facilitiesFromClasses,
   getAllClasses,
   getCurrentParent,
+  getMyFacilityWishlistIds,
   getMyInstructorWishlistIds,
   getMyWishlistIds,
   getSports,
@@ -36,9 +37,14 @@ export default async function SportDetailPage({
   const sport = sports.find((s) => s.id === sportId);
   if (!sport) notFound();
 
-  const [wishedIds, wishedInstructorIds] = user
-    ? await Promise.all([getMyWishlistIds(user.id), getMyInstructorWishlistIds(user.id)])
-    : [[], []];
+  const [wishedIds, wishedInstructorIds, wishedFacilityIds] = user
+    ? await Promise.all([
+        getMyWishlistIds(user.id),
+        getMyInstructorWishlistIds(user.id),
+        getMyFacilityWishlistIds(user.id),
+      ])
+    : [[], [], []];
+  const wishedFacilitySet = new Set(wishedFacilityIds);
 
   const classes = allClasses.filter((c) => c.sportId === sportId);
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 8);
@@ -105,7 +111,7 @@ export default async function SportDetailPage({
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-1">
               {popularFacilities.map((f) => (
-                <FacilityCard key={f.id} item={f} />
+                <FacilityCard key={f.id} item={f} wished={wishedFacilitySet.has(f.id)} />
               ))}
             </div>
           </div>

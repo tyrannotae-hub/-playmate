@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import FacilitiesClient from "./FacilitiesClient";
-import { getAllFacilities, getCurrentParent, getMyProfile, getSports } from "@/lib/data";
+import {
+  getAllFacilities,
+  getCurrentParent,
+  getMyFacilityWishlistIds,
+  getMyProfile,
+  getSports,
+} from "@/lib/data";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -11,7 +17,9 @@ export default async function FacilitiesPage() {
     getSports(),
     getCurrentParent(),
   ]);
-  const profile = user ? await getMyProfile(user.id) : null;
+  const [profile, wishedFacilityIds] = user
+    ? await Promise.all([getMyProfile(user.id), getMyFacilityWishlistIds(user.id)])
+    : [null, []];
 
   return (
     <Suspense fallback={null}>
@@ -19,6 +27,7 @@ export default async function FacilitiesPage() {
         facilities={facilities}
         sports={sports}
         initialRegion={profile?.regionCode ?? ""}
+        wishedFacilityIds={wishedFacilityIds}
       />
     </Suspense>
   );

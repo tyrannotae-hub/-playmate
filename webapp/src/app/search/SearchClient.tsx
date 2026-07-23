@@ -25,14 +25,17 @@ export default function SearchClient({
   sports,
   initialRegion = "",
   wishedIds = [],
+  wishedFacilityIds = [],
 }: {
   classes: TeamClass[];
   facilities: FacilitySummary[];
   sports: Sport[];
   initialRegion?: string;
   wishedIds?: string[];
+  wishedFacilityIds?: string[];
 }) {
   const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
+  const wishedFacilitySet = useMemo(() => new Set(wishedFacilityIds), [wishedFacilityIds]);
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
   const initialQuery = params.get("q") ?? "";
@@ -141,7 +144,7 @@ export default function SearchClient({
             </h2>
             <div className="flex gap-3 overflow-x-auto px-4 pb-1">
               {matchedFacilities.map((f) => (
-                <FacilityCard key={f.id} item={f} />
+                <FacilityCard key={f.id} item={f} wished={wishedFacilitySet.has(f.id)} />
               ))}
             </div>
           </div>

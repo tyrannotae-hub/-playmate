@@ -13,6 +13,7 @@ import {
   getCurrentParent,
   getFeaturedInstructors,
   getMyChildren,
+  getMyFacilityWishlistIds,
   getMyInstructorWishlistIds,
   getMyWishlistIds,
   getSports,
@@ -32,15 +33,17 @@ export default async function HomePage() {
   const popularFacilities = [...facilities]
     .sort((a, b) => b.popularity - a.popularity || b.classCount - a.classCount)
     .slice(0, 10);
-  const [children, wishedIds, wishedInstructorIds] = user
+  const [children, wishedIds, wishedInstructorIds, wishedFacilityIds] = user
     ? await Promise.all([
         getMyChildren(),
         getMyWishlistIds(user.id),
         getMyInstructorWishlistIds(user.id),
+        getMyFacilityWishlistIds(user.id),
       ])
-    : [[], [], []];
+    : [[], [], [], []];
   const child = children[0];
   const wishedSet = new Set(wishedIds);
+  const wishedFacilitySet = new Set(wishedFacilityIds);
 
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 10);
   const browseClasses = [...classes].sort(
@@ -130,7 +133,7 @@ export default async function HomePage() {
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-1">
               {popularFacilities.map((f) => (
-                <FacilityCard key={f.id} item={f} />
+                <FacilityCard key={f.id} item={f} wished={wishedFacilitySet.has(f.id)} />
               ))}
             </div>
           </div>

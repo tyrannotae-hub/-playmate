@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
 import InstructorWishlistButton from "@/components/InstructorWishlistButton";
-import { getCurrentParent, getFacilityHome, getMyInstructorWishlistIds } from "@/lib/data";
+import FacilityWishlistButton from "@/components/FacilityWishlistButton";
+import {
+  getCurrentParent,
+  getFacilityHome,
+  getFacilityWishInfo,
+  getMyInstructorWishlistIds,
+} from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
 
 export const runtime = "edge";
@@ -99,7 +105,9 @@ export default async function FacilityHomePage({
 }) {
   const { id } = await params;
   const [user, facility] = await Promise.all([getCurrentParent(), getFacilityHome(id)]);
-  const wishedInstructorIds = user ? await getMyInstructorWishlistIds(user.id) : [];
+  const [wishedInstructorIds, facilityWishInfo] = user
+    ? await Promise.all([getMyInstructorWishlistIds(user.id), getFacilityWishInfo(id, user.id)])
+    : [[], await getFacilityWishInfo(id)];
   if (!facility) notFound();
 
   const wishedInstructorSet = new Set(wishedInstructorIds);
@@ -130,17 +138,24 @@ export default async function FacilityHomePage({
               <p className="mt-1 text-sm text-muted">{facility.address}</p>
               {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
             </div>
-            {facility.instagramUrl && (
-              <a
-                href={facility.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${facility.name} 인스타그램 바로가기`}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-rink-deep transition hover:opacity-80"
-              >
-                <InstagramIcon />
-              </a>
-            )}
+            <div className="flex shrink-0 items-center gap-2">
+              <FacilityWishlistButton
+                facilityId={facility.id}
+                initialWished={facilityWishInfo.wished}
+                initialCount={facilityWishInfo.count}
+              />
+              {facility.instagramUrl && (
+                <a
+                  href={facility.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${facility.name} 인스타그램 바로가기`}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-rink-deep transition hover:opacity-80"
+                >
+                  <InstagramIcon />
+                </a>
+              )}
+            </div>
           </div>
 
           {facility.description && (

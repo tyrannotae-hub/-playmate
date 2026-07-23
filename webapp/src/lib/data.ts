@@ -111,6 +111,17 @@ async function instructorWishCountMap() {
   return map;
 }
 
+async function facilityWishCountMap() {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_facility_wishlist_counts");
+
+  const map = new Map<string, number>();
+  ((data ?? []) as { facility_id: string; count: number }[]).forEach((row) => {
+    map.set(row.facility_id, row.count);
+  });
+  return map;
+}
+
 function toTeamClass(
   row: RawClass,
   ratings: Map<string, { sum: number; count: number }>,
@@ -226,7 +237,8 @@ async function facilityMetaMap() {
 // 팀 찾기 개선(홈/종목별/검색에 팀·클럽 노출)에 공용으로 쓰인다.
 function summarizeFacilities(
   classes: TeamClass[],
-  metaMap: Map<string, RawFacilityMeta>
+  metaMap: Map<string, RawFacilityMeta>,
+  facilityWishCounts: Map<string, number>
 ): FacilitySummary[] {
   const agg = new Map<
     string,
@@ -265,20 +277,28 @@ function summarizeFacilities(
       rating: a.reviewCount > 0 ? Math.round((a.ratingSum / a.reviewCount) * 10) / 10 : 0,
       reviewCount: a.reviewCount,
       popularity: a.popularity,
+      wishCount: facilityWishCounts.get(fid) ?? 0,
     };
   });
 }
 
 export async function getAllFacilities(): Promise<FacilitySummary[]> {
-  const [classes, metaMap] = await Promise.all([getAllClasses(), facilityMetaMap()]);
-  return summarizeFacilities(classes, metaMap);
+  const [classes, metaMap, facilityWishCounts] = await Promise.all([
+    getAllClasses(),
+    facilityMetaMap(),
+    facilityWishCountMap(),
+  ]);
+  return summarizeFacilities(classes, metaMap, facilityWishCounts);
 }
 
 // 홈 화면처럼 이미 getAllClasses()를 호출한 곳에서 같은 클래스 목록을 다시 안 긁어오도록
 // 시설 메타만 추가로 조회해 합치는 버전.
 export async function facilitiesFromClasses(classes: TeamClass[]): Promise<FacilitySummary[]> {
-  const metaMap = await facilityMetaMap();
-  return summarizeFacilities(classes, metaMap);
+  const [metaMap, facilityWishCounts] = await Promise.all([
+    facilityMetaMap(),
+    facilityWishCountMap(),
+  ]);
+  return summarizeFacilities(classes, metaMap, facilityWishCounts);
 }
 
 export async function getClassById(id: string): Promise<TeamClass | null> {
@@ -671,6 +691,42 @@ export async function getMyWishlistedInstructors(userId?: string): Promise<Featu
       wishCount: instructorWishCounts.get(i.id) ?? 0,
     };
   });
+}
+
+export async function getMyFacilityWishlistIds(userId?: string): Promise<string[]> {
+  const supabase = await createClient();
+
+  let uid = userId;
+  if (!uid) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return [];
+    uid = user.id;
+  }
+
+  const { data } = await supabase.from("facility_wishlists").select("facility_id");
+  return (data ?? []).map((w) => w.facility_id);
+}
+
+export async function getMyWishlistedFacilities(userId?: string): Promise<FacilitySummary[]> {
+  const [ids, all] = await Promise.all([getMyFacilityWishlistIds(userId), getAllFacilities()]);
+  if (ids.length === 0) return [];
+  const idSet = new Set(ids);
+  return all.filter((f) => idSet.has(f.id));
+}
+
+// 시설(팀・클럽) 상세 페이지 헤더에서 찜 버튼 하나만 그릴 때 쓰는 가벼운 버전 —
+// getAllFacilities()처럼 전체 클래스를 다시 긁어오지 않고 카운트/본인 찜 여부만 조회.
+export async function getFacilityWishInfo(
+  facilityId: string,
+  userId?: string
+): Promise<{ wished: boolean; count: number }> {
+  const [wishCounts, ids] = await Promise.all([
+    facilityWishCountMap(),
+    getMyFacilityWishlistIds(userId),
+  ]);
+  return { wished: ids.includes(facilityId), count: wishCounts.get(facilityId) ?? 0 };
 }
 
 export async function getMyNotifications(userId?: string): Promise<AppNotification[]> {
