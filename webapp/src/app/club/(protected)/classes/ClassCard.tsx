@@ -156,14 +156,14 @@ export default function ClassCard({
     <div className={cardClass()}>
       {!editing ? (
         <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="text-xs font-bold text-muted">
+          <div className="min-w-0">
+            <p className="break-words text-xs font-bold text-muted">
               {sport ? `${sport.emoji} ${sport.name}` : item.sportId} ·{" "}
               {item.instructors.length > 0
                 ? item.instructors.map((i) => i.name).join(" · ")
                 : "코치 미정"}
             </p>
-            <p className="mt-0.5 font-bold">{item.name}</p>
+            <p className="mt-0.5 break-words font-bold">{item.name}</p>
             <p className="mt-1 text-xs text-muted">
               {item.ageMin}~{item.ageMax}세 · {item.price.toLocaleString()}원/{item.priceUnit}
             </p>
