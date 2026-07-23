@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { TeamClass } from "@/lib/types";
-import { sportEmoji } from "@/lib/sport-meta";
+import SportIcon from "@/components/icons/SportIcon";
 
 const HoverExpand_001 = ({
   classes,
@@ -36,8 +36,8 @@ const HoverExpand_001 = ({
             {cover ? (
               <Image src={cover} alt="" fill sizes="216px" className="object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-3xl">
-                {sportEmoji(item.sportId)}
+              <div className="flex h-full w-full items-center justify-center text-white">
+                <SportIcon sportId={item.sportId} size={30} />
               </div>
             )}
 

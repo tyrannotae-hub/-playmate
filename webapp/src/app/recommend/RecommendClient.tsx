@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
+import SportIcon from "@/components/icons/SportIcon";
 import { Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 
@@ -62,8 +63,9 @@ export default function RecommendClient({
                 className={cardClass("block hover:border-rink")}
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-base font-bold">
-                    {sport.emoji} {sport.name}
+                  <div className="flex items-center gap-1.5 text-base font-bold">
+                    <SportIcon sportId={sport.id} size={20} />
+                    {sport.name}
                   </div>
                   <span className="rounded bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep tabular-nums">
                     {score}% 맞음

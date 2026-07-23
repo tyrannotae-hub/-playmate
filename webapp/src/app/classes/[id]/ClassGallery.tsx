@@ -2,21 +2,22 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import SportIcon from "@/components/icons/SportIcon";
 
 export default function ClassGallery({
   images,
-  emoji,
+  sportId,
 }: {
   images: string[];
-  emoji: string;
+  sportId: string;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-[4/3] w-full items-center justify-center bg-rink-soft text-5xl">
-        {emoji}
+      <div className="flex aspect-[4/3] w-full items-center justify-center bg-rink-soft text-rink-deep">
+        <SportIcon sportId={sportId} size={56} />
       </div>
     );
   }

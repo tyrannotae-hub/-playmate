@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sport, TeamClass } from "@/lib/types";
-import { sportEmoji } from "@/lib/sport-meta";
+import SportIcon from "@/components/icons/SportIcon";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
@@ -71,7 +71,7 @@ export default function DayFilterBrowser({
           <option value="all">전체 종목</option>
           {sports.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.emoji} {s.name}
+              {s.name}
             </option>
           ))}
         </select>
@@ -125,11 +125,11 @@ export default function DayFilterBrowser({
             href={`/classes/${item.id}`}
             className="flex items-center gap-3 py-3"
           >
-            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md bg-rink-soft text-xl">
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md bg-rink-soft text-rink-deep">
               {item.images[0] ? (
                 <Image src={item.images[0]} alt="" fill sizes="56px" className="object-cover" />
               ) : (
-                sportEmoji(item.sportId)
+                <SportIcon sportId={item.sportId} size={26} />
               )}
             </div>
             <div className="min-w-0 flex-1">

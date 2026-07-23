@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import ClassCard from "@/components/ClassCard";
+import SportIcon from "@/components/icons/SportIcon";
 import { Sport, TeamClass } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
@@ -78,7 +79,8 @@ export default function SearchClient({
                 className: "flex-shrink-0",
               })}
             >
-              {s.emoji} {s.name}
+              <SportIcon sportId={s.id} size={15} />
+              {s.name}
             </button>
           ))}
         </div>
