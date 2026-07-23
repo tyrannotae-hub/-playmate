@@ -32,6 +32,7 @@ export default function SearchClient({
   const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
+  const initialQuery = params.get("q") ?? "";
 
   const [sportId, setSportId] = useState(initialSport);
   const [region, setRegion] = useState(initialRegion || "all");
@@ -43,12 +44,22 @@ export default function SearchClient({
   }, [classes]);
 
   const results = useMemo(() => {
+    const q = initialQuery.trim().toLowerCase();
+    const byQuery =
+      q.length === 0
+        ? classes
+        : classes.filter(
+            (c) =>
+              c.name.toLowerCase().includes(q) ||
+              c.facility.name.toLowerCase().includes(q) ||
+              c.instructors.some((i) => i.name.toLowerCase().includes(q))
+          );
     const bySport =
-      sportId === "all" ? classes : classes.filter((c) => c.sportId === sportId);
+      sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
     const byRegion =
       region === "all" ? bySport : bySport.filter((c) => c.facility.region === region);
     return [...byRegion].sort(SORTERS[sort]);
-  }, [classes, sportId, region, sort]);
+  }, [classes, sportId, region, sort, initialQuery]);
 
   return (
     <>
@@ -58,7 +69,7 @@ export default function SearchClient({
       />
       <main className="pb-10 pt-3">
         <div className="mb-3">
-          <ClassSearchBox classes={classes} />
+          <ClassSearchBox initialQuery={initialQuery} sportId={sportId !== "all" ? sportId : undefined} />
         </div>
 
         <div className="mb-3 flex gap-2 overflow-x-auto px-4 pb-1">
@@ -115,6 +126,7 @@ export default function SearchClient({
         </div>
 
         <p className="mb-3 px-4 text-xs font-semibold text-muted">
+          {initialQuery.trim() && `'${initialQuery.trim()}' 검색 · `}
           {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 

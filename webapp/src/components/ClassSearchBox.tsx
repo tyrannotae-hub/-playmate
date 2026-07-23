@@ -1,25 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { TeamClass } from "@/lib/types";
-import SportIcon from "@/components/icons/SportIcon";
+import { useRouter } from "next/navigation";
 
-export default function ClassSearchBox({ classes }: { classes: TeamClass[] }) {
-  const [query, setQuery] = useState("");
-  const q = query.trim().toLowerCase();
-  const results =
-    q.length === 0
-      ? []
-      : classes.filter(
-          (c) =>
-            c.name.toLowerCase().includes(q) ||
-            c.facility.name.toLowerCase().includes(q) ||
-            c.instructors.some((i) => i.name.toLowerCase().includes(q))
-        );
+export default function ClassSearchBox({
+  initialQuery = "",
+  sportId,
+}: {
+  initialQuery?: string;
+  sportId?: string;
+}) {
+  const router = useRouter();
+  const [query, setQuery] = useState(initialQuery);
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (sportId) params.set("sport", sportId);
+    if (query.trim()) params.set("q", query.trim());
+    router.push(`/search${params.toString() ? `?${params.toString()}` : ""}`);
+  }
 
   return (
-    <div className="relative px-4">
+    <form onSubmit={submit} className="px-4">
       <div className="relative">
         <svg
           width="16"
@@ -42,31 +45,6 @@ export default function ClassSearchBox({ classes }: { classes: TeamClass[] }) {
           className="w-full rounded-md border border-line bg-surface py-3 pl-10 pr-3.5 text-sm"
         />
       </div>
-
-      {q.length > 0 && (
-        <div className="absolute inset-x-4 top-full z-10 mt-1.5 max-h-80 overflow-y-auto rounded-md border border-line bg-surface shadow-elevated">
-          {results.length === 0 ? (
-            <p className="px-3.5 py-4 text-sm text-muted">검색 결과가 없어요.</p>
-          ) : (
-            results.map((c) => (
-              <Link
-                key={c.id}
-                href={`/classes/${c.id}`}
-                className="flex items-center gap-3 border-b border-line px-3.5 py-3 transition last:border-0 hover:bg-surface-2"
-              >
-                <SportIcon sportId={c.sportId} size={20} className="shrink-0 text-rink-deep" />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold">{c.name}</p>
-                  <p className="truncate text-xs text-muted">
-                    {c.facility.name}
-                    {c.instructors.length > 0 && ` · ${c.instructors.map((i) => i.name).join(", ")}`}
-                  </p>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+    </form>
   );
 }

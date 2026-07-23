@@ -76,7 +76,7 @@ export default async function SportDetailPage({
         </div>
 
         <div className="mt-4">
-          <ClassSearchBox classes={classes} />
+          <ClassSearchBox sportId={sport.id} />
         </div>
 
         {popular.length > 0 && (
