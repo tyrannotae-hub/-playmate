@@ -199,6 +199,22 @@ export type ClubClass = {
   collectResidence: boolean;
 };
 
+export type Admin = {
+  id: string;
+  name: string;
+  username: string;
+};
+
+export type ClubSignupRequest = {
+  id: string;
+  username: string;
+  name: string;
+  ownerType: "club" | "solo_coach";
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  reviewedAt?: string;
+};
+
 export type NotificationType =
   | "booking_confirmed"
   | "booking_cancelled"

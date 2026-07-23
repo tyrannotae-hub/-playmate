@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { buttonClass } from "@/lib/ui";
 
-export default function ClubLoginClient() {
+export default function AdminLoginClient() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +19,7 @@ export default function ClubLoginClient() {
     const supabase = createClient();
 
     const { data: email, error: lookupError } = await supabase.rpc(
-      "get_club_login_email",
+      "get_admin_login_email",
       { p_username: username }
     );
 
@@ -36,16 +35,16 @@ export default function ClubLoginClient() {
       setErrorMsg("아이디 또는 비밀번호가 올바르지 않아요.");
       return;
     }
-    router.push("/club/dashboard");
+    router.push("/admin");
     router.refresh();
   }
 
   return (
     <main className="flex flex-col items-center px-6 pb-10 pt-16 text-center">
       <div className="text-2xl font-extrabold tracking-tight">
-        PlayMate<span className="text-energy">.</span> 클래스관리센터
+        PlayMate<span className="text-energy">.</span> 관리자
       </div>
-      <p className="mt-2 text-sm text-muted">내 시설·클래스·예약을 관리하세요</p>
+      <p className="mt-2 text-sm text-muted">가입 신청을 검토하고 승인하세요</p>
 
       <form onSubmit={login} className="mt-8 w-full text-left">
         <div className="flex flex-col gap-3">
@@ -54,7 +53,7 @@ export default function ClubLoginClient() {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value.trim())}
-            placeholder="아이디"
+            placeholder="관리자 아이디"
             autoCapitalize="none"
             className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
           />
@@ -73,21 +72,11 @@ export default function ClubLoginClient() {
         <button
           type="submit"
           disabled={submitting}
-          className={buttonClass({
-            variant: "custom",
-            className: "mt-4 bg-rink text-white",
-          })}
+          className={buttonClass({ variant: "secondary", className: "mt-4" })}
         >
           로그인
         </button>
       </form>
-
-      <p className="mt-6 text-xs leading-relaxed text-muted">
-        계정이 없으신가요?{" "}
-        <Link href="/club/signup" className="font-bold text-rink">
-          가입 신청
-        </Link>
-      </p>
     </main>
   );
 }
