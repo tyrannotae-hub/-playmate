@@ -253,7 +253,9 @@ export type ClubSignupRequest = {
 export type NotificationType =
   | "booking_confirmed"
   | "booking_cancelled"
-  | "booking_completed";
+  | "booking_completed"
+  | "booking_change_approved"
+  | "booking_change_rejected";
 
 export type AppNotification = {
   id: string;

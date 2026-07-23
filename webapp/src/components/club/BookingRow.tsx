@@ -7,7 +7,6 @@ import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
-import { createClient } from "@/lib/supabase/client";
 
 export default function BookingRow({
   booking,
@@ -47,16 +46,17 @@ export default function BookingRow({
     setChangeSubmitting(true);
     setChangeErrorMsg("");
 
-    const supabase = createClient();
-    const { error } = await supabase.rpc("respond_booking_change", {
-      p_booking_id: booking.id,
-      p_approve: approve,
+    const res = await fetch(`/api/bookings/${booking.id}/respond-change`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approve }),
     });
 
     setChangeSubmitting(false);
-    if (error) {
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
       setChangeErrorMsg(
-        error.message === "FULL"
+        body?.error === "FULL"
           ? "요청한 시간대의 정원이 마감됐어요."
           : "처리에 실패했어요. 다시 시도해주세요."
       );
