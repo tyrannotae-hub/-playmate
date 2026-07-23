@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 import { Child, TeamClass } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
+import { formatKoreanShortDate, upcomingDatesForDayLabel } from "@/lib/schedule-dates";
 
 type Phase = "add-child" | "form" | "requested" | "error";
 type Gender = "male" | "female";
+type BookingType = "trial" | "enrollment";
 
 export default function BookingForm({
   item,
@@ -23,6 +25,8 @@ export default function BookingForm({
   const [childId, setChildId] = useState(initialChildren[0]?.id ?? "");
   const [childName, setChildName] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [bookingType, setBookingType] = useState<BookingType>("enrollment");
+  const [trialDate, setTrialDate] = useState("");
   const [gender, setGender] = useState<Gender>("male");
   const [heightCm, setHeightCm] = useState("");
   const [shoeSizeMm, setShoeSizeMm] = useState("");
@@ -31,6 +35,16 @@ export default function BookingForm({
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const trialDateOptions = useMemo(() => {
+    const dates = upcomingDatesForDayLabel(item.schedules[0].dayLabel, 4);
+    return dates.map((d) => ({
+      iso: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`,
+      label: formatKoreanShortDate(d),
+    }));
+  }, [item.schedules]);
 
   async function addChild(e: React.FormEvent) {
     e.preventDefault();
@@ -66,6 +80,10 @@ export default function BookingForm({
       setErrorMsg("개인정보 수집·이용에 동의해주세요.");
       return;
     }
+    if (bookingType === "trial" && !trialDate) {
+      setErrorMsg("체험 참여 날짜를 선택해주세요.");
+      return;
+    }
     setSubmitting(true);
     setErrorMsg("");
     const supabase = createClient();
@@ -78,6 +96,8 @@ export default function BookingForm({
       p_shoe_size_mm: shoeSizeMm ? Number(shoeSizeMm) : null,
       p_residence: residence || null,
       p_consent: consent,
+      p_booking_type: bookingType,
+      p_trial_date: bookingType === "trial" ? trialDate : null,
     });
     setSubmitting(false);
 
@@ -179,6 +199,56 @@ export default function BookingForm({
         </p>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
+          <div>
+            <label className="mb-1.5 block text-sm font-bold">신청 유형</label>
+            <div className="flex gap-2">
+              {(
+                [
+                  { value: "trial" as const, label: "체험(1회)" },
+                  { value: "enrollment" as const, label: "정기 등록" },
+                ]
+              ).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setBookingType(opt.value)}
+                  className={buttonClass({
+                    variant: bookingType === opt.value ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {bookingType === "trial" && (
+            <div>
+              <label className="mb-1.5 block text-sm font-bold">체험 참여 날짜</label>
+              {trialDateOptions.length > 0 ? (
+                <select
+                  value={trialDate}
+                  onChange={(e) => setTrialDate(e.target.value)}
+                  className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+                >
+                  <option value="">날짜를 선택해주세요</option>
+                  {trialDateOptions.map((opt) => (
+                    <option key={opt.iso} value={opt.iso}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-xs text-muted">
+                  선택 가능한 날짜가 없어요. 시설에 직접 문의해주세요.
+                </p>
+              )}
+            </div>
+          )}
+
           <div>
             <label className="mb-1.5 block text-sm font-bold">수강생(자녀)</label>
             <select

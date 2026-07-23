@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/StatusBadge";
 import { ClubBooking } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
 
 export default function BookingRow({ booking }: { booking: ClubBooking }) {
   const router = useRouter();
@@ -35,7 +36,20 @@ export default function BookingRow({ booking }: { booking: ClubBooking }) {
     <div className={cardClass()}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="break-words font-bold">{booking.className}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="break-words font-bold">{booking.className}</p>
+            <span
+              className={`btn-label inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+                booking.bookingType === "trial"
+                  ? "bg-energy-soft text-[color:var(--foreground)]"
+                  : "border border-line text-muted"
+              }`}
+            >
+              {booking.bookingType === "trial"
+                ? `체험${booking.trialDate ? ` · ${formatIsoDateToKoreanShort(booking.trialDate)}` : ""}`
+                : "정기 등록"}
+            </span>
+          </div>
           <p className="mt-0.5 text-xs text-muted">
             {booking.childName} ({booking.childAge}세{booking.gender ? `, ${booking.gender === "male" ? "남" : "여"}` : ""})
           </p>
