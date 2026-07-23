@@ -46,6 +46,9 @@ export default function ClassCard({
   const [editInstructorIds, setEditInstructorIds] = useState<string[]>(
     item.instructors.map((i) => i.id)
   );
+  const [editCollectHeight, setEditCollectHeight] = useState(item.collectHeight);
+  const [editCollectShoeSize, setEditCollectShoeSize] = useState(item.collectShoeSize);
+  const [editCollectResidence, setEditCollectResidence] = useState(item.collectResidence);
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
 
@@ -71,6 +74,9 @@ export default function ClassCard({
         age_max: editAgeMax,
         price: editPrice,
         price_unit: editPriceUnit,
+        collect_height: editCollectHeight,
+        collect_shoe_size: editCollectShoeSize,
+        collect_residence: editCollectResidence,
       })
       .eq("id", item.id);
 
@@ -303,6 +309,34 @@ export default function ClassCard({
                 onChange={(e) => setEditPriceUnit(e.target.value)}
                 className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
+            </div>
+          </div>
+          <div>
+            <p className="mb-1.5 text-xs font-bold text-muted">
+              예약 신청 시 추가로 받을 정보 (성별·나이·연락처는 항상 받아요)
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {(
+                [
+                  ["키", editCollectHeight, setEditCollectHeight],
+                  ["발사이즈", editCollectShoeSize, setEditCollectShoeSize],
+                  ["거주지", editCollectResidence, setEditCollectResidence],
+                ] as const
+              ).map(([label, checked, setChecked]) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setChecked(!checked)}
+                  className={buttonClass({
+                    variant: checked ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                  })}
+                >
+                  {checked ? "✓ " : ""}
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
           {editErrorMsg && <p className="text-xs text-negative">{editErrorMsg}</p>}

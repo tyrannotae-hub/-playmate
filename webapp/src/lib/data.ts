@@ -44,12 +44,14 @@ type RawClass = {
   price_unit: string;
   description: string | null;
   created_at: string;
+  collect_height: boolean | null;
+  collect_shoe_size: boolean | null;
+  collect_residence: boolean | null;
   facility: {
     id: string;
     name: string;
     address: string;
     region_code: string | null;
-    collect_contact_phone: boolean | null;
   } | null;
   class_instructors: {
     instructor: {
@@ -98,8 +100,10 @@ function toTeamClass(
       name: row.facility?.name ?? "",
       region: row.facility?.region_code ?? "",
       address: row.facility?.address ?? "",
-      collectContactPhone: row.facility?.collect_contact_phone ?? true,
     },
+    collectHeight: row.collect_height ?? false,
+    collectShoeSize: row.collect_shoe_size ?? false,
+    collectResidence: row.collect_residence ?? false,
     instructors: row.class_instructors
       .map((ci) => ci.instructor)
       .filter((i): i is NonNullable<typeof i> => !!i)
@@ -140,7 +144,7 @@ export async function getAllClasses(): Promise<TeamClass[]> {
     supabase
       .from("teams_classes")
       .select(
-        "*, facility:facilities(id,name,address,region_code,collect_contact_phone), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
+        "*, facility:facilities(id,name,address,region_code), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order)"
       ),
     ratingMap(),
   ]);

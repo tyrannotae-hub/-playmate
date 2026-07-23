@@ -31,7 +31,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
   const { data } = await supabase
     .from("facilities")
     .select(
-      "id, name, address, phone, description, cover_image_url, instagram_url, owner_type, collect_contact_phone"
+      "id, name, address, phone, description, cover_image_url, instagram_url, owner_type"
     )
     .eq("id", facilityId)
     .maybeSingle();
@@ -46,7 +46,6 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     coverImageUrl: data.cover_image_url ?? "",
     instagramUrl: data.instagram_url ?? "",
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
-    collectContactPhone: data.collect_contact_phone ?? true,
   };
 }
 
@@ -90,7 +89,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -134,6 +133,9 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       schedules,
       description: row.description ?? "",
       images,
+      collectHeight: row.collect_height ?? false,
+      collectShoeSize: row.collect_shoe_size ?? false,
+      collectResidence: row.collect_residence ?? false,
     };
   });
 }

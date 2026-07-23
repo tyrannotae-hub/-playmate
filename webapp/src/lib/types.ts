@@ -11,7 +11,6 @@ export type Facility = {
   name: string;
   region: string;
   address: string;
-  collectContactPhone: boolean;
 };
 
 export type Instructor = {
@@ -49,6 +48,9 @@ export type TeamClass = {
   description: string;
   images: string[];
   createdAt: string;
+  collectHeight: boolean;
+  collectShoeSize: boolean;
+  collectResidence: boolean;
 };
 
 export type Review = {
@@ -133,7 +135,6 @@ export type ClubFacility = {
   coverImageUrl: string;
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
-  collectContactPhone: boolean;
 };
 
 export type FacilityNotice = {
@@ -193,6 +194,9 @@ export type ClubClass = {
   schedules: ClubSchedule[];
   description: string;
   images: string[];
+  collectHeight: boolean;
+  collectShoeSize: boolean;
+  collectResidence: boolean;
 };
 
 export type NotificationType =

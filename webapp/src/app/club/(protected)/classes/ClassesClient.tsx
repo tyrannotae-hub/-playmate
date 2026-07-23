@@ -35,6 +35,9 @@ export default function ClassesClient({
   const [dayLabel, setDayLabel] = useState("");
   const [timeLabel, setTimeLabel] = useState("");
   const [capacity, setCapacity] = useState(6);
+  const [collectHeight, setCollectHeight] = useState(false);
+  const [collectShoeSize, setCollectShoeSize] = useState(false);
+  const [collectResidence, setCollectResidence] = useState(false);
 
   function toggleInstructor(id: string) {
     setInstructorIds((prev) =>
@@ -59,6 +62,9 @@ export default function ClassesClient({
         class_type: classType,
         price,
         price_unit: priceUnit,
+        collect_height: collectHeight,
+        collect_shoe_size: collectShoeSize,
+        collect_residence: collectResidence,
       })
       .select("id")
       .single();
@@ -98,6 +104,9 @@ export default function ClassesClient({
     setInstructorIds([]);
     setDayLabel("");
     setTimeLabel("");
+    setCollectHeight(false);
+    setCollectShoeSize(false);
+    setCollectResidence(false);
     router.refresh();
   }
 
@@ -265,6 +274,35 @@ export default function ClassesClient({
             placeholder="정원"
             className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
           />
+
+          <div>
+            <p className="mb-1.5 text-xs font-bold text-muted">
+              예약 신청 시 추가로 받을 정보 (성별·나이·연락처는 항상 받아요)
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {(
+                [
+                  ["키", collectHeight, setCollectHeight],
+                  ["발사이즈", collectShoeSize, setCollectShoeSize],
+                  ["거주지", collectResidence, setCollectResidence],
+                ] as const
+              ).map(([label, checked, setChecked]) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setChecked(!checked)}
+                  className={buttonClass({
+                    variant: checked ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                  })}
+                >
+                  {checked ? "✓ " : ""}
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">

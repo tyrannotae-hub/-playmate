@@ -72,7 +72,7 @@ export default function BookingForm({
     const { error } = await supabase.rpc("request_booking", {
       p_child_id: childId,
       p_schedule_id: item.schedules[0].id,
-      p_contact_phone: item.facility.collectContactPhone ? contactPhone || null : null,
+      p_contact_phone: contactPhone || null,
       p_gender: gender,
       p_height_cm: heightCm ? Number(heightCm) : null,
       p_shoe_size_mm: shoeSizeMm ? Number(shoeSizeMm) : null,
@@ -215,61 +215,67 @@ export default function BookingForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1.5 block text-sm font-bold">
-                키(cm) <span className="font-normal text-muted">(선택)</span>
-              </label>
-              <input
-                type="number"
-                inputMode="numeric"
-                value={heightCm}
-                onChange={(e) => setHeightCm(e.target.value)}
-                placeholder="120"
-                className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
-              />
+          {(item.collectHeight || item.collectShoeSize) && (
+            <div className="grid grid-cols-2 gap-3">
+              {item.collectHeight && (
+                <div>
+                  <label className="mb-1.5 block text-sm font-bold">
+                    키(cm) <span className="font-normal text-muted">(선택)</span>
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={heightCm}
+                    onChange={(e) => setHeightCm(e.target.value)}
+                    placeholder="120"
+                    className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+                  />
+                </div>
+              )}
+              {item.collectShoeSize && (
+                <div>
+                  <label className="mb-1.5 block text-sm font-bold">
+                    발사이즈(mm) <span className="font-normal text-muted">(선택)</span>
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={shoeSizeMm}
+                    onChange={(e) => setShoeSizeMm(e.target.value)}
+                    placeholder="180"
+                    className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+                  />
+                </div>
+              )}
             </div>
+          )}
+
+          {item.collectResidence && (
             <div>
               <label className="mb-1.5 block text-sm font-bold">
-                발사이즈(mm) <span className="font-normal text-muted">(선택)</span>
+                거주지 <span className="font-normal text-muted">(선택)</span>
               </label>
               <input
-                type="number"
-                inputMode="numeric"
-                value={shoeSizeMm}
-                onChange={(e) => setShoeSizeMm(e.target.value)}
-                placeholder="180"
-                className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-bold">
-              거주지 <span className="font-normal text-muted">(선택)</span>
-            </label>
-            <input
-              value={residence}
-              onChange={(e) => setResidence(e.target.value)}
-              placeholder="예: 서울 강남구"
-              className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
-            />
-          </div>
-
-          {item.facility.collectContactPhone && (
-            <div>
-              <label className="mb-1.5 block text-sm font-bold">
-                보호자 연락처 <span className="font-normal text-muted">(선택)</span>
-              </label>
-              <input
-                type="tel"
-                value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
-                placeholder="010-1234-5678"
+                value={residence}
+                onChange={(e) => setResidence(e.target.value)}
+                placeholder="예: 서울 강남구"
                 className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
           )}
+
+          <div>
+            <label className="mb-1.5 block text-sm font-bold">
+              보호자 연락처 <span className="font-normal text-muted">(선택)</span>
+            </label>
+            <input
+              type="tel"
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
+              placeholder="010-1234-5678"
+              className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+            />
+          </div>
 
           <p className="rounded-md bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
             ⚠️ 결제는 현장/계좌이체로 시설과 직접 진행됩니다
