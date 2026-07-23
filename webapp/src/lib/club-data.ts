@@ -140,7 +140,7 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, status, requested_at, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
+      "id, status, requested_at, contact_phone, child:children(name, birth_date), team_class:teams_classes!inner(name, facility_id), class_schedule:class_schedules(day_label, time_label)"
     )
     .eq("team_class.facility_id", facilityId)
     .order("requested_at", { ascending: false });
@@ -161,6 +161,7 @@ export async function getMyClubBookings(facilityId: string): Promise<ClubBooking
       childAge: child ? yearsSince(child.birth_date) : 0,
       status: b.status,
       requestedAt: b.requested_at,
+      contactPhone: b.contact_phone ?? undefined,
     };
   });
 }

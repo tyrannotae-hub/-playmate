@@ -22,6 +22,7 @@ export default function BookingForm({
   const [childId, setChildId] = useState(initialChildren[0]?.id ?? "");
   const [childName, setChildName] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -61,6 +62,7 @@ export default function BookingForm({
     const { error } = await supabase.rpc("request_booking", {
       p_child_id: childId,
       p_schedule_id: item.schedules[0].id,
+      p_contact_phone: contactPhone || null,
     });
     setSubmitting(false);
 
@@ -175,6 +177,19 @@ export default function BookingForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-sm font-bold">
+              연락처 <span className="font-normal text-muted">(선택)</span>
+            </label>
+            <input
+              type="tel"
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
+              placeholder="010-1234-5678"
+              className="w-full rounded-md border border-line bg-surface px-3.5 py-3 text-sm"
+            />
           </div>
 
           <p className="rounded-md bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
