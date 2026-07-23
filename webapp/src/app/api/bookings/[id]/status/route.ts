@@ -9,6 +9,25 @@ const STATUS_LABEL: Record<string, string> = {
   completed: "완료",
 };
 
+const NOTIFICATION_TYPE: Record<string, string> = {
+  confirmed: "booking_confirmed",
+  cancelled: "booking_cancelled",
+  completed: "booking_completed",
+};
+
+function notificationMessage(status: string, className: string): string {
+  switch (status) {
+    case "confirmed":
+      return `${className} 예약이 확정됐어요`;
+    case "cancelled":
+      return `${className} 예약이 취소됐어요`;
+    case "completed":
+      return `${className} 수업이 완료됐어요, 후기를 남겨보세요`;
+    default:
+      return `${className} 예약 상태가 변경됐어요`;
+  }
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -35,18 +54,31 @@ export async function POST(
   const { data: booking } = await supabase
     .from("bookings")
     .select(
-      "notify_email, team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules(day_label, time_label)"
+      "parent_id, notify_email, team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules(day_label, time_label)"
     )
     .eq("id", id)
     .maybeSingle();
 
   const notifyEmail = booking?.notify_email as string | null | undefined;
+  const teamClass = booking?.team_class as unknown as {
+    name: string;
+    facility: { name: string } | null;
+  } | null;
+
+  if (booking?.parent_id) {
+    const notificationType = NOTIFICATION_TYPE[status];
+    if (notificationType) {
+      await supabase.from("notifications").insert({
+        parent_id: booking.parent_id,
+        booking_id: id,
+        type: notificationType,
+        message: notificationMessage(status, teamClass?.name ?? "클래스"),
+      });
+      // 알림 생성 실패는 예약 상태 처리 자체를 막지 않음 (에러는 무시)
+    }
+  }
 
   if (notifyEmail && process.env.RESEND_API_KEY) {
-    const teamClass = booking?.team_class as unknown as {
-      name: string;
-      facility: { name: string } | null;
-    } | null;
     const schedule = booking?.class_schedule as unknown as {
       day_label: string;
       time_label: string;

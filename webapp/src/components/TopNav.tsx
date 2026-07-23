@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import CategoryDrawer from "./CategoryDrawer";
+import NotificationBell from "./NotificationBell";
 
 export default function TopNav({
   title,
@@ -47,6 +48,7 @@ export default function TopNav({
               PlayMate<span className="text-energy">.</span>
             </Link>
           )}
+          <NotificationBell />
         </div>
       </header>
 

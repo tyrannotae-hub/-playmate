@@ -160,6 +160,20 @@ export type ClubClass = {
   images: string[];
 };
 
+export type NotificationType =
+  | "booking_confirmed"
+  | "booking_cancelled"
+  | "booking_completed";
+
+export type AppNotification = {
+  id: string;
+  bookingId: string | null;
+  type: NotificationType;
+  message: string;
+  read: boolean;
+  createdAt: string;
+};
+
 export type ClubBooking = {
   id: string;
   className: string;
