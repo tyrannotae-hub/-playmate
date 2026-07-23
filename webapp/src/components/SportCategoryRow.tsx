@@ -7,6 +7,9 @@ import SportIcon from "@/components/icons/SportIcon";
 
 const COLLAPSED_COUNT = 9;
 
+// 종목별 상세페이지(/sports/[sportId])는 아직 아이스하키만 시범 적용
+const SPORT_PAGE_PILOT = new Set(["ice-hockey"]);
+
 export default function SportCategoryRow({
   sports,
   counts,
@@ -23,7 +26,7 @@ export default function SportCategoryRow({
       {shown.map((s) => (
         <Link
           key={s.id}
-          href={`/search?sport=${s.id}`}
+          href={SPORT_PAGE_PILOT.has(s.id) ? `/sports/${s.id}` : `/search?sport=${s.id}`}
           className="flex flex-col items-center gap-1.5 text-rink-deep"
         >
           <SportIcon sportId={s.id} size={26} />

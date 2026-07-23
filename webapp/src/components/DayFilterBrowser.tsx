@@ -63,18 +63,20 @@ export default function DayFilterBrowser({
       <h2 className="mb-3 px-4 text-lg font-bold">무슨 요일이 편하세요?</h2>
 
       <div className="flex gap-2 overflow-x-auto px-4 pb-1">
-        <select
-          value={sportId}
-          onChange={(e) => setSportId(e.target.value)}
-          className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
-        >
-          <option value="all">전체 종목</option>
-          {sports.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
+        {sports.length > 0 && (
+          <select
+            value={sportId}
+            onChange={(e) => setSportId(e.target.value)}
+            className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
+          >
+            <option value="all">전체 종목</option>
+            {sports.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        )}
         <select
           value={region}
           onChange={(e) => setRegion(e.target.value)}

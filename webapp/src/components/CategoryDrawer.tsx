@@ -6,6 +6,9 @@ import { createClient } from "@/lib/supabase/client";
 import { Sport } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 
+// 종목별 상세페이지(/sports/[sportId])는 아직 아이스하키만 시범 적용
+const SPORT_PAGE_PILOT = new Set(["ice-hockey"]);
+
 export default function CategoryDrawer({
   open,
   onClose,
@@ -75,7 +78,7 @@ export default function CategoryDrawer({
                 {list.map((s) => (
                   <Link
                     key={s.id}
-                    href={`/search?sport=${s.id}`}
+                    href={SPORT_PAGE_PILOT.has(s.id) ? `/sports/${s.id}` : `/search?sport=${s.id}`}
                     onClick={onClose}
                     className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition hover:bg-rink-soft"
                   >
