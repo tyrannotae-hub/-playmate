@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Sport } from "@/lib/types";
+import SportIcon from "@/components/icons/SportIcon";
 
 export default function CategoryDrawer({
   open,
@@ -78,7 +79,7 @@ export default function CategoryDrawer({
                     onClick={onClose}
                     className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-semibold transition hover:bg-rink-soft"
                   >
-                    <span className="text-lg">{s.emoji}</span>
+                    <SportIcon sportId={s.id} size={19} />
                     {s.name}
                   </Link>
                 ))}

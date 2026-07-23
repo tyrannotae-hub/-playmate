@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { TeamClass } from "@/lib/types";
-import { sportEmoji } from "@/lib/sport-meta";
+import SportIcon from "@/components/icons/SportIcon";
 import { cardClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
@@ -16,7 +16,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="mb-1 flex items-center gap-2 text-xs font-semibold text-muted">
-            <span className="shrink-0">{sportEmoji(item.sportId)}</span>
+            <SportIcon sportId={item.sportId} size={14} className="shrink-0" />
             <span className="min-w-0 break-all">{item.facility.name}</span>
           </div>
           <h3 className="break-words text-base font-bold">{item.name}</h3>

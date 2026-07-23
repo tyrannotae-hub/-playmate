@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TeamClass } from "@/lib/types";
-import { sportEmoji } from "@/lib/sport-meta";
+import SportIcon from "@/components/icons/SportIcon";
 import WishlistButton from "@/components/WishlistButton";
 
 export default function ClassCardCompact({
@@ -21,11 +21,11 @@ export default function ClassCardCompact({
       href={`/classes/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
-      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-3xl">
+      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="144px" className="object-cover" />
         ) : (
-          sportEmoji(item.sportId)
+          <SportIcon sportId={item.sportId} size={30} />
         )}
         <div className="absolute right-1.5 top-1.5">
           <WishlistButton classId={item.id} initialWished={wished} size="sm" />

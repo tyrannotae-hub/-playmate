@@ -4,7 +4,6 @@ import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
 import { getClassById, getCurrentParent, getMyWishlistIds, getReviewsForClass } from "@/lib/data";
-import { sportEmoji } from "@/lib/sport-meta";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
@@ -28,7 +27,7 @@ export default async function ClassDetailPage({
     <>
       <TopNav back />
       <main className="pb-36">
-        <ClassGallery images={item.images} emoji={sportEmoji(item.sportId)} />
+        <ClassGallery images={item.images} sportId={item.sportId} />
 
         <div className="px-4 pt-4">
           <div className="flex items-start justify-between gap-3">

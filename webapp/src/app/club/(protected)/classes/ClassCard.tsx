@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import SportIcon from "@/components/icons/SportIcon";
 import ClassMediaManager from "./ClassMediaManager";
 
 const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
@@ -163,11 +164,14 @@ export default function ClassCard({
       {!editing ? (
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="break-words text-xs font-bold text-muted">
-              {sport ? `${sport.emoji} ${sport.name}` : item.sportId} ·{" "}
-              {item.instructors.length > 0
-                ? item.instructors.map((i) => i.name).join(" · ")
-                : "코치 미정"}
+            <p className="flex items-center gap-1 break-words text-xs font-bold text-muted">
+              {sport && <SportIcon sportId={sport.id} size={13} className="shrink-0" />}
+              <span className="min-w-0 break-words">
+                {sport ? sport.name : item.sportId} ·{" "}
+                {item.instructors.length > 0
+                  ? item.instructors.map((i) => i.name).join(" · ")
+                  : "코치 미정"}
+              </span>
             </p>
             <p className="mt-0.5 break-words font-bold">{item.name}</p>
             <p className="mt-1 text-xs text-muted">
@@ -210,7 +214,7 @@ export default function ClassCard({
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.emoji} {s.name}
+                    {s.name}
                   </option>
                 ))}
               </select>

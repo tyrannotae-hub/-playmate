@@ -151,7 +151,7 @@ export default function ClassesClient({
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.emoji} {s.name}
+                    {s.name}
                   </option>
                 ))}
               </select>
