@@ -48,6 +48,7 @@ const GLYPHS: Record<string, Glyph> = {
   taekwondo: TaekwondoGlyph,
   tennis: TennisGlyph,
   golf: GolfGlyph,
+  climbing: ClimbingGlyph,
 };
 
 // 아이스하키: 스틱 + 퍽
@@ -248,6 +249,25 @@ function GolfGlyph() {
       <path d="M14 4 17.5 5.3 16 8.7 12.6 8.2Z" />
       <path d="M2.5 21.5h9" />
       <circle cx="18.5" cy="19" r="1.8" />
+    </>
+  );
+}
+
+// 클라이밍: 벽면 + 홀드를 잡고 오르는 사람
+function ClimbingGlyph() {
+  return (
+    <>
+      <path d="M3 2v20" />
+      <circle cx="14" cy="4.5" r="1.9" />
+      <path d="M13 6.3 10.5 11" />
+      <path d="M10.5 11 7 8" />
+      <circle cx="6.3" cy="7.3" r="1.1" />
+      <path d="M10.5 11 14.5 9" />
+      <circle cx="15.5" cy="8.3" r="1.1" />
+      <path d="M10.5 11 8 17" />
+      <circle cx="7.3" cy="18" r="1.1" />
+      <path d="M10.5 11 13.5 16.5" />
+      <circle cx="14.5" cy="17.5" r="1.1" />
     </>
   );
 }

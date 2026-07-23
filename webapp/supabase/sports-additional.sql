@@ -15,4 +15,5 @@ insert into sports (id, name, emoji, category, traits) values
   ('ballet', '발레', '', '무용', array['집중력','표현력','유연성']),
   ('korean-dance', '한국무용', '', '무용', array['표현력','차분함','사교적']),
   ('modern-dance', '현대무용', '', '무용', array['표현력','유연성','창의적']),
-  ('dance', '댄스', '', '무용', array['표현력','에너지','사교적']);
+  ('dance', '댄스', '', '무용', array['표현력','에너지','사교적']),
+  ('climbing', '클라이밍', '', '아웃도어', array['활동적','도전정신','문제해결력']);
