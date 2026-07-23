@@ -55,6 +55,7 @@ export type Review = {
   parentName: string;
   rating: number;
   content: string;
+  photoUrls: string[];
   createdAt: string;
 };
 

@@ -120,6 +120,17 @@ export default function DetailTabs({
                   <p className="text-sm font-bold text-rink-deep">★ {r.rating}</p>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{r.content}</p>
+                {r.photoUrls.length > 0 && (
+                  <div className="mt-3 flex gap-2 overflow-x-auto">
+                    {r.photoUrls.map((url) => (
+                      <div
+                        key={url}
+                        className="h-16 w-16 shrink-0 rounded-md border border-line bg-surface-2 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${url})` }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
