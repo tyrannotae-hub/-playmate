@@ -150,9 +150,13 @@ export default function ClassCard({
   async function deleteClass() {
     if (!confirm(`"${item.name}" 클래스를 삭제할까요?`)) return;
     const supabase = createClient();
-    const { error } = await supabase.from("teams_classes").delete().eq("id", item.id);
+    const { error } = await supabase.rpc("delete_class", { p_class_id: item.id });
     if (error) {
-      alert("예약 이력이 있는 클래스는 삭제할 수 없어요.");
+      alert(
+        error.message === "ACTIVE_BOOKINGS_EXIST"
+          ? "신청/확정 상태인 예약이 있어 삭제할 수 없어요. 먼저 완료 또는 취소 처리해주세요."
+          : "삭제에 실패했어요. 다시 시도해주세요."
+      );
       return;
     }
     router.refresh();
