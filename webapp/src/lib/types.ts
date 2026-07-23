@@ -115,6 +115,20 @@ export type MyReview = {
   createdAt: string;
 };
 
+export type FacilitySummary = {
+  id: string;
+  name: string;
+  address: string;
+  region: string;
+  coverImageUrl: string;
+  ownerType: "club" | "solo_coach";
+  sportIds: string[];
+  classCount: number;
+  rating: number;
+  reviewCount: number;
+  popularity: number;
+};
+
 export type FeaturedInstructor = {
   id: string;
   name: string;

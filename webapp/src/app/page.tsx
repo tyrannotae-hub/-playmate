@@ -1,12 +1,14 @@
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import ClassCardCompact from "@/components/ClassCardCompact";
+import FacilityCard from "@/components/FacilityCard";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import {
+  facilitiesFromClasses,
   getAllClasses,
   getCurrentParent,
   getFeaturedInstructors,
@@ -26,6 +28,10 @@ export default async function HomePage() {
     getFeaturedInstructors(),
     getCurrentParent(),
   ]);
+  const facilities = await facilitiesFromClasses(classes);
+  const popularFacilities = [...facilities]
+    .sort((a, b) => b.popularity - a.popularity || b.classCount - a.classCount)
+    .slice(0, 10);
   const [children, wishedIds, wishedInstructorIds] = user
     ? await Promise.all([
         getMyChildren(),
@@ -113,6 +119,22 @@ export default async function HomePage() {
             <p className="px-4 py-6 text-sm text-muted">곧 클래스가 열려요.</p>
           )}
         </div>
+
+        {popularFacilities.length > 0 && (
+          <div className="mt-8">
+            <div className="mb-3 flex items-center justify-between px-4">
+              <h2 className="text-lg font-bold">인기 팀・클럽</h2>
+              <Link href="/facilities" className="text-xs font-bold text-rink-deep">
+                전체보기 →
+              </Link>
+            </div>
+            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
+              {popularFacilities.map((f) => (
+                <FacilityCard key={f.id} item={f} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {instructors.length > 0 && (
           <div className="mt-8">

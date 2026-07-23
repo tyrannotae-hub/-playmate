@@ -3,84 +3,52 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
-import ClassCard from "@/components/ClassCard";
-import ClassSearchBox from "@/components/ClassSearchBox";
 import FacilityCard from "@/components/FacilityCard";
 import SportIcon from "@/components/icons/SportIcon";
-import { FacilitySummary, Sport, TeamClass } from "@/lib/types";
+import { FacilitySummary, Sport } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 
-type SortKey = "distance" | "rating" | "price";
+type SortKey = "popular" | "rating" | "classCount";
 
-const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
-  distance: (a, b) => a.distanceKm - b.distanceKm,
+const SORTERS: Record<SortKey, (a: FacilitySummary, b: FacilitySummary) => number> = {
+  popular: (a, b) => b.popularity - a.popularity,
   rating: (a, b) => b.rating - a.rating,
-  price: (a, b) => a.price - b.price,
+  classCount: (a, b) => b.classCount - a.classCount,
 };
 
-export default function SearchClient({
-  classes,
+export default function FacilitiesClient({
   facilities,
   sports,
   initialRegion = "",
-  wishedIds = [],
 }: {
-  classes: TeamClass[];
   facilities: FacilitySummary[];
   sports: Sport[];
   initialRegion?: string;
-  wishedIds?: string[];
 }) {
-  const wishedSet = useMemo(() => new Set(wishedIds), [wishedIds]);
   const params = useSearchParams();
   const initialSport = params.get("sport") ?? "all";
-  const initialQuery = params.get("q") ?? "";
 
   const [sportId, setSportId] = useState(initialSport);
   const [region, setRegion] = useState(initialRegion || "all");
-  const [sort, setSort] = useState<SortKey>("distance");
+  const [sort, setSort] = useState<SortKey>("popular");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
+    const codes = Array.from(new Set(facilities.map((f) => f.region).filter(Boolean)));
     return codes.map((code) => ({ code, label: regionLabel(code) }));
-  }, [classes]);
+  }, [facilities]);
 
   const results = useMemo(() => {
-    const q = initialQuery.trim().toLowerCase();
-    const byQuery =
-      q.length === 0
-        ? classes
-        : classes.filter(
-            (c) =>
-              c.name.toLowerCase().includes(q) ||
-              c.facility.name.toLowerCase().includes(q) ||
-              c.instructors.some((i) => i.name.toLowerCase().includes(q))
-          );
     const bySport =
-      sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
-    const byRegion =
-      region === "all" ? bySport : bySport.filter((c) => c.facility.region === region);
+      sportId === "all" ? facilities : facilities.filter((f) => f.sportIds.includes(sportId));
+    const byRegion = region === "all" ? bySport : bySport.filter((f) => f.region === region);
     return [...byRegion].sort(SORTERS[sort]);
-  }, [classes, sportId, region, sort, initialQuery]);
-
-  const matchedFacilities = useMemo(() => {
-    const q = initialQuery.trim().toLowerCase();
-    if (q.length === 0) return [];
-    return facilities.filter((f) => f.name.toLowerCase().includes(q));
-  }, [facilities, initialQuery]);
+  }, [facilities, sportId, region, sort]);
 
   return (
     <>
-      <TopNav
-        title={sportId === "all" ? "검색" : sports.find((s) => s.id === sportId)?.name}
-        back
-      />
+      <TopNav title="팀・클럽" back />
       <main className="pb-10 pt-3">
-        <div className="mb-3">
-          <ClassSearchBox initialQuery={initialQuery} sportId={sportId !== "all" ? sportId : undefined} />
-        </div>
-
         <div className="mb-3 flex gap-2 overflow-x-auto px-4 pb-1">
           <button
             onClick={() => setSportId("all")}
@@ -128,37 +96,23 @@ export default function SearchClient({
             onChange={(e) => setSort(e.target.value as SortKey)}
             className="rounded-md border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
-            <option value="distance">거리순</option>
+            <option value="popular">인기순</option>
             <option value="rating">평점순</option>
-            <option value="price">가격순</option>
+            <option value="classCount">클래스 많은순</option>
           </select>
         </div>
 
-        {matchedFacilities.length > 0 && (
-          <div className="mb-4">
-            <h2 className="mb-2 px-4 text-sm font-bold text-muted">
-              팀・클럽 {matchedFacilities.length}개
-            </h2>
-            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
-              {matchedFacilities.map((f) => (
-                <FacilityCard key={f.id} item={f} />
-              ))}
-            </div>
-          </div>
-        )}
-
         <p className="mb-3 px-4 text-xs font-semibold text-muted">
-          {initialQuery.trim() && `'${initialQuery.trim()}' 검색 · `}
           {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 
-        <div className="flex flex-col gap-3 px-4">
-          {results.map((c) => (
-            <ClassCard key={c.id} item={c} wished={wishedSet.has(c.id)} />
+        <div className="grid grid-cols-2 gap-4 px-4">
+          {results.map((f) => (
+            <FacilityCard key={f.id} item={f} variant="grid" />
           ))}
           {results.length === 0 && (
-            <p className="py-10 text-center text-sm text-muted">
-              조건에 맞는 클래스가 아직 없어요.
+            <p className="col-span-2 py-10 text-center text-sm text-muted">
+              조건에 맞는 팀・클럽이 아직 없어요.
             </p>
           )}
         </div>

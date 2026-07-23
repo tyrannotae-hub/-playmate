@@ -6,6 +6,7 @@ import {
   Child,
   FacilityHome,
   FacilityInstructor,
+  FacilitySummary,
   FeaturedInstructor,
   MyReview,
   ParentProfile,
@@ -199,6 +200,85 @@ export async function getAllClasses(): Promise<TeamClass[]> {
   return (data as unknown as RawClass[]).map((r) =>
     toTeamClass(r, ratings, wishCounts, instructorWishCounts)
   );
+}
+
+type RawFacilityMeta = {
+  id: string;
+  name: string;
+  address: string;
+  region_code: string | null;
+  cover_image_url: string | null;
+  owner_type: string | null;
+};
+
+async function facilityMetaMap() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("facilities")
+    .select("id, name, address, region_code, cover_image_url, owner_type");
+
+  const map = new Map<string, RawFacilityMeta>();
+  ((data ?? []) as RawFacilityMeta[]).forEach((f) => map.set(f.id, f));
+  return map;
+}
+
+// 클래스 목록(이미 rating/wishCount가 계산돼 있음)을 시설 단위로 묶어 팀・클럽 요약을 만든다.
+// 팀 찾기 개선(홈/종목별/검색에 팀·클럽 노출)에 공용으로 쓰인다.
+function summarizeFacilities(
+  classes: TeamClass[],
+  metaMap: Map<string, RawFacilityMeta>
+): FacilitySummary[] {
+  const agg = new Map<
+    string,
+    { sportIds: Set<string>; classCount: number; ratingSum: number; reviewCount: number; popularity: number }
+  >();
+
+  for (const c of classes) {
+    const fid = c.facility.id;
+    if (!fid) continue;
+    const cur = agg.get(fid) ?? {
+      sportIds: new Set<string>(),
+      classCount: 0,
+      ratingSum: 0,
+      reviewCount: 0,
+      popularity: 0,
+    };
+    cur.sportIds.add(c.sportId);
+    cur.classCount += 1;
+    cur.ratingSum += c.rating * c.reviewCount;
+    cur.reviewCount += c.reviewCount;
+    cur.popularity += c.wishCount;
+    agg.set(fid, cur);
+  }
+
+  return Array.from(agg.entries()).map(([fid, a]) => {
+    const meta = metaMap.get(fid);
+    return {
+      id: fid,
+      name: meta?.name ?? "",
+      address: meta?.address ?? "",
+      region: meta?.region_code ?? "",
+      coverImageUrl: meta?.cover_image_url ?? "",
+      ownerType: (meta?.owner_type as "club" | "solo_coach") ?? "club",
+      sportIds: Array.from(a.sportIds),
+      classCount: a.classCount,
+      rating: a.reviewCount > 0 ? Math.round((a.ratingSum / a.reviewCount) * 10) / 10 : 0,
+      reviewCount: a.reviewCount,
+      popularity: a.popularity,
+    };
+  });
+}
+
+export async function getAllFacilities(): Promise<FacilitySummary[]> {
+  const [classes, metaMap] = await Promise.all([getAllClasses(), facilityMetaMap()]);
+  return summarizeFacilities(classes, metaMap);
+}
+
+// 홈 화면처럼 이미 getAllClasses()를 호출한 곳에서 같은 클래스 목록을 다시 안 긁어오도록
+// 시설 메타만 추가로 조회해 합치는 버전.
+export async function facilitiesFromClasses(classes: TeamClass[]): Promise<FacilitySummary[]> {
+  const metaMap = await facilityMetaMap();
+  return summarizeFacilities(classes, metaMap);
 }
 
 export async function getClassById(id: string): Promise<TeamClass | null> {

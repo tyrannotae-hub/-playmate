@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import TopNav from "@/components/TopNav";
 import SportIcon from "@/components/icons/SportIcon";
 import ClassSearchBox from "@/components/ClassSearchBox";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
+import FacilityCard from "@/components/FacilityCard";
 import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import {
+  facilitiesFromClasses,
   getAllClasses,
   getCurrentParent,
   getMyInstructorWishlistIds,
@@ -39,6 +42,10 @@ export default async function SportDetailPage({
 
   const classes = allClasses.filter((c) => c.sportId === sportId);
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 8);
+  const facilities = await facilitiesFromClasses(classes);
+  const popularFacilities = [...facilities]
+    .sort((a, b) => b.popularity - a.popularity || b.classCount - a.classCount)
+    .slice(0, 8);
 
   const instructorMap = new Map<string, FeaturedInstructor>();
   classes.forEach((c) => {
@@ -84,6 +91,22 @@ export default async function SportDetailPage({
             <h2 className="mb-3 px-4 text-lg font-bold">지금 인기있는 클래스</h2>
             <div className="px-4">
               <HoverExpand_001 classes={popular} />
+            </div>
+          </div>
+        )}
+
+        {popularFacilities.length > 0 && (
+          <div className="mt-8">
+            <div className="mb-3 flex items-center justify-between px-4">
+              <h2 className="text-lg font-bold">지금 인기있는 팀・클럽</h2>
+              <Link href={`/facilities?sport=${sport.id}`} className="text-xs font-bold text-rink-deep">
+                전체보기 →
+              </Link>
+            </div>
+            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
+              {popularFacilities.map((f) => (
+                <FacilityCard key={f.id} item={f} />
+              ))}
             </div>
           </div>
         )}
