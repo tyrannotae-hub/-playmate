@@ -3,6 +3,7 @@ import { TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import { cardClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
+import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
 export default function ClassCard({ item, wished = false }: { item: TeamClass; wished?: boolean }) {
   const schedule = item.schedules[0];
@@ -44,7 +45,22 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
         <span>{item.distanceKm.toFixed(1)}km</span>
         <span aria-hidden>·</span>
         <span>
-          {item.showPrice ? `${item.priceUnit} ${item.price.toLocaleString()}원` : "가격 문의"}
+          {item.showPrice ? (
+            isDiscountActive(item) ? (
+              <>
+                <span className="text-muted line-through">
+                  {item.priceUnit} {item.price.toLocaleString()}원
+                </span>{" "}
+                <span className="font-bold text-energy">
+                  {item.priceUnit} {effectivePrice(item).toLocaleString()}원
+                </span>
+              </>
+            ) : (
+              `${item.priceUnit} ${item.price.toLocaleString()}원`
+            )
+          ) : (
+            "가격 문의"
+          )}
         </span>
         <span aria-hidden>·</span>
         <span

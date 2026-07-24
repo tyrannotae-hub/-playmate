@@ -10,13 +10,14 @@ import SportIcon from "@/components/icons/SportIcon";
 import { FacilitySummary, Sport, TeamClass } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
+import { effectivePrice } from "@/lib/pricing";
 
 type SortKey = "distance" | "rating" | "price";
 
 const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
   distance: (a, b) => a.distanceKm - b.distanceKm,
   rating: (a, b) => b.rating - a.rating,
-  price: (a, b) => a.price - b.price,
+  price: (a, b) => effectivePrice(a) - effectivePrice(b),
 };
 
 export default function SearchClient({
