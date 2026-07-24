@@ -2,11 +2,14 @@ import { redirect } from "next/navigation";
 import ClubNav from "@/components/ClubNav";
 import { getCurrentClubOwner, getMyFacility } from "@/lib/club-data";
 
-// Vercel Hobby 서버리스 함수가 iad1(미국)에 고정 실행되는 반면 Supabase는 서울이라
-// 왕복 지연이 컸던 문제(학부모 페이지는 이미 edge로 전환됨)를 클럽 관리센터에도 동일 적용.
-// 이 레이아웃에 지정하면 하위 페이지 전체(bookings/classes/dashboard/home/instructors/
-// settings)에 상속된다. web-push를 쓰는 예약 상태변경 API 라우트는 별도 파일이라 영향 없음.
-export const runtime = "edge";
+// 한때 학부모 페이지처럼 edge로 전환했었으나(왕복 지연 개선 목적), 클럽 관리센터
+// 라우트들이 공통으로 지는 기본 번들 무게(Supabase 클라이언트 등)만으로도 Vercel의
+// edge 함수 1MB 한도에 육박해서 페이지마다 순서대로 "1MB 초과" 배포 실패가 반복됐음
+// (club/classes 1.21MB, club/bookings 1.2MB 순으로 발생, page 단위로 nodejs를
+// 되돌려도 다음 라우트가 계속 넘침). 개별 페이지를 땜질하는 대신 nodejs로 전부 되돌림 —
+// 다음에 이 레이아웃을 다시 edge로 시도한다면, 라우트별 번들 크기를 먼저 측정하고
+// 접근할 것.
+export const runtime = "nodejs";
 
 export default async function ClubProtectedLayout({
   children,

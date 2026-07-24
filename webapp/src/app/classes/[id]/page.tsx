@@ -48,37 +48,7 @@ export default async function ClassDetailPage({
         <ClassGallery images={item.images} sportId={item.sportId} />
 
         <div className="px-4 pt-4">
-          <div className="flex items-start justify-between gap-3">
-            <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
-              {item.facility.name} →
-            </Link>
-            <div className="flex shrink-0 items-center gap-1">
-              <FacilityContactLinks
-                phone={item.facility.phone}
-                instagramUrl={item.facility.instagramUrl}
-                facilityName={item.facility.name}
-              />
-              <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
-            </div>
-          </div>
-          <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
-          <p className="mt-1.5 text-sm text-muted">
-            {item.reviewCount > 0
-              ? `★ ${item.rating} (리뷰 ${item.reviewCount})`
-              : "아직 리뷰가 없어요"}{" "}
-            · {item.facility.address}
-          </p>
-          {item.allowTrial && (
-            <span className="mt-2 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
-              원데이 체험 가능
-            </span>
-          )}
-
-          <div className="mt-5">
-            <DetailTabs item={item} reviews={reviews} wishedInstructorIds={wishedInstructorIds} />
-          </div>
-
-          <div className="mt-6 border-t border-line pt-6">
+          <div>
             {item.showPrice ? (
               isDiscountActive(item) ? (
                 <div className="flex items-baseline gap-2">
@@ -117,6 +87,38 @@ export default async function ClassDetailPage({
               </p>
             )}
             <p className="mt-1 text-xs text-muted">현장 결제 또는 계좌이체로 진행돼요</p>
+          </div>
+
+          <div className="mt-5 border-t border-line pt-5">
+            <div className="flex items-start justify-between gap-3">
+              <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
+                {item.facility.name} →
+              </Link>
+              <div className="flex shrink-0 items-center gap-1">
+                <FacilityContactLinks
+                  phone={item.facility.phone}
+                  instagramUrl={item.facility.instagramUrl}
+                  facilityName={item.facility.name}
+                />
+                <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
+              </div>
+            </div>
+            <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
+            <p className="mt-1.5 text-sm text-muted">
+              {item.reviewCount > 0
+                ? `★ ${item.rating} (리뷰 ${item.reviewCount})`
+                : "아직 리뷰가 없어요"}{" "}
+              · {item.facility.address}
+            </p>
+            {item.allowTrial && (
+              <span className="mt-2 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
+                원데이 체험 가능
+              </span>
+            )}
+          </div>
+
+          <div className="mt-5">
+            <DetailTabs item={item} reviews={reviews} wishedInstructorIds={wishedInstructorIds} />
           </div>
         </div>
       </main>
