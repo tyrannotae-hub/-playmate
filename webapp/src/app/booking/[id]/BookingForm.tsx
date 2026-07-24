@@ -243,10 +243,12 @@ export default function BookingForm({
               ))}
             </div>
           </div>
-        ) : (
+        ) : item.schedules[0] ? (
           <p className="mt-1 text-sm text-muted">
             {item.schedules[0].dayLabel} {item.schedules[0].timeLabel}
           </p>
+        ) : (
+          <p className="mt-1 text-sm text-negative">등록된 시간대가 없어 예약할 수 없어요.</p>
         )}
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4">

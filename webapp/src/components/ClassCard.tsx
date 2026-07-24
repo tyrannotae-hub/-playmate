@@ -6,8 +6,8 @@ import WishlistButton from "@/components/WishlistButton";
 import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
 export default function ClassCard({ item, wished = false }: { item: TeamClass; wished?: boolean }) {
-  const schedule = item.schedules[0];
-  const isFull = schedule.booked >= schedule.capacity;
+  const schedule = item.schedules[0] as typeof item.schedules[number] | undefined;
+  const isFull = !!schedule && schedule.booked >= schedule.capacity;
 
   return (
     <Link
@@ -62,16 +62,20 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
             "가격 문의"
           )}
         </span>
-        <span aria-hidden>·</span>
-        <span
-          className={
-            isFull
-              ? "font-semibold text-muted"
-              : "font-semibold text-good"
-          }
-        >
-          {isFull ? "마감" : `빈자리 ${schedule.capacity - schedule.booked}`}
-        </span>
+        {schedule && (
+          <>
+            <span aria-hidden>·</span>
+            <span
+              className={
+                isFull
+                  ? "font-semibold text-muted"
+                  : "font-semibold text-good"
+              }
+            >
+              {isFull ? "마감" : `빈자리 ${schedule.capacity - schedule.booked}`}
+            </span>
+          </>
+        )}
       </div>
     </Link>
   );

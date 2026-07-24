@@ -96,7 +96,8 @@ export default function DetailTabs({
         <div className="whitespace-pre-line text-sm leading-relaxed">
           {item.description || (
             <span className="text-muted">
-              대상 연령 {item.ageMin}–{item.ageMax}세, 정원 {item.schedules[0].capacity}명의{" "}
+              대상 연령 {item.ageMin}–{item.ageMax}세
+              {item.schedules[0] && `, 정원 ${item.schedules[0].capacity}명`}의{" "}
               {item.classType === "team" ? "팀" : item.classType === "group" ? "그룹" : "개인"}{" "}
               수업입니다. 아직 클럽에서 상세 소개를 등록하지 않았어요.
             </span>
