@@ -1,3 +1,7 @@
+-- ⚠️ 부분 대체됨(supabase/README.md 참고): class_trial_dates 테이블과
+-- teams_classes.allow_trial은 class-schedule-trial-toggle.sql에서 삭제됨.
+-- trial_price/show_price 컬럼은 계속 유효.
+--
 -- 클래스 개설 시 "원데이 체험" 옵션 지원.
 --
 -- teams_classes에 3개 컬럼 추가:

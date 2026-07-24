@@ -1,3 +1,9 @@
+-- ⚠️ 부분 대체됨(supabase/README.md 참고): request_booking_change()는
+-- class-schedule-trial-toggle.sql에서 시그니처 자체가 바뀜(trial_date 파라미터
+-- 제거, class_trial_dates 대신 class_schedules.allow_trial 검증). respond_booking_change()는
+-- booking-cancel-request.sql에서 last_change_applied_at 컬럼 갱신이 추가됨.
+-- cancel_booking_change()는 그대로 유효.
+--
 -- 예약 변경(일정/체험 날짜 변경) 요청 기능.
 -- 학부모가 기존 예약의 시간대(또는 체험 날짜)를 바꿔달라고 요청하면, 클럽 운영자가
 -- 승인/거절하는 흐름. cancel_booking()과 마찬가지로 bookings에는 학부모용 UPDATE RLS가

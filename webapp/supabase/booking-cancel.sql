@@ -1,3 +1,7 @@
+-- ⚠️ 부분 대체됨(supabase/README.md 참고): cancel_booking() 최신 버전은
+-- booking-cancel-request.sql에 있음(확인중/승인됨 상태에 따라 즉시취소 vs
+-- 클럽승인필요 분기 추가됨).
+--
 -- 학부모 예약 취소 RPC (schema.sql의 request_booking()과 대칭)
 --
 -- bookings 테이블에는 학부모용 UPDATE RLS 정책이 없다 (schema.sql의

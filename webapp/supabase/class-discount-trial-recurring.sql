@@ -1,3 +1,8 @@
+-- ⚠️ 부분 대체됨(supabase/README.md 참고): trial_day_label 컬럼은
+-- class-schedule-trial-toggle.sql에서 삭제됨(원데이 반복 요일은 이제
+-- class_schedules.day_label을 그대로 씀). discount_* 컬럼과 class_holidays
+-- 테이블은 계속 유효.
+--
 -- 클래스관리센터 확장: 원데이 가격 공개/비공개, 클래스 할인(기간 지정),
 -- 원데이 체험의 매주 요일 반복, 휴일(운영 제외일) 설정.
 --
