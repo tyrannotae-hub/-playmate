@@ -8,6 +8,7 @@ import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import SportIcon from "@/components/icons/SportIcon";
 import ClassMediaManager from "./ClassMediaManager";
+import DayLabelPicker from "@/components/club/DayLabelPicker";
 import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
 
 const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
@@ -135,6 +136,12 @@ export default function ClassCard({
     setSubmitting(true);
     setErrorMsg("");
     const supabase = createClient();
+
+    if (!dayLabel) {
+      setSubmitting(false);
+      setErrorMsg("요일을 하나 이상 선택해주세요.");
+      return;
+    }
 
     const { error } = await supabase.from("class_schedules").insert({
       team_class_id: item.id,
@@ -511,22 +518,14 @@ export default function ClassCard({
         </button>
       ) : (
         <form onSubmit={addSchedule} className="mt-3 flex flex-col gap-2">
-          <div className="flex gap-2">
-            <input
-              required
-              value={dayLabel}
-              onChange={(e) => setDayLabel(e.target.value)}
-              placeholder="요일 (예: 화·목)"
-              className="w-1/2 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
-            />
-            <input
-              required
-              value={timeLabel}
-              onChange={(e) => setTimeLabel(e.target.value)}
-              placeholder="시간 (예: 16:00)"
-              className="w-1/2 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
-            />
-          </div>
+          <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
+          <input
+            required
+            value={timeLabel}
+            onChange={(e) => setTimeLabel(e.target.value)}
+            placeholder="시간 (예: 16:00)"
+            className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+          />
           <input
             type="number"
             required

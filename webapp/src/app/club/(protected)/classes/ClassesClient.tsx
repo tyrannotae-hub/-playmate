@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import DayLabelPicker from "@/components/club/DayLabelPicker";
 import ClassCard from "./ClassCard";
 
 export default function ClassesClient({
@@ -309,20 +310,13 @@ export default function ClassesClient({
           )}
 
           <p className="mt-1 text-xs font-bold text-muted">첫 수업 시간대 (선택, 나중에 추가 가능)</p>
-          <div className="flex gap-2">
-            <input
-              value={dayLabel}
-              onChange={(e) => setDayLabel(e.target.value)}
-              placeholder="요일 (예: 화·목)"
-              className="w-1/2 rounded-md border border-line bg-background px-3.5 py-3 text-sm"
-            />
-            <input
-              value={timeLabel}
-              onChange={(e) => setTimeLabel(e.target.value)}
-              placeholder="시간 (예: 16:00)"
-              className="w-1/2 rounded-md border border-line bg-background px-3.5 py-3 text-sm"
-            />
-          </div>
+          <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
+          <input
+            value={timeLabel}
+            onChange={(e) => setTimeLabel(e.target.value)}
+            placeholder="시간 (예: 16:00)"
+            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          />
           <input
             type="number"
             min={1}

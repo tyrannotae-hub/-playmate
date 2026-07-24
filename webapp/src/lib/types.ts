@@ -56,7 +56,13 @@ export type TeamClass = {
   allowTrial: boolean;
   trialPrice?: number;
   showPrice: boolean;
+  showTrialPrice: boolean;
   trialDates: string[];
+  trialDayLabel?: string;
+  holidays: string[];
+  discountPrice?: number;
+  discountStartDate?: string;
+  discountEndDate?: string;
 };
 
 export type Review = {
@@ -230,7 +236,13 @@ export type ClubClass = {
   allowTrial: boolean;
   trialPrice?: number;
   showPrice: boolean;
+  showTrialPrice: boolean;
   trialDates: string[];
+  trialDayLabel?: string;
+  holidays: string[];
+  discountPrice?: number;
+  discountStartDate?: string;
+  discountEndDate?: string;
 };
 
 export type Admin = {
