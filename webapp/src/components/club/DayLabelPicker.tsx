@@ -30,8 +30,8 @@ export default function DayLabelPicker({
             key={d}
             type="button"
             onClick={() => toggle(d)}
-            className={`h-9 w-9 flex-shrink-0 rounded-md text-sm font-bold transition ${
-              isSelected ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
+            className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-medium transition ${
+              isSelected ? "bg-rink text-white" : "text-foreground"
             }`}
           >
             {d}

@@ -40,13 +40,13 @@ export default function FacilityClassGrid({
     <div>
       <h2 className="mb-3 px-4 text-lg font-bold">전체 클래스</h2>
 
-      <div className="flex gap-1.5 overflow-x-auto px-4 pb-1">
+      <div className="flex gap-2 overflow-x-auto px-4 pb-1">
         {DAYS.map((d) => (
           <button
             key={d}
             onClick={() => setDay(d)}
-            className={`h-9 flex-shrink-0 rounded-md px-3.5 text-xs font-bold transition ${
-              day === d ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
+            className={`flex h-9 flex-shrink-0 items-center justify-center rounded-full px-3.5 text-sm font-medium transition ${
+              day === d ? "bg-rink text-white" : "text-foreground"
             }`}
           >
             {d}
