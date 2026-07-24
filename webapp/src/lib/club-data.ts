@@ -203,7 +203,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
 }
 
 const CLUB_BOOKING_SELECT =
-  "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, child:children(name, birth_date), team_class:teams_classes!inner(id, name, facility_id), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)";
+  "id, status, requested_at, contact_phone, gender, height_cm, shoe_size_mm, residence, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, cancel_requested_at, last_change_applied_at, child:children(name, birth_date), team_class:teams_classes!inner(id, name, facility_id), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)";
 
 type RawClubBooking = {
   id: string;
@@ -219,6 +219,8 @@ type RawClubBooking = {
   change_requested_at: string | null;
   requested_trial_date: string | null;
   change_note: string | null;
+  cancel_requested_at: string | null;
+  last_change_applied_at: string | null;
   child: { name: string; birth_date: string } | null;
   team_class: { id: string; name: string } | null;
   class_schedule: { day_label: string; time_label: string } | null;
@@ -250,6 +252,8 @@ function toClubBooking(b: RawClubBooking): ClubBooking {
       : undefined,
     requestedTrialDate: b.requested_trial_date ?? undefined,
     changeNote: b.change_note ?? undefined,
+    cancelRequestedAt: b.cancel_requested_at ?? undefined,
+    lastChangeAppliedAt: b.last_change_applied_at ?? undefined,
   };
 }
 

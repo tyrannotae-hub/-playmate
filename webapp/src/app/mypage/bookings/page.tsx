@@ -43,7 +43,7 @@ export default async function MyBookingsPage() {
               )}
               {(b.status === "requested" || b.status === "confirmed") && (
                 <>
-                  <CancelBookingButton bookingId={b.id} />
+                  <CancelBookingButton booking={b} />
                   <ChangeBookingButton booking={b} />
                 </>
               )}

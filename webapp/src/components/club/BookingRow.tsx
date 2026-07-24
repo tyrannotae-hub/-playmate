@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/StatusBadge";
+import { createClient } from "@/lib/supabase/client";
 import { ClubBooking } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
@@ -21,6 +22,9 @@ export default function BookingRow({
   const [errorMsg, setErrorMsg] = useState("");
   const [changeSubmitting, setChangeSubmitting] = useState(false);
   const [changeErrorMsg, setChangeErrorMsg] = useState("");
+  const [cancelSubmitting, setCancelSubmitting] = useState(false);
+  const [cancelErrorMsg, setCancelErrorMsg] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   async function updateStatus(
     status: "confirmed" | "cancelled" | "completed"
@@ -63,6 +67,33 @@ export default function BookingRow({
       return;
     }
     router.refresh();
+  }
+
+  async function respondToCancel(approve: boolean) {
+    setCancelSubmitting(true);
+    setCancelErrorMsg("");
+
+    const res = await fetch(`/api/bookings/${booking.id}/respond-cancel`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ approve }),
+    });
+
+    setCancelSubmitting(false);
+    if (!res.ok) {
+      setCancelErrorMsg("처리에 실패했어요. 다시 시도해주세요.");
+      return;
+    }
+    router.refresh();
+  }
+
+  async function deleteBooking() {
+    if (!confirm("이 예약 기록을 삭제할까요? 삭제하면 되돌릴 수 없어요.")) return;
+    setDeleting(true);
+    const supabase = createClient();
+    const { error } = await supabase.from("bookings").delete().eq("id", booking.id);
+    setDeleting(false);
+    if (!error) router.refresh();
   }
 
   return (
@@ -150,6 +181,34 @@ export default function BookingRow({
         </div>
       )}
 
+      {booking.cancelRequestedAt && (
+        <div className="mt-3 rounded-md border border-negative bg-negative/5 px-3 py-2.5">
+          <p className="text-xs font-bold text-negative">취소 요청됨</p>
+          {cancelErrorMsg && <p className="mt-1.5 text-xs text-negative">{cancelErrorMsg}</p>}
+          <div className="mt-2 flex gap-2">
+            <button
+              disabled={cancelSubmitting}
+              onClick={() => respondToCancel(true)}
+              className={buttonClass({
+                variant: "custom",
+                size: "sm",
+                full: false,
+                className: "flex-1 bg-negative text-white",
+              })}
+            >
+              취소 승인
+            </button>
+            <button
+              disabled={cancelSubmitting}
+              onClick={() => respondToCancel(false)}
+              className={buttonClass({ variant: "outline", size: "sm", full: false, className: "flex-1" })}
+            >
+              취소 거절
+            </button>
+          </div>
+        </div>
+      )}
+
       {errorMsg && <p className="mt-2 text-xs text-negative">{errorMsg}</p>}
 
       {booking.status === "requested" && (
@@ -196,6 +255,18 @@ export default function BookingRow({
             className={buttonClass({ variant: "outline", size: "sm", full: false, className: "flex-1" })}
           >
             취소
+          </button>
+        </div>
+      )}
+
+      {(booking.status === "completed" || booking.status === "cancelled") && (
+        <div className="mt-3">
+          <button
+            disabled={deleting}
+            onClick={deleteBooking}
+            className={buttonClass({ variant: "outline", size: "sm", full: false, className: "text-muted" })}
+          >
+            {deleting ? "삭제 중..." : "기록 삭제"}
           </button>
         </div>
       )}

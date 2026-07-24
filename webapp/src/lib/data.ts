@@ -551,7 +551,7 @@ export async function getMyBookings(): Promise<Booking[]> {
   const { data } = await supabase
     .from("bookings")
     .select(
-      "id, status, team_class_id, class_schedule_id, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, child:children(name), team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)"
+      "id, status, team_class_id, class_schedule_id, booking_type, trial_date, change_requested_at, requested_trial_date, change_note, cancel_requested_at, child:children(name), team_class:teams_classes(name, facility:facilities(name)), class_schedule:class_schedules!bookings_class_schedule_id_fkey(day_label, time_label), requested_schedule:class_schedules!bookings_requested_schedule_id_fkey(day_label, time_label)"
     )
     .order("requested_at", { ascending: false });
 
@@ -587,6 +587,7 @@ export async function getMyBookings(): Promise<Booking[]> {
         : undefined,
       requestedTrialDate: b.requested_trial_date ?? undefined,
       changeNote: b.change_note ?? undefined,
+      cancelRequestedAt: b.cancel_requested_at ?? undefined,
     };
   });
 }

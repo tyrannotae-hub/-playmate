@@ -12,6 +12,8 @@ const TYPE_ICON: Record<NotificationType, string> = {
   booking_completed: "🏅",
   booking_change_approved: "🔄",
   booking_change_rejected: "↩️",
+  booking_cancel_approved: "🚫",
+  booking_cancel_rejected: "↩️",
 };
 
 export default function NotificationList({ initial }: { initial: AppNotification[] }) {

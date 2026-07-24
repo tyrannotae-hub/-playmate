@@ -93,7 +93,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
     setErrorMsg("");
 
     const supabase = createClient();
-    const { error } = await supabase.rpc("request_booking_change", {
+    const { data, error } = await supabase.rpc("request_booking_change", {
       p_booking_id: booking.id,
       p_schedule_id: booking.bookingType === "enrollment" ? scheduleId || null : null,
       p_trial_date: booking.bookingType === "trial" ? trialDate || null : null,
@@ -104,6 +104,11 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
     if (error) {
       setErrorMsg("변경 요청에 실패했어요. 다시 시도해주세요.");
       return;
+    }
+    if (data === "applied") {
+      window.alert("변경이 바로 반영됐어요.");
+    } else {
+      window.alert("변경 요청을 보냈어요. 클럽에서 승인하면 반영돼요.");
     }
     setOpen(false);
     router.refresh();

@@ -111,6 +111,7 @@ export type Booking = {
   requestedScheduleLabel?: string;
   requestedTrialDate?: string;
   changeNote?: string;
+  cancelRequestedAt?: string;
 };
 
 export type ActiveClass = {
@@ -286,7 +287,9 @@ export type NotificationType =
   | "booking_cancelled"
   | "booking_completed"
   | "booking_change_approved"
-  | "booking_change_rejected";
+  | "booking_change_rejected"
+  | "booking_cancel_approved"
+  | "booking_cancel_rejected";
 
 export type AppNotification = {
   id: string;
@@ -317,4 +320,6 @@ export type ClubBooking = {
   requestedScheduleLabel?: string;
   requestedTrialDate?: string;
   changeNote?: string;
+  cancelRequestedAt?: string;
+  lastChangeAppliedAt?: string;
 };

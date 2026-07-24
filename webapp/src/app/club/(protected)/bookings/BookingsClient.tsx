@@ -8,7 +8,7 @@ import RefreshButton from "@/components/club/RefreshButton";
 import { BookingStatus, ClubBooking } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
 
-type TabKey = BookingStatus | "all" | "change_requested";
+type TabKey = BookingStatus | "all" | "change_requested" | "cancel_requested";
 type TypeTabKey = "all" | "enrollment" | "trial";
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -17,6 +17,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "completed", label: "완료" },
   { key: "cancelled", label: "취소" },
   { key: "change_requested", label: "변경 요청" },
+  { key: "cancel_requested", label: "취소 요청" },
   { key: "all", label: "전체" },
 ];
 
@@ -44,6 +45,7 @@ function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
     .filter((b) => {
       if (tab === "all") return true;
       if (tab === "change_requested") return !!b.changeRequestedAt;
+      if (tab === "cancel_requested") return !!b.cancelRequestedAt;
       return b.status === tab;
     })
     .filter((b) => typeTab === "all" || b.bookingType === typeTab);
