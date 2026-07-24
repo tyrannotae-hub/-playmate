@@ -3,7 +3,12 @@ import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import WishlistButton from "@/components/WishlistButton";
-import { effectivePrice, isDiscountActive } from "@/lib/pricing";
+import {
+  effectivePrice,
+  effectiveTrialPrice,
+  isDiscountActive,
+  isTrialDiscountActive,
+} from "@/lib/pricing";
 
 export default function ClassCardCompact({
   item,
@@ -36,30 +41,57 @@ export default function ClassCardCompact({
             size="sm"
           />
         </div>
-        {item.allowTrial && (
-          <span className="absolute left-1.5 top-1.5 rounded-md bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
-            원데이
+        <div className="absolute left-1.5 top-1.5 flex gap-1">
+          <span className="rounded-md bg-foreground/70 px-1.5 py-0.5 text-[10px] font-bold text-background">
+            정기
           </span>
-        )}
+          {item.allowTrial && (
+            <span className="rounded-md bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
+              원데이
+            </span>
+          )}
+        </div>
       </div>
       <p className="mt-2 truncate text-[11px] font-semibold text-muted">{item.facility.name}</p>
       <p className="truncate text-sm font-bold">{item.name}</p>
-      <p className="mt-0.5 text-xs text-muted tabular-nums">
+      <p className="mt-0.5 text-xs tabular-nums">
+        <span className="mr-1 text-[10px] font-bold text-muted">정기</span>
         {item.showPrice ? (
           isDiscountActive(item) ? (
             <>
-              <span className="line-through">{item.price.toLocaleString()}원</span>{" "}
+              <span className="text-muted line-through">{item.price.toLocaleString()}원</span>{" "}
               <span className="font-bold text-energy">
                 {effectivePrice(item).toLocaleString()}원
               </span>
             </>
           ) : (
-            `${item.priceUnit} ${item.price.toLocaleString()}원`
+            <span className="text-muted">
+              {item.priceUnit} {item.price.toLocaleString()}원
+            </span>
           )
         ) : (
-          "가격 문의"
+          <span className="text-muted">가격문의</span>
         )}
       </p>
+      {item.allowTrial && item.trialPrice != null && (
+        <p className="mt-0.5 text-xs tabular-nums">
+          <span className="mr-1 text-[10px] font-bold text-muted">원데이</span>
+          {item.showTrialPrice ? (
+            isTrialDiscountActive(item) ? (
+              <>
+                <span className="text-muted line-through">{item.trialPrice.toLocaleString()}원</span>{" "}
+                <span className="font-bold text-energy">
+                  {effectiveTrialPrice(item)!.toLocaleString()}원
+                </span>
+              </>
+            ) : (
+              <span className="text-muted">{item.trialPrice.toLocaleString()}원</span>
+            )
+          ) : (
+            <span className="text-muted">가격문의</span>
+          )}
+        </p>
+      )}
     </Link>
   );
 }
