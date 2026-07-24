@@ -36,7 +36,7 @@ export default function DayFilterBrowser({
   const [sportId, setSportId] = useState("all");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
+    const codes = Array.from(new Set(classes.flatMap((c) => c.facility.regions)));
     return codes.map((code) => ({ code, label: regionLabel(code) }));
   }, [classes]);
 
@@ -52,7 +52,7 @@ export default function DayFilterBrowser({
       })
       .filter((row): row is { item: TeamClass; schedule: TeamClass["schedules"][number] } => {
         if (!row) return false;
-        if (region !== "all" && row.item.facility.region !== region) return false;
+        if (region !== "all" && !row.item.facility.regions.includes(region)) return false;
         if (sportId !== "all" && row.item.sportId !== sportId) return false;
         return true;
       });

@@ -46,7 +46,7 @@ export default function SearchClient({
   const [sort, setSort] = useState<SortKey>("distance");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(classes.map((c) => c.facility.region).filter(Boolean)));
+    const codes = Array.from(new Set(classes.flatMap((c) => c.facility.regions)));
     return codes.map((code) => ({ code, label: regionLabel(code) }));
   }, [classes]);
 
@@ -64,7 +64,7 @@ export default function SearchClient({
     const bySport =
       sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
     const byRegion =
-      region === "all" ? bySport : bySport.filter((c) => c.facility.region === region);
+      region === "all" ? bySport : bySport.filter((c) => c.facility.regions.includes(region));
     return [...byRegion].sort(SORTERS[sort]);
   }, [classes, sportId, region, sort, initialQuery]);
 

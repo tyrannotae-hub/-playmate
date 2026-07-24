@@ -68,6 +68,7 @@ type RawClass = {
     region_code: string | null;
     phone: string | null;
     instagram_url: string | null;
+    facility_regions: { region_code: string }[];
   } | null;
   class_instructors: {
     instructor: {
@@ -150,6 +151,7 @@ function toTeamClass(
       id: row.facility?.id ?? "",
       name: row.facility?.name ?? "",
       region: row.facility?.region_code ?? "",
+      regions: (row.facility?.facility_regions ?? []).map((r) => r.region_code),
       address: row.facility?.address ?? "",
       phone: row.facility?.phone ?? "",
       instagramUrl: row.facility?.instagram_url ?? "",
@@ -213,7 +215,7 @@ function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter
   let query = supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code,phone,instagram_url), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
+      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
     );
   if (filter?.id) query = query.eq("id", filter.id);
   if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);
@@ -264,7 +266,14 @@ function summarizeFacilities(
 ): FacilitySummary[] {
   const agg = new Map<
     string,
-    { sportIds: Set<string>; classCount: number; ratingSum: number; reviewCount: number; popularity: number }
+    {
+      sportIds: Set<string>;
+      classCount: number;
+      ratingSum: number;
+      reviewCount: number;
+      popularity: number;
+      regions: string[];
+    }
   >();
 
   for (const c of classes) {
@@ -276,6 +285,7 @@ function summarizeFacilities(
       ratingSum: 0,
       reviewCount: 0,
       popularity: 0,
+      regions: c.facility.regions,
     };
     cur.sportIds.add(c.sportId);
     cur.classCount += 1;
@@ -292,6 +302,7 @@ function summarizeFacilities(
       name: meta?.name ?? "",
       address: meta?.address ?? "",
       region: meta?.region_code ?? "",
+      regions: a.regions,
       coverImageUrl: meta?.cover_image_url ?? "",
       ownerType: (meta?.owner_type as "club" | "solo_coach") ?? "club",
       sportIds: Array.from(a.sportIds),

@@ -37,7 +37,7 @@ export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacil
   const { data } = await supabase
     .from("facilities")
     .select(
-      "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type"
+      "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type, facility_regions(region_code)"
     )
     .eq("id", facilityId)
     .maybeSingle();
@@ -52,6 +52,7 @@ export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacil
     coverImageUrl: data.cover_image_url ?? "",
     profileImageUrl: data.profile_image_url ?? "",
     instagramUrl: data.instagram_url ?? "",
+    regions: (data.facility_regions ?? []).map((r: { region_code: string }) => r.region_code),
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
   };
 });

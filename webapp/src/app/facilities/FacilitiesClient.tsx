@@ -37,14 +37,15 @@ export default function FacilitiesClient({
   const [sort, setSort] = useState<SortKey>("popular");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(facilities.map((f) => f.region).filter(Boolean)));
+    const codes = Array.from(new Set(facilities.flatMap((f) => f.regions)));
     return codes.map((code) => ({ code, label: regionLabel(code) }));
   }, [facilities]);
 
   const results = useMemo(() => {
     const bySport =
       sportId === "all" ? facilities : facilities.filter((f) => f.sportIds.includes(sportId));
-    const byRegion = region === "all" ? bySport : bySport.filter((f) => f.region === region);
+    const byRegion =
+      region === "all" ? bySport : bySport.filter((f) => f.regions.includes(region));
     return [...byRegion].sort(SORTERS[sort]);
   }, [facilities, sportId, region, sort]);
 

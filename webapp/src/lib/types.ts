@@ -10,6 +10,7 @@ export type Facility = {
   id: string;
   name: string;
   region: string;
+  regions: string[];
   address: string;
   phone: string;
   instagramUrl: string;
@@ -138,6 +139,7 @@ export type FacilitySummary = {
   name: string;
   address: string;
   region: string;
+  regions: string[];
   coverImageUrl: string;
   ownerType: "club" | "solo_coach";
   sportIds: string[];
@@ -176,6 +178,7 @@ export type ClubFacility = {
   profileImageUrl: string;
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
+  regions: string[];
 };
 
 export type FacilityNotice = {
