@@ -79,6 +79,11 @@ README부터 읽으세요.**
 - `profile-photos.sql`, `review-photos.sql` — 프로필/리뷰 사진
 - `leads.sql` — 랜딩페이지 사전등록/입점문의(웹앱과 별개, GitHub Pages 랜딩용)
 
+## 성능
+- `perf-fk-indexes.sql` — public 스키마 FK 컬럼 대부분에 인덱스가 없던 것을
+  일괄 추가(Postgres는 PK와 달리 FK를 자동 인덱싱하지 않음). 지금은 테이블당
+  row가 몇 개뿐이라 체감은 없지만 데이터가 늘어나기 전에 미리 정리.
+
 ## 일회성 정리 스크립트 (이미 실행 완료, 재실행 불필요)
 - `cleanup-test-data.sql` — 테스트 계정/데이터 삭제
 - `cleanup-zenith.sql` — 제니스 스포츠클럽 시설 삭제
