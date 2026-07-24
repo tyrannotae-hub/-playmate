@@ -57,12 +57,26 @@ export default function ClassCard({
   const [editTrialPrice, setEditTrialPrice] = useState(
     item.trialPrice != null ? String(item.trialPrice) : ""
   );
+  const [editShowTrialPrice, setEditShowTrialPrice] = useState(item.showTrialPrice);
+  const [editTrialDayLabel, setEditTrialDayLabel] = useState(item.trialDayLabel ?? "");
+  const [editUseDiscount, setEditUseDiscount] = useState(item.discountPrice != null);
+  const [editDiscountPrice, setEditDiscountPrice] = useState(
+    item.discountPrice != null ? String(item.discountPrice) : ""
+  );
+  const [editDiscountStartDate, setEditDiscountStartDate] = useState(
+    item.discountStartDate ?? ""
+  );
+  const [editDiscountEndDate, setEditDiscountEndDate] = useState(item.discountEndDate ?? "");
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
 
   const [addingTrialDate, setAddingTrialDate] = useState(false);
   const [newTrialDate, setNewTrialDate] = useState("");
   const [trialDateErrorMsg, setTrialDateErrorMsg] = useState("");
+
+  const [addingHoliday, setAddingHoliday] = useState(false);
+  const [newHoliday, setNewHoliday] = useState("");
+  const [holidayErrorMsg, setHolidayErrorMsg] = useState("");
 
   function toggleEditInstructor(id: string) {
     setEditInstructorIds((prev) =>
@@ -72,8 +86,17 @@ export default function ClassCard({
 
   async function saveEdit(e: React.FormEvent) {
     e.preventDefault();
-    setSavingEdit(true);
     setEditErrorMsg("");
+
+    if (
+      editUseDiscount &&
+      (!editDiscountPrice || !editDiscountStartDate || !editDiscountEndDate)
+    ) {
+      setEditErrorMsg("할인 적용 시 할인가와 시작일·종료일을 모두 입력해주세요.");
+      return;
+    }
+
+    setSavingEdit(true);
     const supabase = createClient();
 
     const { error: updateError } = await supabase
@@ -92,6 +115,11 @@ export default function ClassCard({
         show_price: editShowPrice,
         allow_trial: editAllowTrial,
         trial_price: editAllowTrial && editTrialPrice ? Number(editTrialPrice) : null,
+        show_trial_price: editShowTrialPrice,
+        trial_day_label: editAllowTrial && editTrialDayLabel ? editTrialDayLabel : null,
+        discount_price: editUseDiscount ? Number(editDiscountPrice) : null,
+        discount_start_date: editUseDiscount ? editDiscountStartDate : null,
+        discount_end_date: editUseDiscount ? editDiscountEndDate : null,
       })
       .eq("id", item.id);
 
@@ -197,6 +225,38 @@ export default function ClassCard({
       .delete()
       .eq("team_class_id", item.id)
       .eq("trial_date", trialDate);
+    if (!error) router.refresh();
+  }
+
+  async function addHoliday(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newHoliday) return;
+    setAddingHoliday(true);
+    setHolidayErrorMsg("");
+    const supabase = createClient();
+
+    const { error } = await supabase
+      .from("class_holidays")
+      .insert({ team_class_id: item.id, holiday_date: newHoliday });
+
+    setAddingHoliday(false);
+    if (error) {
+      setHolidayErrorMsg(
+        error.code === "23505" ? "이미 등록된 날짜예요." : "휴일 추가에 실패했어요."
+      );
+      return;
+    }
+    setNewHoliday("");
+    router.refresh();
+  }
+
+  async function deleteHoliday(holidayDate: string) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("class_holidays")
+      .delete()
+      .eq("team_class_id", item.id)
+      .eq("holiday_date", holidayDate);
     if (!error) router.refresh();
   }
 
@@ -427,6 +487,79 @@ export default function ClassCard({
               />
             </div>
           )}
+          {editAllowTrial && (
+            <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+              <span className="text-sm font-bold">
+                체험가 공개
+                <span className="mt-0.5 block text-xs font-normal text-muted">
+                  끄면 학부모 화면에 체험 가격 대신 &quot;가격 문의&quot;로 표시돼요
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={editShowTrialPrice}
+                onChange={(e) => setEditShowTrialPrice(e.target.checked)}
+                className="h-5 w-5 flex-shrink-0 accent-rink"
+              />
+            </label>
+          )}
+          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              할인 적용
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                기간을 정해 정가 대신 할인가를 노출해요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={editUseDiscount}
+              onChange={(e) => setEditUseDiscount(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+          {editUseDiscount && (
+            <div className="flex flex-col gap-2">
+              <div>
+                <label className="mb-1.5 block text-xs font-bold text-muted">할인가</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={editDiscountPrice}
+                  onChange={(e) => setEditDiscountPrice(e.target.value)}
+                  placeholder="예: 25000"
+                  className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
+                  <input
+                    type="date"
+                    value={editDiscountStartDate}
+                    onChange={(e) => setEditDiscountStartDate(e.target.value)}
+                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
+                  <input
+                    type="date"
+                    value={editDiscountEndDate}
+                    onChange={(e) => setEditDiscountEndDate(e.target.value)}
+                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          {editAllowTrial && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">
+                원데이 매주 반복 <span className="font-normal">(선택, 예: 매주 토요일 체험)</span>
+              </label>
+              <DayLabelPicker value={editTrialDayLabel} onChange={setEditTrialDayLabel} />
+            </div>
+          )}
           <div>
             <p className="mb-1.5 text-xs font-bold text-muted">
               예약 신청 시 추가로 받을 정보 (성별·나이·연락처는 항상 받아요)
@@ -605,6 +738,50 @@ export default function ClassCard({
           {trialDateErrorMsg && <p className="mt-1 text-xs text-negative">{trialDateErrorMsg}</p>}
         </div>
       )}
+
+      <div className="mt-3 border-t border-line pt-3">
+        <p className="mb-1.5 text-xs font-bold text-muted">휴일(운영 안 하는 날)</p>
+        <div className="flex flex-col gap-1.5">
+          {item.holidays
+            .slice()
+            .sort()
+            .map((d) => (
+              <div
+                key={d}
+                className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
+              >
+                <span>{formatIsoDateToKoreanShort(d)}</span>
+                <button
+                  onClick={() => deleteHoliday(d)}
+                  className="font-bold text-muted"
+                  aria-label="휴일 삭제"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          {item.holidays.length === 0 && (
+            <p className="text-xs text-muted">등록된 휴일이 없어요.</p>
+          )}
+        </div>
+        <form onSubmit={addHoliday} className="mt-2 flex gap-2">
+          <input
+            type="date"
+            required
+            value={newHoliday}
+            onChange={(e) => setNewHoliday(e.target.value)}
+            className="flex-1 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+          />
+          <button
+            type="submit"
+            disabled={addingHoliday}
+            className={buttonClass({ variant: "outline", size: "sm", full: false })}
+          >
+            추가
+          </button>
+        </form>
+        {holidayErrorMsg && <p className="mt-1 text-xs text-negative">{holidayErrorMsg}</p>}
+      </div>
 
       <button
         onClick={() => setShowMedia((v) => !v)}
