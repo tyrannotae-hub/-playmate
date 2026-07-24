@@ -4,7 +4,6 @@ import ClassCardCompact from "@/components/ClassCardCompact";
 import FacilityCard from "@/components/FacilityCard";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
-import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import {
@@ -115,8 +114,10 @@ export default async function HomePage() {
         <div className="mt-8" id="popular">
           <h2 className="mb-3 px-4 text-lg font-bold">인기 클래스</h2>
           {popular.length > 0 ? (
-            <div className="px-4">
-              <HoverExpand_001 classes={popular.slice(0, 8)} />
+            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
+              {popular.slice(0, 8).map((c) => (
+                <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
+              ))}
             </div>
           ) : (
             <p className="px-4 py-6 text-sm text-muted">곧 클래스가 열려요.</p>
