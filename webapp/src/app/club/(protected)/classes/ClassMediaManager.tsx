@@ -1,14 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { resizeImageToCover } from "@/lib/image-resize";
 import { buttonClass } from "@/lib/ui";
+import ImageGalleryUploader from "@/components/ImageGalleryUploader";
 
 // 상품 상세처럼 사진 여러 장을 올릴 수 있되, 규격은 모든 클럽이 동일하게 정방형 고정
-const IMAGE_WIDTH = 960;
-const IMAGE_HEIGHT = 960;
 const MAX_IMAGES = 8;
 
 export default function ClassMediaManager({
@@ -23,57 +21,24 @@ export default function ClassMediaManager({
   initialDescription: string;
 }) {
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [images, setImages] = useState(initialImages);
-  const [uploading, setUploading] = useState(false);
   const [description, setDescription] = useState(initialDescription);
   const [savingDescription, setSavingDescription] = useState(false);
   const [savedDescription, setSavedDescription] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
-  async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setErrorMsg("");
+  async function afterUpload(publicUrl: string, sortOrder: number) {
     const supabase = createClient();
-
-    try {
-      const resized = await resizeImageToCover(file, IMAGE_WIDTH, IMAGE_HEIGHT);
-      const path = `${facilityId}/${classId}/${crypto.randomUUID()}.jpg`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("class-images")
-        .upload(path, resized, { contentType: "image/jpeg" });
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("class-images").getPublicUrl(path);
-
-      const { error: insertError } = await supabase
-        .from("class_images")
-        .insert({ team_class_id: classId, url: publicUrl, sort_order: images.length });
-      if (insertError) throw insertError;
-
-      setImages((prev) => [...prev, publicUrl]);
-      router.refresh();
-    } catch {
-      setErrorMsg("사진 업로드에 실패했어요.");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+    const { error } = await supabase
+      .from("class_images")
+      .insert({ team_class_id: classId, url: publicUrl, sort_order: sortOrder });
+    if (error) throw error;
+    router.refresh();
   }
 
-  async function deleteImage(url: string) {
+  async function onDelete(url: string) {
     const supabase = createClient();
     const { error } = await supabase.from("class_images").delete().eq("url", url);
-    if (!error) {
-      setImages((prev) => prev.filter((u) => u !== url));
-      router.refresh();
-    }
+    if (error) throw error;
+    router.refresh();
   }
 
   async function saveDescription() {
@@ -94,45 +59,15 @@ export default function ClassMediaManager({
 
   return (
     <div className="mt-3 flex flex-col gap-3 border-t border-line pt-3">
-      <div>
-        <p className="mb-1.5 text-xs font-bold text-muted">
-          사진 ({images.length}/{MAX_IMAGES})
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {images.map((url) => (
-            <div key={url} className="relative h-16 w-16 overflow-hidden rounded-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt="" className="h-full w-full object-cover" />
-              <button
-                onClick={() => deleteImage(url)}
-                aria-label="사진 삭제"
-                className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-black/60 text-[10px] text-white"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-          {images.length < MAX_IMAGES && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={onFileChange}
-                className="hidden"
-                id={`class-image-input-${classId}`}
-              />
-              <label
-                htmlFor={`class-image-input-${classId}`}
-                className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
-              >
-                {uploading ? "..." : "+ 추가"}
-              </label>
-            </>
-          )}
-        </div>
-        {errorMsg && <p className="mt-1.5 text-xs text-negative">{errorMsg}</p>}
-      </div>
+      <ImageGalleryUploader
+        bucket="class-images"
+        pathPrefix={`${facilityId}/${classId}`}
+        initialImages={initialImages}
+        maxImages={MAX_IMAGES}
+        label="사진"
+        afterUpload={afterUpload}
+        onDelete={onDelete}
+      />
 
       <div>
         <p className="mb-1.5 text-xs font-bold text-muted">상세 소개</p>

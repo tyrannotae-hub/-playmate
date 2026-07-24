@@ -1,7 +1,5 @@
 // 클래스의 dayLabel(예: "월·수·금")을 기반으로 실제 캘린더 날짜를 계산하는 헬퍼.
 // 체험(원데이) 신청 시 "이번주/다음주 중 어느 날에 올지" 학부모가 직접 골라야 해서 필요함.
-// dayLabel 파싱 방식은 facilities/[id]/page.tsx의 buildWeeklySchedule()과 동일하게
-// /[·,\s]+/ 로 분리한다.
 
 const DAY_CHARS = ["월", "화", "수", "목", "금", "토", "일"] as const;
 type DayChar = (typeof DAY_CHARS)[number];
@@ -34,6 +32,12 @@ export function parseDayLabel(dayLabel: string): DayChar[] {
     .filter(Boolean)
     .map(extractDayChar)
     .filter((d): d is DayChar => d !== null);
+}
+
+// "14:00" 같은 timeLabel을 오전/오후로 분류(정오 이전이면 오전).
+export function timeSlotOf(timeLabel: string): "오전" | "오후" {
+  const startHour = parseInt(timeLabel.split(":")[0], 10);
+  return startHour < 12 ? "오전" : "오후";
 }
 
 // dayLabel의 요일 패턴에 맞는, 오늘부터 향후 weeks주(기본 4주 ≈ 28일) 이내의

@@ -23,12 +23,6 @@ export function effectivePrice(item: DiscountableClass, today = new Date()): num
   return isDiscountActive(item, today) ? item.discountPrice! : item.price;
 }
 
-// 할인 중일 때 정가 대비 할인율(%, 내림). 할인 중이 아니면 0.
-export function discountPercent(item: DiscountableClass, today = new Date()): number {
-  if (!isDiscountActive(item, today) || item.price <= 0) return 0;
-  return Math.floor((1 - item.discountPrice! / item.price) * 100);
-}
-
 // 원데이(체험) 가격 할인. 정가 할인과는 독립적인 자기만의 기간
 // (trial_discount_start_date/trial_discount_end_date)을 가진다.
 export type TrialDiscountableClass = {

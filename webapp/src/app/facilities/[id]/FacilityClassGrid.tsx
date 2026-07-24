@@ -2,17 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { TeamClass } from "@/lib/types";
-import { parseDayLabel } from "@/lib/schedule-dates";
+import { parseDayLabel, timeSlotOf } from "@/lib/schedule-dates";
 import ClassCardCompact from "@/components/ClassCardCompact";
 
 const DAYS = ["전체", "월", "화", "수", "목", "금", "토", "일"] as const;
 const TIME_SLOTS = ["전체", "오전", "오후"] as const;
 type TimeSlot = (typeof TIME_SLOTS)[number];
-
-function timeSlotOf(timeLabel: string): Exclude<TimeSlot, "전체"> {
-  const startHour = parseInt(timeLabel.split(":")[0], 10);
-  return startHour < 12 ? "오전" : "오후";
-}
 
 export default function FacilityClassGrid({
   classes,

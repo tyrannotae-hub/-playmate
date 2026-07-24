@@ -830,26 +830,6 @@ export async function getMyNotifications(userId?: string): Promise<AppNotificati
   }));
 }
 
-export async function getUnreadNotificationCount(userId?: string): Promise<number> {
-  const supabase = await createClient();
-
-  let uid = userId;
-  if (!uid) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return 0;
-    uid = user.id;
-  }
-
-  const { count } = await supabase
-    .from("notifications")
-    .select("id", { count: "exact", head: true })
-    .is("read_at", null);
-
-  return count ?? 0;
-}
-
 export function yearsSince(dateStr: string): number {
   const birth = new Date(dateStr);
   const now = new Date();
