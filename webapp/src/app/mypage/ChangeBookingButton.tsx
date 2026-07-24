@@ -87,7 +87,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
     return () => {
       cancelled = true;
     };
-  }, [open, booking.classId, booking.bookingType]);
+  }, [open, booking.classId, booking.bookingType, booking.scheduleId]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

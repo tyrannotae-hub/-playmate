@@ -1,8 +1,50 @@
 import Link from "next/link";
 import { getCurrentClubOwner, getMyClubBookings, getMyFacility } from "@/lib/club-data";
+import { ClubBooking } from "@/lib/types";
 import BookingRow from "@/components/club/BookingRow";
 import RefreshButton from "@/components/club/RefreshButton";
 import { cardClass } from "@/lib/ui";
+
+// 에이블리 대시보드의 한국/일본/총 컬럼 구조를 참고 — 항목별 건수를 정기/원데이/총으로 나눠 보여준다.
+function toStatRows(rows: { href: string; label: string; list: ClubBooking[]; color: string }[]) {
+  return rows.map((row) => ({
+    href: row.href,
+    label: row.label,
+    color: row.color,
+    enrollment: row.list.filter((b) => b.bookingType === "enrollment").length,
+    trial: row.list.filter((b) => b.bookingType === "trial").length,
+    total: row.list.length,
+  }));
+}
+
+function StatTable({ rows }: { rows: ReturnType<typeof toStatRows> }) {
+  return (
+    <div className={cardClass("mt-2.5 p-0")}>
+      <div className="grid grid-cols-[1fr_2.75rem_2.75rem_2.75rem] gap-x-2 px-4 pt-3 text-xs font-bold text-muted">
+        <span />
+        <span className="text-right">정기</span>
+        <span className="text-right">원데이</span>
+        <span className="text-right">총</span>
+      </div>
+      <div className="mt-1.5 divide-y divide-line">
+        {rows.map((row) => (
+          <Link
+            key={row.href}
+            href={row.href}
+            className="grid grid-cols-[1fr_2.75rem_2.75rem_2.75rem] items-center gap-x-2 px-4 py-3 transition hover:bg-surface-2"
+          >
+            <span className="text-sm">{row.label}</span>
+            <span className="text-right text-sm tabular-nums text-muted">{row.enrollment}</span>
+            <span className="text-right text-sm tabular-nums text-muted">{row.trial}</span>
+            <span className={`text-right text-base font-extrabold tabular-nums ${row.color}`}>
+              {row.total}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default async function ClubDashboardPage() {
   const owner = await getCurrentClubOwner();
@@ -21,49 +63,6 @@ export default async function ClubDashboardPage() {
   const changeRequested = bookings.filter((b) => b.changeRequestedAt);
   const changeApplied = bookings.filter((b) => b.lastChangeAppliedAt);
   const cancelRequested = bookings.filter((b) => b.cancelRequestedAt);
-
-  // 에이블리 대시보드의 한국/일본/총 컬럼 구조를 참고 — 항목별 건수를 정기/원데이/총으로 나눠 보여준다.
-  function toStatRows(
-    rows: { href: string; label: string; list: typeof bookings; color: string }[]
-  ) {
-    return rows.map((row) => ({
-      href: row.href,
-      label: row.label,
-      color: row.color,
-      enrollment: row.list.filter((b) => b.bookingType === "enrollment").length,
-      trial: row.list.filter((b) => b.bookingType === "trial").length,
-      total: row.list.length,
-    }));
-  }
-
-  function StatTable({ rows }: { rows: ReturnType<typeof toStatRows> }) {
-    return (
-      <div className={cardClass("mt-2.5 p-0")}>
-        <div className="grid grid-cols-[1fr_2.75rem_2.75rem_2.75rem] gap-x-2 px-4 pt-3 text-xs font-bold text-muted">
-          <span />
-          <span className="text-right">정기</span>
-          <span className="text-right">원데이</span>
-          <span className="text-right">총</span>
-        </div>
-        <div className="mt-1.5 divide-y divide-line">
-          {rows.map((row) => (
-            <Link
-              key={row.href}
-              href={row.href}
-              className="grid grid-cols-[1fr_2.75rem_2.75rem_2.75rem] items-center gap-x-2 px-4 py-3 transition hover:bg-surface-2"
-            >
-              <span className="text-sm">{row.label}</span>
-              <span className="text-right text-sm tabular-nums text-muted">{row.enrollment}</span>
-              <span className="text-right text-sm tabular-nums text-muted">{row.trial}</span>
-              <span className={`text-right text-base font-extrabold tabular-nums ${row.color}`}>
-                {row.total}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   const bookingStatusRows = toStatRows([
     { href: "/club/bookings?status=requested", label: "확인중", list: pending, color: "text-warn" },
