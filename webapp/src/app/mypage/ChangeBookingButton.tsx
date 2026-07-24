@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Booking } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
-import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
+import {
+  formatIsoDateToKoreanShort,
+  upcomingDatesForDayLabel,
+} from "@/lib/schedule-dates";
+
+// 로컬 자정 기준 Date를 "YYYY-MM-DD"로. toISOString()은 UTC 변환 중 하루 밀릴 수 있음.
+function toIsoDate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+}
 
 type ScheduleOption = { id: string; label: string };
 
@@ -32,17 +42,28 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
       const supabase = createClient();
 
       if (booking.bookingType === "trial") {
-        const { data } = await supabase
-          .from("class_trial_dates")
-          .select("trial_date")
-          .eq("team_class_id", booking.classId);
+        // 원데이 체험은 이제 특정 시간대(schedule)에 딸린 속성이라, 그 schedule의
+        // 요일(day_label)로 반복 날짜를 계산하고 휴일(class_holidays)만 제외한다
+        // (BookingForm.tsx의 최초 예약 시 계산 로직과 동일하게 맞춤).
+        const [{ data: scheduleRow }, { data: holidayRows }] = await Promise.all([
+          supabase
+            .from("class_schedules")
+            .select("day_label")
+            .eq("id", booking.scheduleId)
+            .maybeSingle(),
+          supabase
+            .from("class_holidays")
+            .select("holiday_date")
+            .eq("team_class_id", booking.classId),
+        ]);
         if (cancelled) return;
-        const todayIso = new Date().toISOString().slice(0, 10);
+        const todayIso = toIsoDate(new Date());
+        const holidaySet = new Set((holidayRows ?? []).map((h) => h.holiday_date as string));
+        const dates = scheduleRow?.day_label
+          ? upcomingDatesForDayLabel(scheduleRow.day_label).map(toIsoDate)
+          : [];
         setTrialDateOptions(
-          (data ?? [])
-            .map((d) => d.trial_date as string)
-            .filter((d) => d >= todayIso)
-            .sort()
+          dates.filter((d) => d >= todayIso && !holidaySet.has(d)).sort()
         );
       } else {
         const { data } = await supabase

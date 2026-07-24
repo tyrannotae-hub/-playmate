@@ -8,6 +8,7 @@ const ITEMS = [
   { href: "/club/home", label: "홈 꾸미기" },
   { href: "/club/instructors", label: "코치 관리" },
   { href: "/club/classes", label: "클래스 관리" },
+  { href: "/club/trial-classes", label: "원데이 클래스 관리" },
   { href: "/club/bookings", label: "예약 관리" },
   { href: "/club/settings", label: "계정 설정" },
 ];

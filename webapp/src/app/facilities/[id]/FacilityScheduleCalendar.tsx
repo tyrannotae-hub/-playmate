@@ -25,6 +25,9 @@ type MatchedClass = {
   isTrial: boolean;
 };
 
+// 원데이 체험 가능 여부는 이제 클래스 단위가 아니라 시간대(schedule) 단위 필드
+// (schedule.allowTrial)라, 그 시간대의 요일(dayLabel)이 곧 반복 요일이 된다 —
+// 별도 trial_day_label/class_trial_dates 없이 휴일(class_holidays)만 제외하면 됨.
 function matchesForDate(classes: TeamClass[], date: Date): MatchedClass[] {
   const iso = toIsoDate(date);
   const dayChar = DAY_CHARS_BY_JS_DAY[date.getDay()];
@@ -32,28 +35,12 @@ function matchesForDate(classes: TeamClass[], date: Date): MatchedClass[] {
 
   for (const c of classes) {
     for (const s of c.schedules) {
-      if (parseDayLabel(s.dayLabel).includes(dayChar)) {
-        matched.push({ classId: c.id, className: c.name, timeLabel: s.timeLabel, isTrial: false });
-      }
-    }
-
-    if (c.trialDates.includes(iso)) {
+      if (!parseDayLabel(s.dayLabel).includes(dayChar)) continue;
       matched.push({
         classId: c.id,
         className: c.name,
-        timeLabel: c.schedules[0]?.timeLabel ?? "",
-        isTrial: true,
-      });
-    } else if (
-      c.trialDayLabel &&
-      parseDayLabel(c.trialDayLabel).includes(dayChar) &&
-      !c.holidays.includes(iso)
-    ) {
-      matched.push({
-        classId: c.id,
-        className: c.name,
-        timeLabel: c.schedules[0]?.timeLabel ?? "",
-        isTrial: true,
+        timeLabel: s.timeLabel,
+        isTrial: s.allowTrial && !c.holidays.includes(iso),
       });
     }
   }

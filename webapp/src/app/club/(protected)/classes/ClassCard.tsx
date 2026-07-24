@@ -35,6 +35,7 @@ export default function ClassCard({
   const [dayLabel, setDayLabel] = useState("");
   const [timeLabel, setTimeLabel] = useState("");
   const [capacity, setCapacity] = useState(6);
+  const [newScheduleAllowTrial, setNewScheduleAllowTrial] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -53,12 +54,10 @@ export default function ClassCard({
   const [editCollectShoeSize, setEditCollectShoeSize] = useState(item.collectShoeSize);
   const [editCollectResidence, setEditCollectResidence] = useState(item.collectResidence);
   const [editShowPrice, setEditShowPrice] = useState(item.showPrice);
-  const [editAllowTrial, setEditAllowTrial] = useState(item.allowTrial);
   const [editTrialPrice, setEditTrialPrice] = useState(
     item.trialPrice != null ? String(item.trialPrice) : ""
   );
   const [editShowTrialPrice, setEditShowTrialPrice] = useState(item.showTrialPrice);
-  const [editTrialDayLabel, setEditTrialDayLabel] = useState(item.trialDayLabel ?? "");
   const [editUseDiscount, setEditUseDiscount] = useState(item.discountPrice != null);
   const [editDiscountPrice, setEditDiscountPrice] = useState(
     item.discountPrice != null ? String(item.discountPrice) : ""
@@ -81,10 +80,6 @@ export default function ClassCard({
   );
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
-
-  const [addingTrialDate, setAddingTrialDate] = useState(false);
-  const [newTrialDate, setNewTrialDate] = useState("");
-  const [trialDateErrorMsg, setTrialDateErrorMsg] = useState("");
 
   const [addingHoliday, setAddingHoliday] = useState(false);
   const [newHoliday, setNewHoliday] = useState("");
@@ -133,21 +128,19 @@ export default function ClassCard({
         collect_shoe_size: editCollectShoeSize,
         collect_residence: editCollectResidence,
         show_price: editShowPrice,
-        allow_trial: editAllowTrial,
-        trial_price: editAllowTrial && editTrialPrice ? Number(editTrialPrice) : null,
+        trial_price: item.allowTrial && editTrialPrice ? Number(editTrialPrice) : null,
         show_trial_price: editShowTrialPrice,
-        trial_day_label: editAllowTrial && editTrialDayLabel ? editTrialDayLabel : null,
         discount_price: editUseDiscount ? Number(editDiscountPrice) : null,
         discount_start_date: editUseDiscount ? editDiscountStartDate : null,
         discount_end_date: editUseDiscount ? editDiscountEndDate : null,
         trial_discount_price:
-          editAllowTrial && editUseTrialDiscount && editTrialDiscountPrice
+          item.allowTrial && editUseTrialDiscount && editTrialDiscountPrice
             ? Number(editTrialDiscountPrice)
             : null,
         trial_discount_start_date:
-          editAllowTrial && editUseTrialDiscount ? editTrialDiscountStartDate : null,
+          item.allowTrial && editUseTrialDiscount ? editTrialDiscountStartDate : null,
         trial_discount_end_date:
-          editAllowTrial && editUseTrialDiscount ? editTrialDiscountEndDate : null,
+          item.allowTrial && editUseTrialDiscount ? editTrialDiscountEndDate : null,
       })
       .eq("id", item.id);
 
@@ -204,6 +197,7 @@ export default function ClassCard({
       day_label: dayLabel,
       time_label: timeLabel,
       slot_capacity: capacity,
+      allow_trial: newScheduleAllowTrial,
     });
 
     setSubmitting(false);
@@ -214,6 +208,7 @@ export default function ClassCard({
     setDayLabel("");
     setTimeLabel("");
     setCapacity(6);
+    setNewScheduleAllowTrial(false);
     setAddingSchedule(false);
     router.refresh();
   }
@@ -224,35 +219,12 @@ export default function ClassCard({
     if (!error) router.refresh();
   }
 
-  async function addTrialDate(e: React.FormEvent) {
-    e.preventDefault();
-    if (!newTrialDate) return;
-    setAddingTrialDate(true);
-    setTrialDateErrorMsg("");
-    const supabase = createClient();
-
-    const { error } = await supabase
-      .from("class_trial_dates")
-      .insert({ team_class_id: item.id, trial_date: newTrialDate });
-
-    setAddingTrialDate(false);
-    if (error) {
-      setTrialDateErrorMsg(
-        error.code === "23505" ? "이미 등록된 날짜예요." : "날짜 추가에 실패했어요."
-      );
-      return;
-    }
-    setNewTrialDate("");
-    router.refresh();
-  }
-
-  async function deleteTrialDate(trialDate: string) {
+  async function toggleScheduleTrial(scheduleId: string, allowTrial: boolean) {
     const supabase = createClient();
     const { error } = await supabase
-      .from("class_trial_dates")
-      .delete()
-      .eq("team_class_id", item.id)
-      .eq("trial_date", trialDate);
+      .from("class_schedules")
+      .update({ allow_trial: allowTrial })
+      .eq("id", scheduleId);
     if (!error) router.refresh();
   }
 
@@ -486,21 +458,11 @@ export default function ClassCard({
               className="h-5 w-5 flex-shrink-0 accent-rink"
             />
           </label>
-          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
-            <span className="text-sm font-bold">
-              원데이 체험 받기
-              <span className="mt-0.5 block text-xs font-normal text-muted">
-                켜면 학부모가 예약 시 체험(1회)을 선택할 수 있어요
-              </span>
-            </span>
-            <input
-              type="checkbox"
-              checked={editAllowTrial}
-              onChange={(e) => setEditAllowTrial(e.target.checked)}
-              className="h-5 w-5 flex-shrink-0 accent-rink"
-            />
-          </label>
-          {editAllowTrial && (
+          <p className="rounded-md border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+            원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
+            시간대마다 원데이 가능을 켜고 끌 수 있어요.
+          </p>
+          {item.allowTrial && (
             <div>
               <label className="mb-1.5 block text-xs font-bold text-muted">
                 체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
@@ -515,7 +477,7 @@ export default function ClassCard({
               />
             </div>
           )}
-          {editAllowTrial && (
+          {item.allowTrial && (
             <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 체험가 공개
@@ -580,7 +542,7 @@ export default function ClassCard({
               </div>
             </div>
           )}
-          {editAllowTrial && (
+          {item.allowTrial && (
             <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 원데이 할인 적용
@@ -596,7 +558,7 @@ export default function ClassCard({
               />
             </label>
           )}
-          {editAllowTrial && editUseTrialDiscount && (
+          {item.allowTrial && editUseTrialDiscount && (
             <div className="flex flex-col gap-2">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-muted">원데이 할인가</label>
@@ -629,14 +591,6 @@ export default function ClassCard({
                   />
                 </div>
               </div>
-            </div>
-          )}
-          {editAllowTrial && (
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-muted">
-                원데이 매주 반복 <span className="font-normal">(선택, 예: 매주 토요일 체험)</span>
-              </label>
-              <DayLabelPicker value={editTrialDayLabel} onChange={setEditTrialDayLabel} />
             </div>
           )}
           <div>
@@ -703,13 +657,24 @@ export default function ClassCard({
             <span>
               {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
             </span>
-            <button
-              onClick={() => deleteSchedule(s.id)}
-              className="font-bold text-muted"
-              aria-label="시간대 삭제"
-            >
-              ✕
-            </button>
+            <div className="flex shrink-0 items-center gap-3">
+              <label className="flex items-center gap-1.5 font-bold text-muted">
+                <input
+                  type="checkbox"
+                  checked={s.allowTrial}
+                  onChange={(e) => toggleScheduleTrial(s.id, e.target.checked)}
+                  className="h-4 w-4 accent-rink"
+                />
+                원데이 가능
+              </label>
+              <button
+                onClick={() => deleteSchedule(s.id)}
+                className="font-bold text-muted"
+                aria-label="시간대 삭제"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         ))}
         {item.schedules.length === 0 && (
@@ -747,6 +712,15 @@ export default function ClassCard({
             placeholder="정원"
             className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
           />
+          <label className="flex items-center gap-1.5 text-xs font-bold text-muted">
+            <input
+              type="checkbox"
+              checked={newScheduleAllowTrial}
+              onChange={(e) => setNewScheduleAllowTrial(e.target.checked)}
+              className="h-4 w-4 accent-rink"
+            />
+            원데이 체험 가능
+          </label>
           {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
           <div className="flex gap-2">
             <button
@@ -770,52 +744,6 @@ export default function ClassCard({
             </button>
           </div>
         </form>
-      )}
-
-      {item.allowTrial && (
-        <div className="mt-3 border-t border-line pt-3">
-          <p className="mb-1.5 text-xs font-bold text-muted">원데이 체험 가능 날짜</p>
-          <div className="flex flex-col gap-1.5">
-            {item.trialDates
-              .slice()
-              .sort()
-              .map((d) => (
-                <div
-                  key={d}
-                  className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
-                >
-                  <span>{formatIsoDateToKoreanShort(d)}</span>
-                  <button
-                    onClick={() => deleteTrialDate(d)}
-                    className="font-bold text-muted"
-                    aria-label="체험 날짜 삭제"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            {item.trialDates.length === 0 && (
-              <p className="text-xs text-muted">등록된 체험 날짜가 없어요.</p>
-            )}
-          </div>
-          <form onSubmit={addTrialDate} className="mt-2 flex gap-2">
-            <input
-              type="date"
-              required
-              value={newTrialDate}
-              onChange={(e) => setNewTrialDate(e.target.value)}
-              className="flex-1 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
-            />
-            <button
-              type="submit"
-              disabled={addingTrialDate}
-              className={buttonClass({ variant: "outline", size: "sm", full: false })}
-            >
-              추가
-            </button>
-          </form>
-          {trialDateErrorMsg && <p className="mt-1 text-xs text-negative">{trialDateErrorMsg}</p>}
-        </div>
       )}
 
       <div className="mt-3 border-t border-line pt-3">

@@ -32,6 +32,7 @@ type RawSchedule = {
   time_label: string;
   slot_capacity: number;
   slot_booked_count: number;
+  allow_trial: boolean | null;
 };
 
 type RawClass = {
@@ -48,18 +49,15 @@ type RawClass = {
   collect_height: boolean | null;
   collect_shoe_size: boolean | null;
   collect_residence: boolean | null;
-  allow_trial: boolean | null;
   trial_price: number | null;
   show_price: boolean | null;
   show_trial_price: boolean | null;
-  trial_day_label: string | null;
   discount_price: number | null;
   discount_start_date: string | null;
   discount_end_date: string | null;
   trial_discount_price: number | null;
   trial_discount_start_date: string | null;
   trial_discount_end_date: string | null;
-  class_trial_dates: { trial_date: string }[];
   class_holidays: { holiday_date: string }[];
   facility: {
     id: string;
@@ -159,12 +157,10 @@ function toTeamClass(
     collectHeight: row.collect_height ?? false,
     collectShoeSize: row.collect_shoe_size ?? false,
     collectResidence: row.collect_residence ?? false,
-    allowTrial: row.allow_trial ?? false,
+    allowTrial: row.class_schedules.some((s) => s.allow_trial),
     trialPrice: row.trial_price ?? undefined,
     showPrice: row.show_price ?? true,
     showTrialPrice: row.show_trial_price ?? true,
-    trialDates: row.class_trial_dates.map((d) => d.trial_date),
-    trialDayLabel: row.trial_day_label ?? undefined,
     holidays: row.class_holidays.map((h) => h.holiday_date),
     discountPrice: row.discount_price ?? undefined,
     discountStartDate: row.discount_start_date ?? undefined,
@@ -199,6 +195,7 @@ function toTeamClass(
       timeLabel: s.time_label,
       capacity: s.slot_capacity,
       booked: s.slot_booked_count,
+      allowTrial: s.allow_trial ?? false,
     })),
     description: row.description ?? "",
     images: [...row.class_images]
@@ -215,7 +212,7 @@ function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter
   let query = supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
+      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date)"
     );
   if (filter?.id) query = query.eq("id", filter.id);
   if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);

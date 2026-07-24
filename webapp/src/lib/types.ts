@@ -32,6 +32,7 @@ export type ClassSchedule = {
   timeLabel: string;
   capacity: number;
   booked: number;
+  allowTrial: boolean;
 };
 
 export type TeamClass = {
@@ -60,8 +61,6 @@ export type TeamClass = {
   trialPrice?: number;
   showPrice: boolean;
   showTrialPrice: boolean;
-  trialDates: string[];
-  trialDayLabel?: string;
   holidays: string[];
   discountPrice?: number;
   discountStartDate?: string;
@@ -228,6 +227,7 @@ export type ClubSchedule = {
   timeLabel: string;
   capacity: number;
   booked: number;
+  allowTrial: boolean;
 };
 
 export type ClubInstructorRef = {
@@ -255,8 +255,6 @@ export type ClubClass = {
   trialPrice?: number;
   showPrice: boolean;
   showTrialPrice: boolean;
-  trialDates: string[];
-  trialDayLabel?: string;
   holidays: string[];
   discountPrice?: number;
   discountStartDate?: string;

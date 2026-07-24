@@ -136,7 +136,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, allow_trial, trial_price, show_price, show_trial_price, trial_day_label, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -154,6 +154,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
         time_label: string;
         slot_capacity: number;
         slot_booked_count: number;
+        allow_trial: boolean | null;
       }[]
     ).map((s) => ({
       id: s.id,
@@ -161,6 +162,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       timeLabel: s.time_label,
       capacity: s.slot_capacity,
       booked: s.slot_booked_count,
+      allowTrial: s.allow_trial ?? false,
     }));
     const images = (row.class_images as unknown as { url: string; sort_order: number }[])
       .slice()
@@ -183,14 +185,10 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       collectHeight: row.collect_height ?? false,
       collectShoeSize: row.collect_shoe_size ?? false,
       collectResidence: row.collect_residence ?? false,
-      allowTrial: row.allow_trial ?? false,
+      allowTrial: schedules.some((s) => s.allowTrial),
       trialPrice: row.trial_price ?? undefined,
       showPrice: row.show_price ?? true,
       showTrialPrice: row.show_trial_price ?? true,
-      trialDates: (row.class_trial_dates as unknown as { trial_date: string }[]).map(
-        (d) => d.trial_date
-      ),
-      trialDayLabel: row.trial_day_label ?? undefined,
       holidays: (row.class_holidays as unknown as { holiday_date: string }[]).map(
         (h) => h.holiday_date
       ),

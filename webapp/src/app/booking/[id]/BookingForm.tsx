@@ -26,6 +26,7 @@ export default function BookingForm({
   const [childId, setChildId] = useState(initialChildren[0]?.id ?? "");
   const [childName, setChildName] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [scheduleId, setScheduleId] = useState(item.schedules[0]?.id ?? "");
   const [bookingType, setBookingType] = useState<BookingType>("enrollment");
   const [trialDate, setTrialDate] = useState("");
   const [gender, setGender] = useState<Gender>("male");
@@ -37,7 +38,22 @@ export default function BookingForm({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const selectedSchedule = item.schedules.find((s) => s.id === scheduleId) ?? item.schedules[0];
+
+  function selectSchedule(id: string) {
+    setScheduleId(id);
+    const next = item.schedules.find((s) => s.id === id);
+    if (!next?.allowTrial) {
+      setBookingType("enrollment");
+      setTrialDate("");
+    }
+  }
+
+  // 원데이 체험 가능 여부/반복 요일은 이제 클래스 전체가 아니라 선택된 시간대(schedule)
+  // 단위 필드라, 그 schedule의 dayLabel을 반복 요일로 그대로 쓴다.
   const trialDateOptions = useMemo(() => {
+    if (!selectedSchedule?.allowTrial) return [];
+
     // 로컬 자정 기준 Date를 "YYYY-MM-DD"로 변환. toISOString()은 UTC 변환 과정에서
     // 하루 밀릴 수 있어 연/월/일을 직접 조합한다.
     const toIsoDate = (d: Date) =>
@@ -47,16 +63,13 @@ export default function BookingForm({
 
     const todayIso = toIsoDate(new Date());
     const holidaySet = new Set(item.holidays);
-    const recurringDates = item.trialDayLabel
-      ? upcomingDatesForDayLabel(item.trialDayLabel).map(toIsoDate)
-      : [];
-    const merged = new Set([...item.trialDates, ...recurringDates]);
 
-    return Array.from(merged)
+    return upcomingDatesForDayLabel(selectedSchedule.dayLabel)
+      .map(toIsoDate)
       .filter((iso) => iso >= todayIso && !holidaySet.has(iso))
       .sort()
       .map((iso) => ({ iso, label: formatIsoDateToKoreanShort(iso) }));
-  }, [item.trialDates, item.trialDayLabel, item.holidays]);
+  }, [selectedSchedule, item.holidays]);
 
   async function addChild(e: React.FormEvent) {
     e.preventDefault();
@@ -101,7 +114,7 @@ export default function BookingForm({
     const supabase = createClient();
     const { error } = await supabase.rpc("request_booking", {
       p_child_id: childId,
-      p_schedule_id: item.schedules[0].id,
+      p_schedule_id: scheduleId,
       p_contact_phone: contactPhone || null,
       p_gender: gender,
       p_height_cm: heightCm ? Number(heightCm) : null,
@@ -114,11 +127,12 @@ export default function BookingForm({
     setSubmitting(false);
 
     if (error) {
-      setErrorMsg(
-        error.message === "FULL"
-          ? "방금 정원이 마감됐어요. 다른 시간대를 확인해주세요."
-          : "예약 신청에 실패했어요. 다시 시도해주세요."
-      );
+      const MESSAGES: Record<string, string> = {
+        FULL: "방금 정원이 마감됐어요. 다른 시간대를 확인해주세요.",
+        HOLIDAY_DATE: "그 날짜는 휴무일이에요. 다른 날짜를 선택해주세요.",
+        SCHEDULE_NOT_TRIAL: "이 시간대는 원데이 체험을 받지 않아요.",
+      };
+      setErrorMsg(MESSAGES[error.message] ?? "예약 신청에 실패했어요. 다시 시도해주세요.");
       setPhase("error");
       return;
     }
@@ -206,12 +220,37 @@ export default function BookingForm({
       <main className="px-4 pb-10 pt-4">
         <p className="text-xs font-bold text-muted">{item.facility.name}</p>
         <h1 className="mt-1 text-lg font-extrabold">{item.name}</h1>
-        <p className="mt-1 text-sm text-muted">
-          {item.schedules[0].dayLabel} {item.schedules[0].timeLabel}
-        </p>
+
+        {item.schedules.length > 1 ? (
+          <div className="mt-3">
+            <label className="mb-1.5 block text-sm font-bold">시간대 선택</label>
+            <div className="flex flex-col gap-2">
+              {item.schedules.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => selectSchedule(s.id)}
+                  className={buttonClass({
+                    variant: scheduleId === s.id ? "secondary" : "outline",
+                    className: "justify-between",
+                  })}
+                >
+                  <span>
+                    {s.dayLabel} {s.timeLabel}
+                  </span>
+                  {s.allowTrial && <span className="text-xs font-normal">원데이 가능</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="mt-1 text-sm text-muted">
+            {item.schedules[0].dayLabel} {item.schedules[0].timeLabel}
+          </p>
+        )}
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
-          {item.allowTrial && (
+          {selectedSchedule?.allowTrial && (
             <div>
               <label className="mb-1.5 block text-sm font-bold">신청 유형</label>
               <div className="flex gap-2">
@@ -239,7 +278,7 @@ export default function BookingForm({
             </div>
           )}
 
-          {item.allowTrial && bookingType === "trial" && (
+          {selectedSchedule?.allowTrial && bookingType === "trial" && (
             <div>
               <label className="mb-1.5 block text-sm font-bold">체험 참여 날짜</label>
               {trialDateOptions.length > 0 ? (
