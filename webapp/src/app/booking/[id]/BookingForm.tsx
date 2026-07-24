@@ -5,7 +5,7 @@ import TopNav from "@/components/TopNav";
 import { createClient } from "@/lib/supabase/client";
 import { Child, TeamClass } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
-import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
+import { formatIsoDateToKoreanShort, upcomingDatesForDayLabel } from "@/lib/schedule-dates";
 
 type Phase = "add-child" | "form" | "requested" | "error";
 type Gender = "male" | "female";
@@ -37,12 +37,25 @@ export default function BookingForm({
   const [errorMsg, setErrorMsg] = useState("");
 
   const trialDateOptions = useMemo(() => {
-    const todayIso = new Date().toISOString().slice(0, 10);
-    return item.trialDates
-      .filter((iso) => iso >= todayIso)
+    // 로컬 자정 기준 Date를 "YYYY-MM-DD"로 변환. toISOString()은 UTC 변환 과정에서
+    // 하루 밀릴 수 있어 연/월/일을 직접 조합한다.
+    const toIsoDate = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+
+    const todayIso = toIsoDate(new Date());
+    const holidaySet = new Set(item.holidays);
+    const recurringDates = item.trialDayLabel
+      ? upcomingDatesForDayLabel(item.trialDayLabel).map(toIsoDate)
+      : [];
+    const merged = new Set([...item.trialDates, ...recurringDates]);
+
+    return Array.from(merged)
+      .filter((iso) => iso >= todayIso && !holidaySet.has(iso))
       .sort()
       .map((iso) => ({ iso, label: formatIsoDateToKoreanShort(iso) }));
-  }, [item.trialDates]);
+  }, [item.trialDates, item.trialDayLabel, item.holidays]);
 
   async function addChild(e: React.FormEvent) {
     e.preventDefault();
@@ -248,7 +261,9 @@ export default function BookingForm({
               )}
               {item.trialPrice != null && (
                 <p className="mt-1.5 text-xs text-muted">
-                  체험 가격: {item.trialPrice.toLocaleString()}원
+                  {item.showTrialPrice
+                    ? `체험 가격: ${item.trialPrice.toLocaleString()}원`
+                    : "체험 문의"}
                 </p>
               )}
             </div>

@@ -13,6 +13,7 @@ import {
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 import FacilityContactLinks from "@/components/FacilityContactLinks";
+import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -73,14 +74,29 @@ export default async function ClassDetailPage({
           </div>
 
           <div className="mt-6 border-t border-line pt-6">
-            <p className="text-lg font-extrabold tabular-nums">
-              {item.showPrice
-                ? `${item.priceUnit} ${item.price.toLocaleString()}원`
-                : "가격 문의"}
-            </p>
+            {item.showPrice ? (
+              isDiscountActive(item) ? (
+                <div className="flex items-baseline gap-2">
+                  <p className="text-sm text-muted line-through tabular-nums">
+                    {item.priceUnit} {item.price.toLocaleString()}원
+                  </p>
+                  <p className="text-lg font-extrabold text-energy tabular-nums">
+                    {item.priceUnit} {effectivePrice(item).toLocaleString()}원
+                  </p>
+                </div>
+              ) : (
+                <p className="text-lg font-extrabold tabular-nums">
+                  {item.priceUnit} {item.price.toLocaleString()}원
+                </p>
+              )
+            ) : (
+              <p className="text-lg font-extrabold tabular-nums">가격 문의</p>
+            )}
             {item.allowTrial && item.trialPrice != null && (
               <p className="mt-1 text-sm text-muted tabular-nums">
-                원데이 체험 {item.trialPrice.toLocaleString()}원
+                {item.showTrialPrice
+                  ? `원데이 체험 ${item.trialPrice.toLocaleString()}원`
+                  : "원데이 체험 문의"}
               </p>
             )}
             <p className="mt-1 text-xs text-muted">현장 결제 또는 계좌이체로 진행돼요</p>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
+import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
 const HoverExpand_001 = ({
   classes,
@@ -69,9 +70,22 @@ const HoverExpand_001 = ({
                     </p>
                     <p className="truncate whitespace-nowrap text-xs text-white/80 tabular-nums">
                       {item.facility.name} ·{" "}
-                      {item.showPrice
-                        ? `${item.priceUnit} ${item.price.toLocaleString()}원`
-                        : "가격 문의"}
+                      {item.showPrice ? (
+                        isDiscountActive(item) ? (
+                          <>
+                            <span className="text-white/50 line-through">
+                              {item.price.toLocaleString()}원
+                            </span>{" "}
+                            <span className="font-bold text-energy">
+                              {effectivePrice(item).toLocaleString()}원
+                            </span>
+                          </>
+                        ) : (
+                          `${item.priceUnit} ${item.price.toLocaleString()}원`
+                        )
+                      ) : (
+                        "가격 문의"
+                      )}
                     </p>
                   </Link>
                 </motion.div>

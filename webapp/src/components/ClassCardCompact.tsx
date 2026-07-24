@@ -3,6 +3,7 @@ import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import WishlistButton from "@/components/WishlistButton";
+import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
 export default function ClassCardCompact({
   item,
@@ -44,7 +45,20 @@ export default function ClassCardCompact({
       <p className="mt-2 truncate text-[11px] font-semibold text-muted">{item.facility.name}</p>
       <p className="truncate text-sm font-bold">{item.name}</p>
       <p className="mt-0.5 text-xs text-muted tabular-nums">
-        {item.showPrice ? `${item.priceUnit} ${item.price.toLocaleString()}원` : "가격 문의"}
+        {item.showPrice ? (
+          isDiscountActive(item) ? (
+            <>
+              <span className="line-through">{item.price.toLocaleString()}원</span>{" "}
+              <span className="font-bold text-energy">
+                {effectivePrice(item).toLocaleString()}원
+              </span>
+            </>
+          ) : (
+            `${item.priceUnit} ${item.price.toLocaleString()}원`
+          )
+        ) : (
+          "가격 문의"
+        )}
       </p>
     </Link>
   );
