@@ -92,6 +92,11 @@ export default function ClassCardCompact({
           )}
         </p>
       )}
+      {item.reviewCount > 0 && (
+        <p className="mt-0.5 text-[11px] font-semibold text-rink-deep tabular-nums">
+          ★{item.rating}({item.reviewCount})
+        </p>
+      )}
     </Link>
   );
 }
