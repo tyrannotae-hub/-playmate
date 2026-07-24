@@ -57,6 +57,8 @@ type RawClass = {
   discount_start_date: string | null;
   discount_end_date: string | null;
   trial_discount_price: number | null;
+  trial_discount_start_date: string | null;
+  trial_discount_end_date: string | null;
   class_trial_dates: { trial_date: string }[];
   class_holidays: { holiday_date: string }[];
   facility: {
@@ -166,6 +168,8 @@ function toTeamClass(
     discountStartDate: row.discount_start_date ?? undefined,
     discountEndDate: row.discount_end_date ?? undefined,
     trialDiscountPrice: row.trial_discount_price ?? undefined,
+    trialDiscountStartDate: row.trial_discount_start_date ?? undefined,
+    trialDiscountEndDate: row.trial_discount_end_date ?? undefined,
     instructors: row.class_instructors
       .map((ci) => ci.instructor)
       .filter((i): i is NonNullable<typeof i> => !!i)

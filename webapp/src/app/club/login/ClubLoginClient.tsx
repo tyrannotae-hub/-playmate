@@ -43,7 +43,7 @@ export default function ClubLoginClient() {
   return (
     <main className="flex flex-col items-center px-6 pb-10 pt-16 text-center">
       <div className="text-2xl font-extrabold tracking-tight">
-        PlayMate<span className="text-energy">.</span> 클래스관리센터
+        PlayMate<span className="text-energy">.</span> 클럽 관리센터
       </div>
       <p className="mt-2 text-sm text-muted">내 시설·클래스·예약을 관리하세요</p>
 

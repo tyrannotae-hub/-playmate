@@ -38,7 +38,7 @@ export default function ClubMenuDrawer({
         }`}
       >
         <div className="flex items-center justify-between border-b border-line px-4 py-3.5">
-          <p className="text-base font-bold">클래스관리센터</p>
+          <p className="text-base font-bold">클럽 관리센터</p>
           <button
             type="button"
             onClick={onClose}

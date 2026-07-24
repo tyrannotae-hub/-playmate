@@ -84,7 +84,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
     return (
       <main className="flex flex-col items-center px-6 pb-10 pt-16 text-center">
         <div className="text-2xl font-extrabold tracking-tight">
-          PlayMate<span className="text-energy">.</span> 클래스관리센터
+          PlayMate<span className="text-energy">.</span> 클럽 관리센터
         </div>
         <p className="mt-6 text-base font-bold">신청이 접수됐어요</p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -102,7 +102,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
   return (
     <main className="flex flex-col items-center px-6 pb-10 pt-16 text-center">
       <div className="text-2xl font-extrabold tracking-tight">
-        PlayMate<span className="text-energy">.</span> 클래스관리센터
+        PlayMate<span className="text-energy">.</span> 클럽 관리센터
       </div>
       <p className="mt-2 text-sm text-muted">클럽·개인 코치 가입 신청</p>
 

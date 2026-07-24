@@ -9,17 +9,14 @@ export type DiscountableClass = {
   discountEndDate?: string;
 };
 
-function isWithinDiscountWindow(
-  item: { discountStartDate?: string; discountEndDate?: string },
-  today: Date
-): boolean {
-  if (!item.discountStartDate || !item.discountEndDate) return false;
+function isWithinWindow(startDate: string | undefined, endDate: string | undefined, today: Date): boolean {
+  if (!startDate || !endDate) return false;
   const todayIso = today.toISOString().slice(0, 10);
-  return todayIso >= item.discountStartDate && todayIso <= item.discountEndDate;
+  return todayIso >= startDate && todayIso <= endDate;
 }
 
 export function isDiscountActive(item: DiscountableClass, today = new Date()): boolean {
-  return item.discountPrice != null && isWithinDiscountWindow(item, today);
+  return item.discountPrice != null && isWithinWindow(item.discountStartDate, item.discountEndDate, today);
 }
 
 export function effectivePrice(item: DiscountableClass, today = new Date()): number {
@@ -32,18 +29,20 @@ export function discountPercent(item: DiscountableClass, today = new Date()): nu
   return Math.floor((1 - item.discountPrice! / item.price) * 100);
 }
 
-// 원데이(체험) 가격 할인. 할인 기간은 정가 할인과 discount_start_date/discount_end_date를
-// 공유하고, trial_discount_price 존재 여부로 체험가 할인 적용 여부만 별도로 판정한다.
+// 원데이(체험) 가격 할인. 정가 할인과는 독립적인 자기만의 기간
+// (trial_discount_start_date/trial_discount_end_date)을 가진다.
 export type TrialDiscountableClass = {
   trialPrice?: number;
   trialDiscountPrice?: number;
-  discountStartDate?: string;
-  discountEndDate?: string;
+  trialDiscountStartDate?: string;
+  trialDiscountEndDate?: string;
 };
 
 export function isTrialDiscountActive(item: TrialDiscountableClass, today = new Date()): boolean {
   return (
-    item.trialPrice != null && item.trialDiscountPrice != null && isWithinDiscountWindow(item, today)
+    item.trialPrice != null &&
+    item.trialDiscountPrice != null &&
+    isWithinWindow(item.trialDiscountStartDate, item.trialDiscountEndDate, today)
   );
 }
 

@@ -67,8 +67,17 @@ export default function ClassCard({
     item.discountStartDate ?? ""
   );
   const [editDiscountEndDate, setEditDiscountEndDate] = useState(item.discountEndDate ?? "");
+  const [editUseTrialDiscount, setEditUseTrialDiscount] = useState(
+    item.trialDiscountPrice != null
+  );
   const [editTrialDiscountPrice, setEditTrialDiscountPrice] = useState(
     item.trialDiscountPrice != null ? String(item.trialDiscountPrice) : ""
+  );
+  const [editTrialDiscountStartDate, setEditTrialDiscountStartDate] = useState(
+    item.trialDiscountStartDate ?? ""
+  );
+  const [editTrialDiscountEndDate, setEditTrialDiscountEndDate] = useState(
+    item.trialDiscountEndDate ?? ""
   );
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
@@ -99,6 +108,14 @@ export default function ClassCard({
       return;
     }
 
+    if (
+      editUseTrialDiscount &&
+      (!editTrialDiscountPrice || !editTrialDiscountStartDate || !editTrialDiscountEndDate)
+    ) {
+      setEditErrorMsg("원데이 할인 적용 시 할인가와 시작일·종료일을 모두 입력해주세요.");
+      return;
+    }
+
     setSavingEdit(true);
     const supabase = createClient();
 
@@ -124,9 +141,13 @@ export default function ClassCard({
         discount_start_date: editUseDiscount ? editDiscountStartDate : null,
         discount_end_date: editUseDiscount ? editDiscountEndDate : null,
         trial_discount_price:
-          editUseDiscount && editAllowTrial && editTrialDiscountPrice
+          editAllowTrial && editUseTrialDiscount && editTrialDiscountPrice
             ? Number(editTrialDiscountPrice)
             : null,
+        trial_discount_start_date:
+          editAllowTrial && editUseTrialDiscount ? editTrialDiscountStartDate : null,
+        trial_discount_end_date:
+          editAllowTrial && editUseTrialDiscount ? editTrialDiscountEndDate : null,
       })
       .eq("id", item.id);
 
@@ -557,21 +578,57 @@ export default function ClassCard({
                   />
                 </div>
               </div>
-              {editAllowTrial && (
-                <div>
-                  <label className="mb-1.5 block text-xs font-bold text-muted">
-                    원데이 할인가 <span className="font-normal">(선택, 비워두면 체험가는 할인 안 함)</span>
-                  </label>
+            </div>
+          )}
+          {editAllowTrial && (
+            <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+              <span className="text-sm font-bold">
+                원데이 할인 적용
+                <span className="mt-0.5 block text-xs font-normal text-muted">
+                  정가 할인과 별개로, 원데이 체험가만 다른 기간에 할인할 수 있어요
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={editUseTrialDiscount}
+                onChange={(e) => setEditUseTrialDiscount(e.target.checked)}
+                className="h-5 w-5 flex-shrink-0 accent-rink"
+              />
+            </label>
+          )}
+          {editAllowTrial && editUseTrialDiscount && (
+            <div className="flex flex-col gap-2">
+              <div>
+                <label className="mb-1.5 block text-xs font-bold text-muted">원데이 할인가</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={editTrialDiscountPrice}
+                  onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
+                  placeholder="예: 20000"
+                  className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
                   <input
-                    type="number"
-                    min={0}
-                    value={editTrialDiscountPrice}
-                    onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
-                    placeholder="예: 20000"
+                    type="date"
+                    value={editTrialDiscountStartDate}
+                    onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
                     className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
-              )}
+                <div className="flex-1">
+                  <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
+                  <input
+                    type="date"
+                    value={editTrialDiscountEndDate}
+                    onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
+                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+              </div>
             </div>
           )}
           {editAllowTrial && (

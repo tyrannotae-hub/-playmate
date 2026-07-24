@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ClubMenuDrawer from "./ClubMenuDrawer";
@@ -37,9 +38,16 @@ export default function ClubNav({
               <path d="M3 15h14" />
             </svg>
           </button>
-          <div>
-            <p className="btn-label text-xs font-bold text-muted">클래스관리센터</p>
-            <p className="text-base font-extrabold">{facilityName}</p>
+          <Image
+            src="/icon.png"
+            alt="PlayMate"
+            width={28}
+            height={28}
+            className="shrink-0 rounded-md"
+          />
+          <div className="min-w-0">
+            <p className="btn-label text-xs font-bold text-muted">클럽 관리센터</p>
+            <p className="truncate text-base font-extrabold">{facilityName}</p>
           </div>
         </div>
       </header>
