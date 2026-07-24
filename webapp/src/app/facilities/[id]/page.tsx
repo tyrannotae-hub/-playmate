@@ -12,6 +12,7 @@ import {
 } from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
 import { parseDayLabel } from "@/lib/schedule-dates";
+import FacilityContactLinks from "@/components/FacilityContactLinks";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -33,21 +34,6 @@ function buildWeeklySchedule(classes: TeamClass[]): [string, DaySlot[]][] {
     }
   }
   return DAY_ORDER.filter((d) => map.has(d)).map((d) => [d, map.get(d)!]);
-}
-
-function InstagramIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className="h-4 w-4"
-      aria-hidden
-    >
-      <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="12" cy="12" r="4.3" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" />
-    </svg>
-  );
 }
 
 function InstructorCard({
@@ -142,17 +128,11 @@ export default async function FacilityHomePage({
                 initialWished={facilityWishInfo.wished}
                 initialCount={facilityWishInfo.count}
               />
-              {facility.instagramUrl && (
-                <a
-                  href={facility.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${facility.name} 인스타그램 바로가기`}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-rink-deep transition hover:opacity-80"
-                >
-                  <InstagramIcon />
-                </a>
-              )}
+              <FacilityContactLinks
+                phone={facility.phone}
+                instagramUrl={facility.instagramUrl}
+                facilityName={facility.name}
+              />
             </div>
           </div>
 

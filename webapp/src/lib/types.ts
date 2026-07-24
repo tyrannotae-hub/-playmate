@@ -11,6 +11,8 @@ export type Facility = {
   name: string;
   region: string;
   address: string;
+  phone: string;
+  instagramUrl: string;
 };
 
 export type Instructor = {

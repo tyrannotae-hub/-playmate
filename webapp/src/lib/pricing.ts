@@ -20,3 +20,9 @@ export function isDiscountActive(item: DiscountableClass, today = new Date()): b
 export function effectivePrice(item: DiscountableClass, today = new Date()): number {
   return isDiscountActive(item, today) ? item.discountPrice! : item.price;
 }
+
+// 할인 중일 때 정가 대비 할인율(%, 내림). 할인 중이 아니면 0.
+export function discountPercent(item: DiscountableClass, today = new Date()): number {
+  if (!isDiscountActive(item, today) || item.price <= 0) return 0;
+  return Math.floor((1 - item.discountPrice! / item.price) * 100);
+}

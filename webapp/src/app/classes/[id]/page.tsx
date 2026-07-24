@@ -12,6 +12,7 @@ import {
 } from "@/lib/data";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
+import FacilityContactLinks from "@/components/FacilityContactLinks";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -45,7 +46,14 @@ export default async function ClassDetailPage({
             <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
               {item.facility.name} →
             </Link>
-            <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
+            <div className="flex shrink-0 items-center gap-1">
+              <FacilityContactLinks
+                phone={item.facility.phone}
+                instagramUrl={item.facility.instagramUrl}
+                facilityName={item.facility.name}
+              />
+              <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
+            </div>
           </div>
           <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
           <p className="mt-1.5 text-sm text-muted">
