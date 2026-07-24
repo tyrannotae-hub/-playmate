@@ -70,7 +70,6 @@ export default function ClassesClient({
         collect_shoe_size: collectShoeSize,
         collect_residence: collectResidence,
         show_price: showPrice,
-        allow_trial: allowTrial,
         trial_price: allowTrial && trialPrice ? Number(trialPrice) : null,
       })
       .select("id")
@@ -102,6 +101,7 @@ export default function ClassesClient({
         day_label: dayLabel.trim(),
         time_label: timeLabel.trim(),
         slot_capacity: capacity,
+        allow_trial: allowTrial,
       });
     }
 
@@ -304,7 +304,8 @@ export default function ClassesClient({
                 className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
               <p className="mt-1.5 text-xs text-muted">
-                체험 가능 날짜는 클래스 등록 후 &quot;정보 수정&quot;에서 추가할 수 있어요.
+                원데이 가능 여부는 아래 첫 수업 시간대에 적용돼요. 시간대를 여러 개
+                등록한 뒤에는 클래스 관리에서 시간대별로 따로 켜고 끌 수 있어요.
               </p>
             </div>
           )}
