@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { yearsSince } from "@/lib/data";
 import {
@@ -11,7 +12,10 @@ import {
   FacilityNotice,
 } from "@/lib/types";
 
-export async function getCurrentClubOwner(): Promise<ClubOwner | null> {
+// club/(protected)/layout.tsx가 ClubNav 렌더링용으로, 그리고 각 페이지가 자기 데이터 조회용으로
+// 같은 요청 안에서 이 함수를 각자 또 호출해 auth.getUser()+club_owners 조회가 매번 중복됐다.
+// React cache()로 감싸 같은 요청(같은 렌더 패스) 안에서는 실제 조회가 한 번만 일어나게 한다.
+export const getCurrentClubOwner = cache(async (): Promise<ClubOwner | null> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -26,9 +30,9 @@ export async function getCurrentClubOwner(): Promise<ClubOwner | null> {
 
   if (!data) return null;
   return { id: data.id, name: data.name, facilityId: data.facility_id };
-}
+});
 
-export async function getMyFacility(facilityId: string): Promise<ClubFacility | null> {
+export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacility | null> => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("facilities")
@@ -50,7 +54,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     instagramUrl: data.instagram_url ?? "",
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
   };
-}
+});
 
 export async function getMyPromoImages(facilityId: string): Promise<string[]> {
   const supabase = await createClient();
