@@ -16,7 +16,7 @@ export default function ClassGallery({
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-[4/3] w-full items-center justify-center bg-rink-soft text-rink-deep">
+      <div className="flex aspect-square w-full items-center justify-center bg-rink-soft text-rink-deep">
         <SportIcon sportId={sportId} size={56} />
       </div>
     );
@@ -34,7 +34,7 @@ export default function ClassGallery({
       <div
         ref={trackRef}
         onScroll={onScroll}
-        className="flex aspect-[4/3] w-full snap-x snap-mandatory overflow-x-auto"
+        className="flex aspect-square w-full snap-x snap-mandatory overflow-x-auto"
       >
         {images.map((url, i) => (
           <div key={i} className="relative h-full w-full flex-shrink-0 snap-center">

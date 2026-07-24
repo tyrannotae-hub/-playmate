@@ -6,10 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 import { resizeImageToCover } from "@/lib/image-resize";
 import { buttonClass } from "@/lib/ui";
 
-// 상품 상세처럼 사진 여러 장을 올릴 수 있되, 규격은 모든 클럽이 동일하게 4:3 고정
+// 상품 상세처럼 사진 여러 장을 올릴 수 있되, 규격은 모든 클럽이 동일하게 정방형 고정
 const IMAGE_WIDTH = 960;
-const IMAGE_HEIGHT = 720;
-const MAX_IMAGES = 6;
+const IMAGE_HEIGHT = 960;
+const MAX_IMAGES = 8;
 
 export default function ClassMediaManager({
   facilityId,
@@ -100,7 +100,7 @@ export default function ClassMediaManager({
         </p>
         <div className="flex flex-wrap gap-2">
           {images.map((url) => (
-            <div key={url} className="relative h-16 w-20 overflow-hidden rounded-md">
+            <div key={url} className="relative h-16 w-16 overflow-hidden rounded-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="h-full w-full object-cover" />
               <button
@@ -124,7 +124,7 @@ export default function ClassMediaManager({
               />
               <label
                 htmlFor={`class-image-input-${classId}`}
-                className="flex h-16 w-20 cursor-pointer items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
+                className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
               >
                 {uploading ? "..." : "+ 추가"}
               </label>

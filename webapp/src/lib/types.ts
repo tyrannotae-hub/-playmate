@@ -171,6 +171,7 @@ export type ClubFacility = {
   phone: string;
   description: string;
   coverImageUrl: string;
+  profileImageUrl: string;
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
 };
@@ -193,6 +194,12 @@ export type FacilityInstructor = {
   wishCount: number;
 };
 
+export type FacilityHomeCategory = {
+  id: string;
+  name: string;
+  classIds: string[];
+};
+
 export type FacilityHome = {
   id: string;
   name: string;
@@ -200,6 +207,9 @@ export type FacilityHome = {
   phone: string;
   description: string;
   coverImageUrl: string;
+  profileImageUrl: string;
+  promoImages: string[];
+  homeCategories: FacilityHomeCategory[];
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
   notices: FacilityNotice[];

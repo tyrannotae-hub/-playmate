@@ -345,10 +345,14 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     { data: classRows, error: classError },
     ratings,
     wishCounts,
+    { data: promoRows },
+    { data: categoryRows },
   ] = await Promise.all([
     supabase
       .from("facilities")
-      .select("id, name, address, phone, description, cover_image_url, instagram_url, owner_type")
+      .select(
+        "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type"
+      )
       .eq("id", facilityId)
       .maybeSingle(),
     supabase
@@ -365,6 +369,16 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     classesQuery(supabase, { facilityId }),
     ratingMap(),
     wishCountMap(),
+    supabase
+      .from("facility_promo_images")
+      .select("url")
+      .eq("facility_id", facilityId)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("facility_home_categories")
+      .select("id, name, facility_home_category_classes(team_class_id)")
+      .eq("facility_id", facilityId)
+      .order("sort_order", { ascending: true }),
   ]);
 
   if (!facility) return null;
@@ -394,6 +408,19 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     phone: facility.phone ?? "",
     description: facility.description ?? "",
     coverImageUrl: facility.cover_image_url ?? "",
+    profileImageUrl: facility.profile_image_url ?? "",
+    promoImages: (promoRows ?? []).map((r) => r.url),
+    homeCategories: (
+      (categoryRows ?? []) as unknown as {
+        id: string;
+        name: string;
+        facility_home_category_classes: { team_class_id: string }[];
+      }[]
+    ).map((c) => ({
+      id: c.id,
+      name: c.name,
+      classIds: c.facility_home_category_classes.map((l) => l.team_class_id),
+    })),
     instagramUrl: facility.instagram_url ?? "",
     ownerType: (facility.owner_type as "club" | "solo_coach") ?? "club",
     notices: (notices ?? []).map((n) => ({

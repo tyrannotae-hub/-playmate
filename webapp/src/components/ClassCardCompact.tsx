@@ -22,7 +22,7 @@ export default function ClassCardCompact({
       href={`/classes/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
-      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="144px" className="object-cover" />
         ) : (

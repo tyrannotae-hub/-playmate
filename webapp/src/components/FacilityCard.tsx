@@ -20,7 +20,7 @@ export default function FacilityCard({
       href={`/facilities/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-40 flex-shrink-0"}
     >
-      <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
         {item.coverImageUrl ? (
           <Image src={item.coverImageUrl} alt="" fill sizes="160px" className="object-cover" />
         ) : (

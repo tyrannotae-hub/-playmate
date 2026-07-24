@@ -3,13 +3,13 @@ import Link from "next/link";
 import { ActiveClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 
-// 마이페이지 "수강중인 클래스" 섹션 전용 카드: 16:9 대표 이미지 (ClassCardCompact의 4:3과 구분)
+// 마이페이지 "수강중인 클래스" 섹션 전용 카드
 export default function ActiveClassCard({ item }: { item: ActiveClass }) {
   const cover = item.images[0];
 
   return (
     <Link href={`/classes/${item.classId}`} className="w-64 flex-shrink-0">
-      <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-md border border-line bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-md border border-line bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="256px" className="object-cover" />
         ) : (

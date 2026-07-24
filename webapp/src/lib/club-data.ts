@@ -6,6 +6,7 @@ import {
   ClubClass,
   ClubFacility,
   ClubOwner,
+  FacilityHomeCategory,
   FacilityInstructor,
   FacilityNotice,
 } from "@/lib/types";
@@ -32,7 +33,7 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
   const { data } = await supabase
     .from("facilities")
     .select(
-      "id, name, address, phone, description, cover_image_url, instagram_url, owner_type"
+      "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type"
     )
     .eq("id", facilityId)
     .maybeSingle();
@@ -45,9 +46,47 @@ export async function getMyFacility(facilityId: string): Promise<ClubFacility | 
     phone: data.phone ?? "",
     description: data.description ?? "",
     coverImageUrl: data.cover_image_url ?? "",
+    profileImageUrl: data.profile_image_url ?? "",
     instagramUrl: data.instagram_url ?? "",
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
   };
+}
+
+export async function getMyPromoImages(facilityId: string): Promise<string[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("facility_promo_images")
+    .select("url")
+    .eq("facility_id", facilityId)
+    .order("sort_order", { ascending: true });
+
+  return (data ?? []).map((row) => row.url);
+}
+
+export async function getMyHomeCategories(facilityId: string): Promise<FacilityHomeCategory[]> {
+  const supabase = await createClient();
+  const { data: categories } = await supabase
+    .from("facility_home_categories")
+    .select("id, name")
+    .eq("facility_id", facilityId)
+    .order("sort_order", { ascending: true });
+
+  if (!categories || categories.length === 0) return [];
+
+  const { data: links } = await supabase
+    .from("facility_home_category_classes")
+    .select("category_id, team_class_id")
+    .in(
+      "category_id",
+      categories.map((c) => c.id)
+    )
+    .order("sort_order", { ascending: true });
+
+  return categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    classIds: (links ?? []).filter((l) => l.category_id === c.id).map((l) => l.team_class_id),
+  }));
 }
 
 export async function getMyNotices(facilityId: string): Promise<FacilityNotice[]> {
