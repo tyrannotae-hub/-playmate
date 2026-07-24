@@ -67,6 +67,9 @@ export default function ClassCard({
     item.discountStartDate ?? ""
   );
   const [editDiscountEndDate, setEditDiscountEndDate] = useState(item.discountEndDate ?? "");
+  const [editTrialDiscountPrice, setEditTrialDiscountPrice] = useState(
+    item.trialDiscountPrice != null ? String(item.trialDiscountPrice) : ""
+  );
   const [savingEdit, setSavingEdit] = useState(false);
   const [editErrorMsg, setEditErrorMsg] = useState("");
 
@@ -120,6 +123,10 @@ export default function ClassCard({
         discount_price: editUseDiscount ? Number(editDiscountPrice) : null,
         discount_start_date: editUseDiscount ? editDiscountStartDate : null,
         discount_end_date: editUseDiscount ? editDiscountEndDate : null,
+        trial_discount_price:
+          editUseDiscount && editAllowTrial && editTrialDiscountPrice
+            ? Number(editTrialDiscountPrice)
+            : null,
       })
       .eq("id", item.id);
 
@@ -550,6 +557,21 @@ export default function ClassCard({
                   />
                 </div>
               </div>
+              {editAllowTrial && (
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold text-muted">
+                    원데이 할인가 <span className="font-normal">(선택, 비워두면 체험가는 할인 안 함)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={editTrialDiscountPrice}
+                    onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
+                    placeholder="예: 20000"
+                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+              )}
             </div>
           )}
           {editAllowTrial && (

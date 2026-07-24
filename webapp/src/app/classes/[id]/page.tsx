@@ -13,7 +13,12 @@ import {
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 import FacilityContactLinks from "@/components/FacilityContactLinks";
-import { effectivePrice, isDiscountActive } from "@/lib/pricing";
+import {
+  effectivePrice,
+  effectiveTrialPrice,
+  isDiscountActive,
+  isTrialDiscountActive,
+} from "@/lib/pricing";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -94,9 +99,21 @@ export default async function ClassDetailPage({
             )}
             {item.allowTrial && item.trialPrice != null && (
               <p className="mt-1 text-sm text-muted tabular-nums">
-                {item.showTrialPrice
-                  ? `원데이 체험 ${item.trialPrice.toLocaleString()}원`
-                  : "원데이 체험 문의"}
+                {item.showTrialPrice ? (
+                  isTrialDiscountActive(item) ? (
+                    <>
+                      원데이 체험{" "}
+                      <span className="line-through">{item.trialPrice.toLocaleString()}원</span>{" "}
+                      <span className="font-bold text-energy">
+                        {effectiveTrialPrice(item)!.toLocaleString()}원
+                      </span>
+                    </>
+                  ) : (
+                    `원데이 체험 ${item.trialPrice.toLocaleString()}원`
+                  )
+                ) : (
+                  "원데이 체험 문의"
+                )}
               </p>
             )}
             <p className="mt-1 text-xs text-muted">현장 결제 또는 계좌이체로 진행돼요</p>

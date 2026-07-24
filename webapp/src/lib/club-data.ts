@@ -92,7 +92,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, allow_trial, trial_price, show_price, show_trial_price, trial_day_label, discount_price, discount_start_date, discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, allow_trial, trial_price, show_price, show_trial_price, trial_day_label, discount_price, discount_start_date, discount_end_date, trial_discount_price, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_trial_dates(trial_date), class_holidays(holiday_date)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -153,6 +153,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       discountPrice: row.discount_price ?? undefined,
       discountStartDate: row.discount_start_date ?? undefined,
       discountEndDate: row.discount_end_date ?? undefined,
+      trialDiscountPrice: row.trial_discount_price ?? undefined,
     };
   });
 }

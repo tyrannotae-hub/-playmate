@@ -9,12 +9,17 @@ export type DiscountableClass = {
   discountEndDate?: string;
 };
 
-export function isDiscountActive(item: DiscountableClass, today = new Date()): boolean {
-  if (item.discountPrice == null || !item.discountStartDate || !item.discountEndDate) {
-    return false;
-  }
+function isWithinDiscountWindow(
+  item: { discountStartDate?: string; discountEndDate?: string },
+  today: Date
+): boolean {
+  if (!item.discountStartDate || !item.discountEndDate) return false;
   const todayIso = today.toISOString().slice(0, 10);
   return todayIso >= item.discountStartDate && todayIso <= item.discountEndDate;
+}
+
+export function isDiscountActive(item: DiscountableClass, today = new Date()): boolean {
+  return item.discountPrice != null && isWithinDiscountWindow(item, today);
 }
 
 export function effectivePrice(item: DiscountableClass, today = new Date()): number {
@@ -25,4 +30,27 @@ export function effectivePrice(item: DiscountableClass, today = new Date()): num
 export function discountPercent(item: DiscountableClass, today = new Date()): number {
   if (!isDiscountActive(item, today) || item.price <= 0) return 0;
   return Math.floor((1 - item.discountPrice! / item.price) * 100);
+}
+
+// 원데이(체험) 가격 할인. 할인 기간은 정가 할인과 discount_start_date/discount_end_date를
+// 공유하고, trial_discount_price 존재 여부로 체험가 할인 적용 여부만 별도로 판정한다.
+export type TrialDiscountableClass = {
+  trialPrice?: number;
+  trialDiscountPrice?: number;
+  discountStartDate?: string;
+  discountEndDate?: string;
+};
+
+export function isTrialDiscountActive(item: TrialDiscountableClass, today = new Date()): boolean {
+  return (
+    item.trialPrice != null && item.trialDiscountPrice != null && isWithinDiscountWindow(item, today)
+  );
+}
+
+export function effectiveTrialPrice(
+  item: TrialDiscountableClass,
+  today = new Date()
+): number | undefined {
+  if (item.trialPrice == null) return undefined;
+  return isTrialDiscountActive(item, today) ? item.trialDiscountPrice! : item.trialPrice;
 }

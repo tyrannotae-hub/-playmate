@@ -65,6 +65,7 @@ export type TeamClass = {
   discountPrice?: number;
   discountStartDate?: string;
   discountEndDate?: string;
+  trialDiscountPrice?: number;
 };
 
 export type Review = {
@@ -245,6 +246,7 @@ export type ClubClass = {
   discountPrice?: number;
   discountStartDate?: string;
   discountEndDate?: string;
+  trialDiscountPrice?: number;
 };
 
 export type Admin = {

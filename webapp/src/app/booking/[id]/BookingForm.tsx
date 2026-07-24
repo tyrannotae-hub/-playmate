@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Child, TeamClass } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
 import { formatIsoDateToKoreanShort, upcomingDatesForDayLabel } from "@/lib/schedule-dates";
+import { effectiveTrialPrice, isTrialDiscountActive } from "@/lib/pricing";
 
 type Phase = "add-child" | "form" | "requested" | "error";
 type Gender = "male" | "female";
@@ -261,9 +262,21 @@ export default function BookingForm({
               )}
               {item.trialPrice != null && (
                 <p className="mt-1.5 text-xs text-muted">
-                  {item.showTrialPrice
-                    ? `체험 가격: ${item.trialPrice.toLocaleString()}원`
-                    : "체험 문의"}
+                  {item.showTrialPrice ? (
+                    isTrialDiscountActive(item) ? (
+                      <>
+                        체험 가격:{" "}
+                        <span className="line-through">{item.trialPrice.toLocaleString()}원</span>{" "}
+                        <span className="font-bold text-energy">
+                          {effectiveTrialPrice(item)!.toLocaleString()}원
+                        </span>
+                      </>
+                    ) : (
+                      `체험 가격: ${item.trialPrice.toLocaleString()}원`
+                    )
+                  ) : (
+                    "체험 문의"
+                  )}
                 </p>
               )}
             </div>
