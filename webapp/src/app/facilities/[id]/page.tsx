@@ -11,6 +11,7 @@ import {
   getMyInstructorWishlistIds,
 } from "@/lib/data";
 import { FacilityHome, TeamClass } from "@/lib/types";
+import { parseDayLabel } from "@/lib/schedule-dates";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -23,10 +24,7 @@ function buildWeeklySchedule(classes: TeamClass[]): [string, DaySlot[]][] {
   const map = new Map<string, DaySlot[]>();
   for (const c of classes) {
     for (const s of c.schedules) {
-      const days = s.dayLabel
-        .split(/[·,\s]+/)
-        .map((d) => d.trim())
-        .filter(Boolean);
+      const days = parseDayLabel(s.dayLabel);
       for (const day of days) {
         const list = map.get(day) ?? [];
         list.push({ className: c.name, timeLabel: s.timeLabel });

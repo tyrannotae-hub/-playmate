@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Sport, TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import { regionLabel } from "@/lib/region-meta";
+import { parseDayLabel } from "@/lib/schedule-dates";
 import WishlistButton from "@/components/WishlistButton";
 
 const DAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
@@ -43,7 +44,9 @@ export default function DayFilterBrowser({
     return classes
       .map((c) => {
         const schedule = c.schedules.find(
-          (s) => s.dayLabel.includes(day) && (time === "전체" || timeSlotOf(s.timeLabel) === time)
+          (s) =>
+            (parseDayLabel(s.dayLabel) as string[]).includes(day) &&
+            (time === "전체" || timeSlotOf(s.timeLabel) === time)
         );
         return schedule ? { item: c, schedule } : null;
       })

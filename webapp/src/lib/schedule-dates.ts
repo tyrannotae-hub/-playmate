@@ -17,11 +17,23 @@ const DAY_CHAR_TO_JS_DAY: Record<DayChar, number> = {
   토: 6,
 };
 
+// 토큰이 축약형("토")이든 완전한 요일명("토요일")이든 요일 문자 하나로 정규화한다.
+// 실제 운영 데이터에 두 표기가 섞여 있어("토요일" vs "월,화,수,목,토") 이 정규화가 꼭 필요함 —
+// 단순 substring 매칭(dayLabel.includes("일"))은 "토요일" 안의 "일"과 충돌해 토요일 수업이
+// 일요일 필터에도 걸리는 버그를 낸다.
+function extractDayChar(token: string): DayChar | null {
+  if ((DAY_CHARS as readonly string[]).includes(token)) return token as DayChar;
+  const match = token.match(/^([월화수목금토일])요일$/);
+  return match ? (match[1] as DayChar) : null;
+}
+
 export function parseDayLabel(dayLabel: string): DayChar[] {
   return dayLabel
     .split(/[·,\s]+/)
     .map((d) => d.trim())
-    .filter((d): d is DayChar => (DAY_CHARS as readonly string[]).includes(d));
+    .filter(Boolean)
+    .map(extractDayChar)
+    .filter((d): d is DayChar => d !== null);
 }
 
 // dayLabel의 요일 패턴에 맞는, 오늘부터 향후 weeks주(기본 4주 ≈ 28일) 이내의
