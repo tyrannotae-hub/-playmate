@@ -11,18 +11,18 @@ export default function FacilityCard({
   wished = false,
 }: {
   item: FacilitySummary;
-  /** "scroll": 가로 스크롤용 고정폭(w-40) / "grid": 그리드용 유동폭(w-full) */
+  /** "scroll": 가로 스크롤용 고정폭(w-36, ClassCardCompact와 통일) / "grid": 그리드용 유동폭(w-full) */
   variant?: "scroll" | "grid";
   wished?: boolean;
 }) {
   return (
     <Link
       href={`/facilities/${item.id}`}
-      className={variant === "grid" ? "w-full" : "w-40 flex-shrink-0"}
+      className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
       <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
         {item.coverImageUrl ? (
-          <Image src={item.coverImageUrl} alt="" fill sizes="160px" className="object-cover" />
+          <Image src={item.coverImageUrl} alt="" fill sizes="144px" className="object-cover" />
         ) : (
           <span className="text-3xl">🏟️</span>
         )}
