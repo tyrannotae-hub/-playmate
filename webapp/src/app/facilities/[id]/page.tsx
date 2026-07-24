@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import TopNav from "@/components/TopNav";
-import ClassCard from "@/components/ClassCard";
 import InstructorWishlistButton from "@/components/InstructorWishlistButton";
 import FacilityWishlistButton from "@/components/FacilityWishlistButton";
 import {
@@ -9,32 +8,17 @@ import {
   getFacilityHome,
   getFacilityWishInfo,
   getMyInstructorWishlistIds,
+  getMyWishlistIds,
 } from "@/lib/data";
-import { FacilityHome, TeamClass } from "@/lib/types";
-import { parseDayLabel } from "@/lib/schedule-dates";
+import { FacilityHome } from "@/lib/types";
 import FacilityContactLinks from "@/components/FacilityContactLinks";
+import PromoCarousel from "@/components/facility/PromoCarousel";
+import HomeCategoryShowcase from "./HomeCategoryShowcase";
+import FacilityClassGrid from "./FacilityClassGrid";
+import FacilityScheduleCalendar from "./FacilityScheduleCalendar";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
-
-const DAY_ORDER = ["월", "화", "수", "목", "금", "토", "일"];
-
-type DaySlot = { className: string; timeLabel: string };
-
-function buildWeeklySchedule(classes: TeamClass[]): [string, DaySlot[]][] {
-  const map = new Map<string, DaySlot[]>();
-  for (const c of classes) {
-    for (const s of c.schedules) {
-      const days = parseDayLabel(s.dayLabel);
-      for (const day of days) {
-        const list = map.get(day) ?? [];
-        list.push({ className: c.name, timeLabel: s.timeLabel });
-        map.set(day, list);
-      }
-    }
-  }
-  return DAY_ORDER.filter((d) => map.has(d)).map((d) => [d, map.get(d)!]);
-}
 
 function InstructorCard({
   instructor,
@@ -89,53 +73,81 @@ export default async function FacilityHomePage({
 }) {
   const { id } = await params;
   const [user, facility] = await Promise.all([getCurrentParent(), getFacilityHome(id)]);
-  const [wishedInstructorIds, facilityWishInfo] = user
-    ? await Promise.all([getMyInstructorWishlistIds(user.id), getFacilityWishInfo(id, user.id)])
-    : [[], await getFacilityWishInfo(id)];
+  const [wishedInstructorIds, facilityWishInfo, wishedClassIds] = user
+    ? await Promise.all([
+        getMyInstructorWishlistIds(user.id),
+        getFacilityWishInfo(id, user.id),
+        getMyWishlistIds(user.id),
+      ])
+    : [[], await getFacilityWishInfo(id), []];
   if (!facility) notFound();
 
   const wishedInstructorSet = new Set(wishedInstructorIds);
-  const weeklySchedule = buildWeeklySchedule(facility.classes);
+  // 홍보 캐러셀에 올릴 사진이 아직 없으면, 예전 방식으로 올려둔 커버 사진 1장을 그대로 보여준다.
+  const heroImages = facility.promoImages.length > 0 ? facility.promoImages : facility.coverImageUrl ? [facility.coverImageUrl] : [];
 
   return (
     <>
       <TopNav back />
       <main className="pb-10">
-        <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-rink-soft">
-          {facility.coverImageUrl ? (
-            <Image
-              src={facility.coverImageUrl}
-              alt={facility.name}
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : (
+        {heroImages.length > 0 ? (
+          <PromoCarousel images={heroImages} />
+        ) : (
+          <div className="flex aspect-square w-full items-center justify-center bg-rink-soft">
             <span className="text-4xl">🏟️</span>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="px-4 pt-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h1 className="text-xl font-extrabold">{facility.name}</h1>
-              <p className="mt-1 text-sm text-muted">{facility.address}</p>
-              {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
+          <div className="flex items-start gap-3">
+            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-rink-soft text-rink-deep">
+              {facility.profileImageUrl ? (
+                <Image
+                  src={facility.profileImageUrl}
+                  alt={facility.name}
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="text-2xl">🏟️</span>
+              )}
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <FacilityWishlistButton
-                facilityId={facility.id}
-                initialWished={facilityWishInfo.wished}
-                initialCount={facilityWishInfo.count}
-              />
-              <FacilityContactLinks
-                phone={facility.phone}
-                instagramUrl={facility.instagramUrl}
-                facilityName={facility.name}
-              />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h1 className="text-xl font-extrabold">{facility.name}</h1>
+                  <p className="mt-1 text-sm text-muted">{facility.address}</p>
+                  {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <FacilityWishlistButton
+                    facilityId={facility.id}
+                    initialWished={facilityWishInfo.wished}
+                    initialCount={facilityWishInfo.count}
+                  />
+                  <FacilityContactLinks
+                    phone={facility.phone}
+                    instagramUrl={facility.instagramUrl}
+                    facilityName={facility.name}
+                  />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
+        <HomeCategoryShowcase
+          categories={facility.homeCategories}
+          allClasses={facility.classes}
+          wishedIds={wishedClassIds}
+        />
+
+        <div className="mt-8">
+          <FacilityClassGrid classes={facility.classes} wishedIds={wishedClassIds} />
+        </div>
+
+        <div className="px-4">
           {facility.description && (
             <div className="mt-6 border-t border-line pt-6">
               <p className="mb-2.5 text-sm font-bold text-muted">
@@ -158,24 +170,10 @@ export default async function FacilityHomePage({
             </div>
           )}
 
-          {weeklySchedule.length > 0 && (
+          {facility.classes.length > 0 && (
             <div className="mt-6 border-t border-line pt-6">
-              <p className="mb-2.5 text-sm font-bold text-muted">주간 시간표</p>
-              <div className="flex flex-col divide-y divide-line">
-                {weeklySchedule.map(([day, slots]) => (
-                  <div key={day} className="flex gap-3 py-3 first:pt-0 last:pb-0">
-                    <p className="w-8 shrink-0 text-sm font-bold text-rink-deep">{day}</p>
-                    <div className="flex flex-1 flex-col gap-1">
-                      {slots.map((s, i) => (
-                        <p key={i} className="text-sm leading-relaxed">
-                          <span className="font-bold">{s.className}</span>{" "}
-                          <span className="text-muted">{s.timeLabel}</span>
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <p className="mb-2.5 text-sm font-bold text-muted">일정표</p>
+              <FacilityScheduleCalendar classes={facility.classes} />
             </div>
           )}
 
@@ -195,20 +193,6 @@ export default async function FacilityHomePage({
               </div>
             </div>
           )}
-
-          <div className="mt-6 border-t border-line pt-6">
-            <p className="mb-2.5 text-sm font-bold text-muted">
-              운영 중인 클래스 ({facility.classes.length})
-            </p>
-            <div className="flex flex-col gap-3">
-              {facility.classes.map((c) => (
-                <ClassCard key={c.id} item={c} />
-              ))}
-              {facility.classes.length === 0 && (
-                <p className="py-4 text-sm text-muted">등록된 클래스가 없어요.</p>
-              )}
-            </div>
-          </div>
         </div>
       </main>
     </>
