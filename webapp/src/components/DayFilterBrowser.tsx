@@ -6,18 +6,15 @@ import Link from "next/link";
 import { Sport, TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import { regionLabel } from "@/lib/region-meta";
-import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 
 const DAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
-const TIME_SLOTS = ["전체", "오전", "오후", "저녁"] as const;
+const TIME_SLOTS = ["전체", "오전", "오후"] as const;
 type TimeSlot = (typeof TIME_SLOTS)[number];
 
 function timeSlotOf(timeLabel: string): Exclude<TimeSlot, "전체"> {
   const startHour = parseInt(timeLabel.split(":")[0], 10);
-  if (startHour < 12) return "오전";
-  if (startHour < 18) return "오후";
-  return "저녁";
+  return startHour < 12 ? "오전" : "오후";
 }
 
 export default function DayFilterBrowser({
@@ -89,16 +86,16 @@ export default function DayFilterBrowser({
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="mt-2 flex gap-1.5 overflow-x-auto px-4 pb-1">
         {TIME_SLOTS.map((t) => (
           <button
             key={t}
             onClick={() => setTime(t)}
-            className={buttonClass({
-              variant: time === t ? "secondary" : "outline",
-              size: "sm",
-              full: false,
-              className: "flex-shrink-0",
-            })}
+            className={`h-9 flex-shrink-0 rounded-md px-3.5 text-xs font-bold transition ${
+              time === t ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
+            }`}
           >
             {t}
           </button>
@@ -110,8 +107,8 @@ export default function DayFilterBrowser({
           <button
             key={d}
             onClick={() => setDay(d)}
-            className={`flex h-9 flex-shrink-0 flex-col items-center justify-center rounded-full px-3.5 text-sm font-bold transition ${
-              day === d ? "bg-rink text-white" : "text-muted"
+            className={`flex h-9 flex-shrink-0 flex-col items-center justify-center rounded-full px-3.5 text-sm font-medium transition ${
+              day === d ? "bg-rink text-white" : "text-foreground"
             }`}
           >
             {d}
