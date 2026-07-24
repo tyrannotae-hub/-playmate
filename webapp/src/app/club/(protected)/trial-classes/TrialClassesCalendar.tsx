@@ -22,12 +22,21 @@ function isSameDate(a: Date, b: Date): boolean {
   );
 }
 
-type Match = { classId: string; className: string; timeLabel: string; isHoliday: boolean };
+type Match = {
+  scheduleId: string;
+  classId: string;
+  className: string;
+  timeLabel: string;
+  isHoliday: boolean;
+};
 
+// 원데이 휴무는 시간대(class_schedules) 단위로 저장한다 — 같은 클래스에 원데이 가능한
+// 시간대가 2개 이상일 때(예: 토요일 10시/14시), 한쪽만 휴무로 켜도 다른 시간대까지 같이
+// 꺼지지 않도록 class_schedule_id로 구분해서 관리한다.
 export default function TrialClassesCalendar({ classes }: { classes: ClubClass[] }) {
   const router = useRouter();
-  const [holidaysByClass, setHolidaysByClass] = useState<Record<string, string[]>>(() =>
-    Object.fromEntries(classes.map((c) => [c.id, c.holidays]))
+  const [holidaysBySchedule, setHolidaysBySchedule] = useState<Record<string, string[]>>(() =>
+    Object.fromEntries(classes.flatMap((c) => c.schedules).map((s) => [s.id, s.holidays]))
   );
   const [togglingKey, setTogglingKey] = useState<string | null>(null);
 
@@ -65,47 +74,47 @@ export default function TrialClassesCalendar({ classes }: { classes: ClubClass[]
     const dayChar = DAY_CHARS_BY_JS_DAY[date.getDay()];
     const matched: Match[] = [];
     for (const c of trialClasses) {
-      const holidays = holidaysByClass[c.id] ?? [];
       for (const s of c.schedules) {
         if (!s.allowTrial) continue;
         if (!parseDayLabel(s.dayLabel).includes(dayChar)) continue;
         matched.push({
+          scheduleId: s.id,
           classId: c.id,
           className: c.name,
           timeLabel: s.timeLabel,
-          isHoliday: holidays.includes(iso),
+          isHoliday: (holidaysBySchedule[s.id] ?? []).includes(iso),
         });
       }
     }
     return matched;
   }
 
-  async function toggleHoliday(classId: string, iso: string, holiday: boolean) {
-    const key = `${classId}-${iso}`;
+  async function toggleHoliday(scheduleId: string, classId: string, iso: string, holiday: boolean) {
+    const key = `${scheduleId}-${iso}`;
     setTogglingKey(key);
     const supabase = createClient();
 
     if (holiday) {
       const { error } = await supabase
         .from("class_holidays")
-        .insert({ team_class_id: classId, holiday_date: iso });
+        .insert({ team_class_id: classId, class_schedule_id: scheduleId, holiday_date: iso });
       setTogglingKey(null);
       if (error) return;
-      setHolidaysByClass((prev) => ({
+      setHolidaysBySchedule((prev) => ({
         ...prev,
-        [classId]: [...(prev[classId] ?? []), iso],
+        [scheduleId]: [...(prev[scheduleId] ?? []), iso],
       }));
     } else {
       const { error } = await supabase
         .from("class_holidays")
         .delete()
-        .eq("team_class_id", classId)
+        .eq("class_schedule_id", scheduleId)
         .eq("holiday_date", iso);
       setTogglingKey(null);
       if (error) return;
-      setHolidaysByClass((prev) => ({
+      setHolidaysBySchedule((prev) => ({
         ...prev,
-        [classId]: (prev[classId] ?? []).filter((d) => d !== iso),
+        [scheduleId]: (prev[scheduleId] ?? []).filter((d) => d !== iso),
       }));
     }
     router.refresh();
@@ -207,15 +216,15 @@ export default function TrialClassesCalendar({ classes }: { classes: ClubClass[]
         </p>
         {selectedMatches.length > 0 ? (
           <div className="flex flex-col divide-y divide-line">
-            {selectedMatches.map((m, i) => (
-              <div key={`${m.classId}-${i}`} className="flex items-center justify-between gap-2 py-2.5">
+            {selectedMatches.map((m) => (
+              <div key={m.scheduleId} className="flex items-center justify-between gap-2 py-2.5">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold">{m.className}</p>
                   <p className="text-xs text-muted">{m.timeLabel}</p>
                 </div>
                 <button
-                  disabled={togglingKey === `${m.classId}-${selectedIso}`}
-                  onClick={() => toggleHoliday(m.classId, selectedIso, !m.isHoliday)}
+                  disabled={togglingKey === `${m.scheduleId}-${selectedIso}`}
+                  onClick={() => toggleHoliday(m.scheduleId, m.classId, selectedIso, !m.isHoliday)}
                   className={buttonClass({
                     variant: m.isHoliday ? "secondary" : "outline",
                     size: "sm",

@@ -214,6 +214,10 @@ export default function ClassCard({
   }
 
   async function deleteSchedule(scheduleId: string) {
+    if (item.schedules.length <= 1) {
+      alert("클래스에는 시간대가 최소 1개 있어야 해요. 마지막 시간대는 삭제할 수 없어요.");
+      return;
+    }
     const supabase = createClient();
     const { error } = await supabase.from("class_schedules").delete().eq("id", scheduleId);
     if (!error) router.refresh();
@@ -256,7 +260,8 @@ export default function ClassCard({
       .from("class_holidays")
       .delete()
       .eq("team_class_id", item.id)
-      .eq("holiday_date", holidayDate);
+      .eq("holiday_date", holidayDate)
+      .is("class_schedule_id", null);
     if (!error) router.refresh();
   }
 

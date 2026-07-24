@@ -33,6 +33,8 @@ export type ClassSchedule = {
   capacity: number;
   booked: number;
   allowTrial: boolean;
+  /** 이 시간대만 원데이 휴무로 지정된 날짜(ISO). 클래스 전체 휴무(TeamClass.holidays)와는 별개. */
+  holidays: string[];
 };
 
 export type TeamClass = {
@@ -229,6 +231,7 @@ export type ClubSchedule = {
   capacity: number;
   booked: number;
   allowTrial: boolean;
+  holidays: string[];
 };
 
 export type ClubInstructorRef = {

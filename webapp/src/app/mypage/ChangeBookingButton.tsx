@@ -43,7 +43,8 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
 
       if (booking.bookingType === "trial") {
         // 원데이 체험은 이제 특정 시간대(schedule)에 딸린 속성이라, 그 schedule의
-        // 요일(day_label)로 반복 날짜를 계산하고 휴일(class_holidays)만 제외한다
+        // 요일(day_label)로 반복 날짜를 계산하고, 클래스 전체 휴무(class_schedule_id
+        // null)와 이 시간대만의 휴무(class_schedule_id=이 스케줄)를 모두 제외한다
         // (BookingForm.tsx의 최초 예약 시 계산 로직과 동일하게 맞춤).
         const [{ data: scheduleRow }, { data: holidayRows }] = await Promise.all([
           supabase
@@ -54,7 +55,8 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
           supabase
             .from("class_holidays")
             .select("holiday_date")
-            .eq("team_class_id", booking.classId),
+            .eq("team_class_id", booking.classId)
+            .or(`class_schedule_id.is.null,class_schedule_id.eq.${booking.scheduleId}`),
         ]);
         if (cancelled) return;
         const todayIso = toIsoDate(new Date());

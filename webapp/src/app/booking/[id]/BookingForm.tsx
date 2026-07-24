@@ -62,7 +62,8 @@ export default function BookingForm({
       ).padStart(2, "0")}`;
 
     const todayIso = toIsoDate(new Date());
-    const holidaySet = new Set(item.holidays);
+    // 클래스 전체 휴무(item.holidays) + 이 시간대만의 휴무(selectedSchedule.holidays) 둘 다 제외.
+    const holidaySet = new Set([...item.holidays, ...selectedSchedule.holidays]);
 
     return upcomingDatesForDayLabel(selectedSchedule.dayLabel)
       .map(toIsoDate)

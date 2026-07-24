@@ -136,7 +136,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date)"
+      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -147,6 +147,10 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
     )
       .map((ci) => ci.instructor)
       .filter((i): i is { id: string; name: string } => !!i);
+    const holidayRows = row.class_holidays as unknown as {
+      holiday_date: string;
+      class_schedule_id: string | null;
+    }[];
     const schedules = (
       row.class_schedules as unknown as {
         id: string;
@@ -163,6 +167,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       capacity: s.slot_capacity,
       booked: s.slot_booked_count,
       allowTrial: s.allow_trial ?? false,
+      holidays: holidayRows.filter((h) => h.class_schedule_id === s.id).map((h) => h.holiday_date),
     }));
     const images = (row.class_images as unknown as { url: string; sort_order: number }[])
       .slice()
@@ -189,9 +194,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       trialPrice: row.trial_price ?? undefined,
       showPrice: row.show_price ?? true,
       showTrialPrice: row.show_trial_price ?? true,
-      holidays: (row.class_holidays as unknown as { holiday_date: string }[]).map(
-        (h) => h.holiday_date
-      ),
+      holidays: holidayRows.filter((h) => !h.class_schedule_id).map((h) => h.holiday_date),
       discountPrice: row.discount_price ?? undefined,
       discountStartDate: row.discount_start_date ?? undefined,
       discountEndDate: row.discount_end_date ?? undefined,

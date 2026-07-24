@@ -40,7 +40,7 @@ function matchesForDate(classes: TeamClass[], date: Date): MatchedClass[] {
         classId: c.id,
         className: c.name,
         timeLabel: s.timeLabel,
-        isTrial: s.allowTrial && !c.holidays.includes(iso),
+        isTrial: s.allowTrial && !c.holidays.includes(iso) && !s.holidays.includes(iso),
       });
     }
   }

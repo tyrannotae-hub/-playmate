@@ -51,8 +51,14 @@ export default function ClassesClient({
 
   async function createClass(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitting(true);
     setErrorMsg("");
+
+    if (!dayLabel.trim() || !timeLabel.trim()) {
+      setErrorMsg("시간대(요일·시간)를 최소 1개 입력해야 클래스를 등록할 수 있어요.");
+      return;
+    }
+
+    setSubmitting(true);
     const supabase = createClient();
 
     const { data: newClass, error: classError } = await supabase
@@ -95,14 +101,21 @@ export default function ClassesClient({
       }
     }
 
-    if (dayLabel.trim() && timeLabel.trim()) {
-      await supabase.from("class_schedules").insert({
-        team_class_id: newClass.id,
-        day_label: dayLabel.trim(),
-        time_label: timeLabel.trim(),
-        slot_capacity: capacity,
-        allow_trial: allowTrial,
-      });
+    const { error: scheduleError } = await supabase.from("class_schedules").insert({
+      team_class_id: newClass.id,
+      day_label: dayLabel.trim(),
+      time_label: timeLabel.trim(),
+      slot_capacity: capacity,
+      allow_trial: allowTrial,
+    });
+
+    if (scheduleError) {
+      // 시간대 없는 클래스가 남아있으면 검색 등 목록 화면이 깨지므로, 실패 시 클래스 자체를
+      // 되돌린다(schedule 없이는 클래스가 존재할 수 없다는 규칙을 여기서도 지킴).
+      await supabase.from("teams_classes").delete().eq("id", newClass.id);
+      setSubmitting(false);
+      setErrorMsg("시간대 등록에 실패해서 클래스 등록을 취소했어요. 다시 시도해주세요.");
+      return;
     }
 
     setSubmitting(false);
@@ -310,9 +323,12 @@ export default function ClassesClient({
             </div>
           )}
 
-          <p className="mt-1 text-xs font-bold text-muted">첫 수업 시간대 (선택, 나중에 추가 가능)</p>
+          <p className="mt-1 text-xs font-bold text-muted">
+            첫 수업 시간대 <span className="font-normal">(필수, 최소 1개 등록해야 클래스를 만들 수 있어요)</span>
+          </p>
           <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
           <input
+            required
             value={timeLabel}
             onChange={(e) => setTimeLabel(e.target.value)}
             placeholder="시간 (예: 16:00)"
