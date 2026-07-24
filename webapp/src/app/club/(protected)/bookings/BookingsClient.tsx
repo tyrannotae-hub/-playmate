@@ -9,6 +9,7 @@ import { BookingStatus, ClubBooking } from "@/lib/types";
 import { buttonClass } from "@/lib/ui";
 
 type TabKey = BookingStatus | "all" | "change_requested";
+type TypeTabKey = "all" | "enrollment" | "trial";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "requested", label: "승인 대기" },
@@ -19,12 +20,19 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "all", label: "전체" },
 ];
 
+const TYPE_TABS: { key: TypeTabKey; label: string }[] = [
+  { key: "all", label: "전체" },
+  { key: "enrollment", label: "정기" },
+  { key: "trial", label: "원데이" },
+];
+
 function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
   const params = useSearchParams();
   const initialStatus = (params.get("status") as TabKey | null) ?? "requested";
   const classId = params.get("classId");
 
   const [tab, setTab] = useState<TabKey>(initialStatus);
+  const [typeTab, setTypeTab] = useState<TypeTabKey>("all");
 
   const className = useMemo(
     () => (classId ? bookings.find((b) => b.classId === classId)?.className : undefined),
@@ -37,7 +45,8 @@ function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
       if (tab === "all") return true;
       if (tab === "change_requested") return !!b.changeRequestedAt;
       return b.status === tab;
-    });
+    })
+    .filter((b) => typeTab === "all" || b.bookingType === typeTab);
 
   return (
     <>
@@ -58,6 +67,20 @@ function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
           ))}
         </div>
         <RefreshButton />
+      </div>
+
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {TYPE_TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTypeTab(t.key)}
+            className={`h-8 flex-shrink-0 rounded-md px-3 text-xs font-bold transition ${
+              typeTab === t.key ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {classId && (
