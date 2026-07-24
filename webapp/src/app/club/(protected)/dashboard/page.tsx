@@ -26,60 +26,35 @@ export default async function ClubDashboardPage() {
         <p className="text-sm font-bold text-muted">예약 현황</p>
         <RefreshButton />
       </div>
-      <div className="mt-2.5 grid grid-cols-3 gap-2.5">
-        <Link
-          href="/club/bookings?status=requested"
-          className={cardClass("text-center transition hover:border-rink")}
-        >
-          <p className="text-2xl font-extrabold text-warn">{pending.length}</p>
-          <p className="mt-1 text-xs text-muted">확인중</p>
-        </Link>
-        <Link
-          href="/club/bookings?status=confirmed"
-          className={cardClass("text-center transition hover:border-rink")}
-        >
-          <p className="text-2xl font-extrabold text-good">{confirmed.length}</p>
-          <p className="mt-1 text-xs text-muted">승인</p>
-        </Link>
-        <Link
-          href="/club/bookings?status=completed"
-          className={cardClass("text-center transition hover:border-rink")}
-        >
-          <p className="text-2xl font-extrabold">{completed.length}</p>
-          <p className="mt-1 text-xs text-muted">완료</p>
-        </Link>
-      </div>
-
-      <div className="mt-6 flex items-center justify-between">
-        <p className="text-sm font-bold text-muted">취소·변경 현황</p>
-        <RefreshButton />
-      </div>
-      <div className="mt-2.5 flex flex-col gap-2.5">
-        <Link
-          href="/club/bookings?status=cancelled"
-          className={cardClass("flex items-center justify-between transition hover:border-rink")}
-        >
-          <span>
-            <span className="block text-2xl font-extrabold text-muted">{cancelled.length}</span>
-            <span className="mt-1 block text-xs text-muted">취소된 예약</span>
-          </span>
-          <span className="text-xs font-bold text-rink">전체 보기 →</span>
-        </Link>
-        <Link
-          href="/club/bookings?status=change_requested"
-          className={cardClass("flex items-center justify-between transition hover:border-rink")}
-        >
-          <span>
-            <span className="block text-2xl font-extrabold text-warn">{changeRequested.length}</span>
-            <span className="mt-1 block text-xs text-muted">변경 요청된 예약</span>
-          </span>
-          <span className="text-xs font-bold text-rink">전체 보기 →</span>
-        </Link>
+      <div className={cardClass("mt-2.5 divide-y divide-line p-0")}>
+        {(
+          [
+            { href: "/club/bookings?status=requested", label: "확인중", count: pending.length, color: "text-warn" },
+            { href: "/club/bookings?status=confirmed", label: "승인", count: confirmed.length, color: "text-good" },
+            { href: "/club/bookings?status=completed", label: "완료", count: completed.length, color: "text-foreground" },
+            { href: "/club/bookings?status=cancelled", label: "취소된 예약", count: cancelled.length, color: "text-muted" },
+            {
+              href: "/club/bookings?status=change_requested",
+              label: "변경 요청된 예약",
+              count: changeRequested.length,
+              color: "text-warn",
+            },
+          ] as const
+        ).map((row) => (
+          <Link
+            key={row.href}
+            href={row.href}
+            className="flex items-center justify-between px-4 py-3 transition hover:bg-surface-2"
+          >
+            <span className="text-sm">{row.label}</span>
+            <span className={`text-base font-extrabold tabular-nums ${row.color}`}>{row.count}건</span>
+          </Link>
+        ))}
       </div>
 
       <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
         <p className="font-bold">{isSoloCoach ? "프로필 꾸미기" : "클럽 홈 꾸미기"}</p>
-        <p className="mt-1 text-sm text-muted">커버 이미지·소개·공지사항을 관리해요 →</p>
+        <p className="mt-1 text-sm text-muted">프로필·홍보사진·진열장·소개·공지사항을 관리해요 →</p>
       </Link>
 
       <div className="mt-7 flex items-center justify-between">
