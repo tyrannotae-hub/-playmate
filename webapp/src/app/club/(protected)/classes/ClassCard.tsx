@@ -362,7 +362,7 @@ export default function ClassCard({
             />
           </div>
           <div className="flex gap-2">
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">종목</label>
               <select
                 value={editSportId}
@@ -376,7 +376,7 @@ export default function ClassCard({
                 ))}
               </select>
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">클래스 형태</label>
               <select
                 value={editClassType}
@@ -427,7 +427,7 @@ export default function ClassCard({
             )}
           </div>
           <div className="flex gap-2">
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">최소 나이</label>
               <input
                 type="number"
@@ -438,7 +438,7 @@ export default function ClassCard({
                 className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">최대 나이</label>
               <input
                 type="number"
@@ -451,7 +451,7 @@ export default function ClassCard({
             </div>
           </div>
           <div className="flex gap-2">
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">가격</label>
               <input
                 type="number"
@@ -559,7 +559,7 @@ export default function ClassCard({
                 />
               </div>
               <div className="flex gap-2">
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
                   <input
                     type="date"
@@ -568,7 +568,7 @@ export default function ClassCard({
                     className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
                   <input
                     type="date"
@@ -610,7 +610,7 @@ export default function ClassCard({
                 />
               </div>
               <div className="flex gap-2">
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
                   <input
                     type="date"
@@ -619,7 +619,7 @@ export default function ClassCard({
                     className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
                   <input
                     type="date"
