@@ -48,41 +48,44 @@ export default async function ClassDetailPage({
         <ClassGallery images={item.images} sportId={item.sportId} />
 
         <div className="px-4 pt-4">
-          <div>
-            {item.showPrice ? (
-              isDiscountActive(item) ? (
-                <div className="flex items-baseline gap-2">
-                  <p className="text-sm text-muted line-through tabular-nums">
-                    {item.priceUnit} {item.price.toLocaleString()}원
-                  </p>
-                  <p className="text-lg font-extrabold text-energy tabular-nums">
-                    {item.priceUnit} {effectivePrice(item).toLocaleString()}원
-                  </p>
-                </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-lg font-extrabold tabular-nums">
+              <span className="mr-1.5 text-sm font-bold text-muted">정기</span>
+              {item.showPrice ? (
+                isDiscountActive(item) ? (
+                  <>
+                    <span className="text-sm text-muted line-through">
+                      {item.priceUnit} {item.price.toLocaleString()}원
+                    </span>{" "}
+                    <span className="text-energy">
+                      {item.priceUnit} {effectivePrice(item).toLocaleString()}원
+                    </span>
+                  </>
+                ) : (
+                  `${item.priceUnit} ${item.price.toLocaleString()}원`
+                )
               ) : (
-                <p className="text-lg font-extrabold tabular-nums">
-                  {item.priceUnit} {item.price.toLocaleString()}원
-                </p>
-              )
-            ) : (
-              <p className="text-lg font-extrabold tabular-nums">가격 문의</p>
-            )}
+                "가격문의"
+              )}
+            </p>
             {item.allowTrial && item.trialPrice != null && (
-              <p className="mt-1 text-sm text-muted tabular-nums">
+              <p className="text-lg font-extrabold tabular-nums">
+                <span className="mr-1.5 text-sm font-bold text-muted">원데이</span>
                 {item.showTrialPrice ? (
                   isTrialDiscountActive(item) ? (
                     <>
-                      원데이 체험{" "}
-                      <span className="line-through">{item.trialPrice.toLocaleString()}원</span>{" "}
-                      <span className="font-bold text-energy">
+                      <span className="text-sm text-muted line-through">
+                        {item.trialPrice.toLocaleString()}원
+                      </span>{" "}
+                      <span className="text-energy">
                         {effectiveTrialPrice(item)!.toLocaleString()}원
                       </span>
                     </>
                   ) : (
-                    `원데이 체험 ${item.trialPrice.toLocaleString()}원`
+                    `${item.trialPrice.toLocaleString()}원`
                   )
                 ) : (
-                  "원데이 체험 문의"
+                  "가격문의"
                 )}
               </p>
             )}

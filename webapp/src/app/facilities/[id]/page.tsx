@@ -69,7 +69,6 @@ export default async function FacilityHomePage({
                 <div className="min-w-0">
                   <h1 className="text-xl font-extrabold">{facility.name}</h1>
                   <p className="mt-1 text-sm text-muted">{facility.address}</p>
-                  {facility.phone && <p className="mt-0.5 text-sm text-muted">{facility.phone}</p>}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <FacilityWishlistButton
