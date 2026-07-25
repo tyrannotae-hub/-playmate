@@ -46,6 +46,10 @@ README부터 읽으세요.**
   `request_booking_change()`를 한 번 더 갱신).
 - `class-holiday-per-schedule.sql` — ✅ 최신. 원데이 휴무도 `class_holidays.
   class_schedule_id`로 시간대 단위 지정 가능(null이면 클래스 전체 휴무).
+- `service-type-academy-lesson.sql` — ✅ 최신. 학부모 앱을 "아카데미"/"레슨" 두
+  갈래로 분리. `teams_classes.service_type`(클래스별 수동 지정),
+  `facilities.offers_academy`/`offers_lesson`(가입 승인 시 부여되는 자격),
+  `club_signup_requests.wants_academy`/`wants_lesson`/`business_reg_number`.
 
 ## 예약
 - `booking-contact-phone.sql`, `booking-registration-details.sql` — 연락처/성별/키/

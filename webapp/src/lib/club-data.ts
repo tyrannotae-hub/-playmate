@@ -37,7 +37,7 @@ export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacil
   const { data } = await supabase
     .from("facilities")
     .select(
-      "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type, facility_regions(region_code)"
+      "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type, offers_academy, offers_lesson, facility_regions(region_code)"
     )
     .eq("id", facilityId)
     .maybeSingle();
@@ -54,6 +54,8 @@ export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacil
     instagramUrl: data.instagram_url ?? "",
     regions: (data.facility_regions ?? []).map((r: { region_code: string }) => r.region_code),
     ownerType: (data.owner_type as "club" | "solo_coach") ?? "club",
+    offersAcademy: data.offers_academy ?? true,
+    offersLesson: data.offers_lesson ?? false,
   };
 });
 
@@ -136,7 +138,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
   const { data } = await supabase
     .from("teams_classes")
     .select(
-      "id, name, sport_id, age_min, age_max, class_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
+      "id, name, sport_id, age_min, age_max, class_type, service_type, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
@@ -182,6 +184,7 @@ export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
       ageMin: row.age_min,
       ageMax: row.age_max,
       classType: row.class_type,
+      serviceType: row.service_type,
       price: row.price,
       priceUnit: row.price_unit,
       schedules,

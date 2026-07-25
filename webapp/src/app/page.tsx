@@ -1,11 +1,13 @@
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
+import ServiceTypeTabs from "@/components/ServiceTypeTabs";
 import ClassCardCompact from "@/components/ClassCardCompact";
 import FacilityCard from "@/components/FacilityCard";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
+import { ServiceType } from "@/lib/types";
 import {
   facilitiesFromClasses,
   getAllClasses,
@@ -21,13 +23,20 @@ import {
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-  const [classes, sports, instructors, user] = await Promise.all([
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const type: ServiceType = (await searchParams).type === "lesson" ? "lesson" : "academy";
+
+  const [allClasses, sports, instructors, user] = await Promise.all([
     getAllClasses(),
     getSports(),
     getFeaturedInstructors(),
     getCurrentParent(),
   ]);
+  const classes = allClasses.filter((c) => c.serviceType === type);
   const facilities = await facilitiesFromClasses(classes);
   const popularFacilities = [...facilities]
     .sort((a, b) => b.popularity - a.popularity || b.classCount - a.classCount)
@@ -56,8 +65,8 @@ export default async function HomePage() {
   return (
     <>
       <TopNav />
+      <ServiceTypeTabs active={type} />
       <main className="pb-10">
-        <PromoBanner />
         <div className="px-4 pt-4">
           <div className="mb-5 flex items-center gap-2.5">
             {child?.photoUrl && (
@@ -106,6 +115,10 @@ export default async function HomePage() {
             <SportCategoryRow sports={sports} counts={sportCounts} />
           </div>
         )}
+
+        <div className="mt-8">
+          <PromoBanner />
+        </div>
 
         {classes.length > 0 && (
           <DayFilterBrowser classes={classes} sports={sports} wishedIds={wishedIds} />

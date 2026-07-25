@@ -64,19 +64,19 @@ export default function PromoBanner() {
   }
 
   return (
-    <div className="pt-2">
+    <div className="px-4">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory overflow-x-auto rounded-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {BANNERS.map((b) => (
           <Link
             key={b.id}
             href={b.href}
-            className={`flex aspect-[21/8] w-full shrink-0 snap-center flex-col justify-center gap-1 px-5 ${b.className}`}
+            className={`flex aspect-square w-full shrink-0 snap-center flex-col justify-center gap-1.5 rounded-md px-6 ${b.className}`}
           >
-            <p className="text-base font-extrabold">{b.title}</p>
+            <p className="text-xl font-extrabold">{b.title}</p>
             <p className="text-sm opacity-90">{b.subtitle}</p>
           </Link>
         ))}

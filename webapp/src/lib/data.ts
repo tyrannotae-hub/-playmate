@@ -42,6 +42,7 @@ type RawClass = {
   age_min: number;
   age_max: number;
   class_type: "individual" | "group" | "team";
+  service_type: "academy" | "lesson";
   price: number;
   price_unit: string;
   description: string | null;
@@ -183,6 +184,7 @@ function toTeamClass(
     ageMin: row.age_min,
     ageMax: row.age_max,
     classType: row.class_type,
+    serviceType: row.service_type,
     price: row.price,
     priceUnit: row.price_unit,
     distanceKm: DISTANCE_KM[row.facility?.name ?? ""] ?? 1.5,

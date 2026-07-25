@@ -16,6 +16,8 @@ export type Facility = {
   instagramUrl: string;
 };
 
+export type ServiceType = "academy" | "lesson";
+
 export type Instructor = {
   id: string;
   name: string;
@@ -46,6 +48,7 @@ export type TeamClass = {
   ageMin: number;
   ageMax: number;
   classType: "individual" | "group" | "team";
+  serviceType: ServiceType;
   price: number;
   priceUnit: string;
   distanceKm: number;
@@ -181,6 +184,8 @@ export type ClubFacility = {
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
   regions: string[];
+  offersAcademy: boolean;
+  offersLesson: boolean;
 };
 
 export type FacilityNotice = {
@@ -247,6 +252,7 @@ export type ClubClass = {
   ageMin: number;
   ageMax: number;
   classType: "individual" | "group" | "team";
+  serviceType: ServiceType;
   price: number;
   priceUnit: string;
   schedules: ClubSchedule[];
@@ -283,6 +289,9 @@ export type ClubSignupRequest = {
   createdAt: string;
   reviewedAt?: string;
   sportName?: string;
+  wantsAcademy: boolean;
+  wantsLesson: boolean;
+  businessRegNumber?: string;
 };
 
 export type NotificationType =

@@ -19,6 +19,9 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
   const [name, setName] = useState("");
   const [ownerType, setOwnerType] = useState<"club" | "solo_coach">("club");
   const [sportId, setSportId] = useState(sports[0]?.id ?? "");
+  const [wantsAcademy, setWantsAcademy] = useState(true);
+  const [wantsLesson, setWantsLesson] = useState(false);
+  const [businessRegNumber, setBusinessRegNumber] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -37,6 +40,10 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
     }
     if (!name.trim()) {
       setErrorMsg("이름(클럽명 또는 코치 이름)을 입력해주세요.");
+      return;
+    }
+    if (!wantsAcademy && !wantsLesson) {
+      setErrorMsg("아카데미・레슨 중 하나 이상 선택해주세요.");
       return;
     }
 
@@ -64,6 +71,9 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
       name: name.trim(),
       owner_type: ownerType,
       sport_id: sportId || null,
+      wants_academy: wantsAcademy,
+      wants_lesson: wantsLesson,
+      business_reg_number: businessRegNumber.trim() || null,
     });
 
     // 로그인 상태로 둬봤자 club_owners 행이 없어서 아무 화면도 못 들어가니, 결과와 무관하게
@@ -155,6 +165,51 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
               </option>
             ))}
           </select>
+
+          <div>
+            <p className="mb-1.5 text-xs font-bold text-muted">운영 형태 (하나 이상 선택)</p>
+            <div className="flex gap-2">
+              <label
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2.5 text-sm font-bold transition ${
+                  wantsAcademy ? "border-rink bg-rink-soft text-rink-deep" : "border-line text-muted"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={wantsAcademy}
+                  onChange={(e) => setWantsAcademy(e.target.checked)}
+                  className="sr-only"
+                />
+                아카데미
+              </label>
+              <label
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2.5 text-sm font-bold transition ${
+                  wantsLesson ? "border-rink bg-rink-soft text-rink-deep" : "border-line text-muted"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={wantsLesson}
+                  onChange={(e) => setWantsLesson(e.target.checked)}
+                  className="sr-only"
+                />
+                레슨
+              </label>
+            </div>
+            <p className="mt-1.5 text-left text-xs text-muted">
+              정기 등록형 프로그램(학원・팀 훈련 등)은 아카데미, 회당 결제하는 개인・소그룹
+              지도는 레슨이에요. 둘 다 운영하면 둘 다 선택하세요.
+            </p>
+          </div>
+
+          <input
+            type="text"
+            value={businessRegNumber}
+            onChange={(e) => setBusinessRegNumber(e.target.value)}
+            placeholder="사업자등록번호 (선택, 나중에 정산 시 필요할 수 있어요)"
+            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+          />
+
           <input
             type="text"
             required

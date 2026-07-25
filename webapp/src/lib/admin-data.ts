@@ -23,7 +23,7 @@ export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {
   const { data } = await supabase
     .from("club_signup_requests")
     .select(
-      "id, username, name, owner_type, status, created_at, reviewed_at, sport:sports(name)"
+      "id, username, name, owner_type, status, created_at, reviewed_at, wants_academy, wants_lesson, business_reg_number, sport:sports(name)"
     )
     .order("created_at", { ascending: false });
 
@@ -38,6 +38,9 @@ export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {
       createdAt: r.created_at,
       reviewedAt: r.reviewed_at ?? undefined,
       sportName: sport?.name,
+      wantsAcademy: r.wants_academy,
+      wantsLesson: r.wants_lesson,
+      businessRegNumber: r.business_reg_number ?? undefined,
     };
   });
 }

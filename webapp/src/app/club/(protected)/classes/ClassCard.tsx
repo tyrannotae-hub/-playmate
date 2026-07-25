@@ -22,11 +22,15 @@ export default function ClassCard({
   sports,
   facilityId,
   instructors,
+  offersAcademy,
+  offersLesson,
 }: {
   item: ClubClass;
   sports: Sport[];
   facilityId: string;
   instructors: FacilityInstructor[];
+  offersAcademy: boolean;
+  offersLesson: boolean;
 }) {
   const router = useRouter();
   const sport = sports.find((s) => s.id === item.sportId);
@@ -43,6 +47,7 @@ export default function ClassCard({
   const [editName, setEditName] = useState(item.name);
   const [editSportId, setEditSportId] = useState(item.sportId);
   const [editClassType, setEditClassType] = useState(item.classType);
+  const [editServiceType, setEditServiceType] = useState(item.serviceType);
   const [editAgeMin, setEditAgeMin] = useState(item.ageMin);
   const [editAgeMax, setEditAgeMax] = useState(item.ageMax);
   const [editPrice, setEditPrice] = useState(item.price);
@@ -120,6 +125,7 @@ export default function ClassCard({
         name: editName,
         sport_id: editSportId,
         class_type: editClassType,
+        service_type: editServiceType,
         age_min: editAgeMin,
         age_max: editAgeMax,
         price: editPrice,
@@ -294,7 +300,14 @@ export default function ClassCard({
                   : "코치 미정"}
               </span>
             </p>
-            <p className="mt-0.5 break-words font-bold">{item.name}</p>
+            <p className="mt-0.5 break-words font-bold">
+              {item.name}
+              {offersAcademy && offersLesson && (
+                <span className="ml-1.5 rounded-md bg-surface-2 px-1.5 py-0.5 align-middle text-[11px] font-bold text-muted">
+                  {item.serviceType === "academy" ? "아카데미" : "레슨"}
+                </span>
+              )}
+            </p>
             <p className="mt-1 text-xs text-muted">
               {item.ageMin}~{item.ageMax}세 ·{" "}
               {item.showPrice ? `${item.price.toLocaleString()}원/${item.priceUnit}` : "가격 비공개"}
@@ -368,6 +381,39 @@ export default function ClassCard({
               </select>
             </div>
           </div>
+
+          {offersAcademy && offersLesson && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">구분</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditServiceType("academy")}
+                  className={buttonClass({
+                    variant: editServiceType === "academy" ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  아카데미
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditServiceType("lesson")}
+                  className={buttonClass({
+                    variant: editServiceType === "lesson" ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  레슨
+                </button>
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">
               담당 코치 (선택, 복수 선택 가능)

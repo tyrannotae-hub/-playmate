@@ -50,6 +50,14 @@ export default function SignupRequestCard({ request }: { request: ClubSignupRequ
             아이디 {request.username} · {request.ownerType === "club" ? "클럽/팀" : "개인 코치"}
             {request.sportName && ` · ${request.sportName}`}
           </p>
+          <p className="mt-1 text-xs font-bold text-rink-deep">
+            신청 자격: {[request.wantsAcademy && "아카데미", request.wantsLesson && "레슨"]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+          {request.businessRegNumber && (
+            <p className="mt-0.5 text-[11px] text-muted">사업자등록번호 {request.businessRegNumber}</p>
+          )}
           <p className="mt-1 text-[11px] text-muted">
             신청일 {new Date(request.createdAt).toLocaleDateString("ko-KR")}
           </p>

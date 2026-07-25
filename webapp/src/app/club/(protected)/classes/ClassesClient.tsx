@@ -14,11 +14,15 @@ export default function ClassesClient({
   initialClasses,
   sports,
   instructors,
+  offersAcademy,
+  offersLesson,
 }: {
   facilityId: string;
   initialClasses: ClubClass[];
   sports: Sport[];
   instructors: FacilityInstructor[];
+  offersAcademy: boolean;
+  offersLesson: boolean;
 }) {
   const router = useRouter();
   const [adding, setAdding] = useState(false);
@@ -31,6 +35,9 @@ export default function ClassesClient({
   const [ageMin, setAgeMin] = useState(5);
   const [ageMax, setAgeMax] = useState(12);
   const [classType, setClassType] = useState<"individual" | "group" | "team">("group");
+  const [serviceType, setServiceType] = useState<"academy" | "lesson">(
+    offersAcademy ? "academy" : "lesson"
+  );
   const [price, setPrice] = useState(150000);
   const [priceUnit, setPriceUnit] = useState("월");
   const [dayLabel, setDayLabel] = useState("");
@@ -70,6 +77,7 @@ export default function ClassesClient({
         age_min: ageMin,
         age_max: ageMax,
         class_type: classType,
+        service_type: serviceType,
         price,
         price_unit: priceUnit,
         collect_height: collectHeight,
@@ -130,6 +138,7 @@ export default function ClassesClient({
     setShowPrice(true);
     setAllowTrial(false);
     setTrialPrice("");
+    setServiceType(offersAcademy ? "academy" : "lesson");
     router.refresh();
   }
 
@@ -192,6 +201,39 @@ export default function ClassesClient({
               </select>
             </div>
           </div>
+
+          {offersAcademy && offersLesson && (
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">구분</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setServiceType("academy")}
+                  className={buttonClass({
+                    variant: serviceType === "academy" ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  아카데미
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setServiceType("lesson")}
+                  className={buttonClass({
+                    variant: serviceType === "lesson" ? "secondary" : "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  레슨
+                </button>
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">
               담당 코치 (선택, 복수 선택 가능)
@@ -404,6 +446,8 @@ export default function ClassesClient({
             sports={sports}
             facilityId={facilityId}
             instructors={instructors}
+            offersAcademy={offersAcademy}
+            offersLesson={offersLesson}
           />
         ))}
         {initialClasses.length === 0 && !adding && (
