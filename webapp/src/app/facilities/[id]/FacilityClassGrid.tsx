@@ -54,7 +54,7 @@ export default function FacilityClassGrid({
           <button
             key={t}
             onClick={() => setTime(t)}
-            className={`h-9 flex-shrink-0 rounded-xs px-3.5 text-xs font-bold transition ${
+            className={`h-9 flex-shrink-0 rounded-full px-3.5 text-xs font-bold transition ${
               time === t ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
             }`}
           >

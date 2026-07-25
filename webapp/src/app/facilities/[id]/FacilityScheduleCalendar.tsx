@@ -22,12 +22,12 @@ type MatchedClass = {
   classId: string;
   className: string;
   timeLabel: string;
-  isTrial: boolean;
+  allowTrial: boolean;
 };
 
-// 원데이 체험 가능 여부는 이제 클래스 단위가 아니라 시간대(schedule) 단위 필드
-// (schedule.allowTrial)라, 그 시간대의 요일(dayLabel)이 곧 반복 요일이 된다 —
-// 별도 trial_day_label/class_trial_dates 없이 휴일(class_holidays)만 제외하면 됨.
+// 모든 시간대는 그 요일에 정규로 운영되는 시간대다 (schedule.dayLabel이 반복 요일).
+// allowTrial은 그중 원데이 체험도 함께 받는 시간대인지를 나타내는 추가 속성이라,
+// 정규 여부와 배타적이지 않다 — 휴일(class_holidays)인 날만 아예 매칭에서 제외한다.
 function matchesForDate(classes: TeamClass[], date: Date): MatchedClass[] {
   const iso = toIsoDate(date);
   const dayChar = DAY_CHARS_BY_JS_DAY[date.getDay()];
@@ -36,11 +36,12 @@ function matchesForDate(classes: TeamClass[], date: Date): MatchedClass[] {
   for (const c of classes) {
     for (const s of c.schedules) {
       if (!parseDayLabel(s.dayLabel).includes(dayChar)) continue;
+      if (c.holidays.includes(iso) || s.holidays.includes(iso)) continue;
       matched.push({
         classId: c.id,
         className: c.name,
         timeLabel: s.timeLabel,
-        isTrial: s.allowTrial && !c.holidays.includes(iso) && !s.holidays.includes(iso),
+        allowTrial: s.allowTrial,
       });
     }
   }
@@ -126,8 +127,8 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
               const isToday = isSameDate(date, today);
               const isSelected = isSameDate(date, selectedDate);
               const dayMatches = matchesForDate(classes, date);
-              const hasRegular = dayMatches.some((m) => !m.isTrial);
-              const hasTrial = dayMatches.some((m) => m.isTrial);
+              const hasRegular = dayMatches.length > 0;
+              const hasTrial = dayMatches.some((m) => m.allowTrial);
               return (
                 <button
                   key={j}
@@ -141,17 +142,15 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
                   }`}
                 >
                   {date.getDate()}
-                  {(hasRegular || hasTrial) && (
-                    <span className="flex gap-0.5">
-                      {hasRegular && (
-                        <span
-                          className={`h-1 w-1 rounded-full ${isSelected ? "bg-white" : "bg-[#0d3f63]"}`}
-                          aria-label="정규 운영"
-                        />
-                      )}
+                  {hasRegular && (
+                    <span className="flex flex-col items-center gap-0.5">
+                      <span
+                        className={`h-1 w-3.5 rounded-full ${isSelected ? "bg-white" : "bg-[#0d3f63]"}`}
+                        aria-label="정규 운영"
+                      />
                       {hasTrial && (
                         <span
-                          className={`h-1 w-1 rounded-full ${isSelected ? "bg-white/70" : "bg-[#ff6b35]"}`}
+                          className={`h-1 w-3.5 rounded-full ${isSelected ? "bg-white/70" : "bg-[#ff6b35]"}`}
                           aria-label="원데이 가능"
                         />
                       )}
@@ -177,13 +176,12 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
                 href={`/classes/${m.classId}`}
                 className="flex items-center gap-2 py-2.5"
               >
-                {m.isTrial ? (
+                <span className="shrink-0 rounded-xs bg-rink-soft px-1.5 py-0.5 text-[10px] font-bold text-rink-deep">
+                  정규
+                </span>
+                {m.allowTrial && (
                   <span className="shrink-0 rounded-xs bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
                     원데이
-                  </span>
-                ) : (
-                  <span className="shrink-0 rounded-xs bg-rink-soft px-1.5 py-0.5 text-[10px] font-bold text-rink-deep">
-                    정규
                   </span>
                 )}
                 <p className="truncate text-sm font-bold">{m.className}</p>
