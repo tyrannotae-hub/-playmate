@@ -35,7 +35,7 @@ export default function NotificationBell() {
     <Link
       href="/notifications"
       aria-label={count > 0 ? `알림 (안읽음 ${count}개)` : "알림"}
-      className="relative -mr-1.5 ml-auto flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
+      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
     >
       <svg
         width="20"

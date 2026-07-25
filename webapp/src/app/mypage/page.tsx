@@ -61,7 +61,7 @@ export default async function MyPage() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-2 text-muted">
               <CalendarIcon />
             </span>
-            <span className="flex-1 text-sm font-bold">예약 내역 전체보기</span>
+            <span className="flex-1 text-sm font-bold">내 클래스 전체보기</span>
             <ChevronIcon />
           </Link>
           <Link

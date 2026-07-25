@@ -16,7 +16,7 @@ export default function TopNav({
 
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
+      <header className="sticky top-0 z-20 bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-md items-center gap-3 px-4 py-3.5">
           {back ? (
             <button
@@ -48,7 +48,28 @@ export default function TopNav({
               PlayMate<span className="text-energy">.</span>
             </Link>
           )}
-          <NotificationBell />
+          <div className="-mr-1.5 ml-auto flex items-center">
+            <NotificationBell />
+            <Link
+              href="/mypage"
+              aria-label="마이페이지"
+              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="10" cy="6.5" r="3" />
+                <path d="M4 17c1-3.2 3.4-4.8 6-4.8s5 1.6 6 4.8" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </header>
 

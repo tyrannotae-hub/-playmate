@@ -7,7 +7,7 @@ const ITEMS = [
   { href: "/", label: "홈", Icon: HomeIcon },
   { href: "/search", label: "검색", Icon: SearchIcon },
   { href: "/wishlist", label: "찜", Icon: HeartIcon },
-  { href: "/mypage", label: "마이", Icon: UserIcon },
+  { href: "/mypage/bookings", label: "내 클래스", Icon: ClassIcon },
 ];
 
 export default function BottomNav() {
@@ -89,7 +89,7 @@ function HeartIcon({ active }: { active: boolean }) {
   );
 }
 
-function UserIcon({ active }: { active: boolean }) {
+function ClassIcon({ active }: { active: boolean }) {
   return (
     <svg
       width="24"
@@ -101,8 +101,8 @@ function UserIcon({ active }: { active: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M4.5 20c1.2-3.7 4-5.5 7.5-5.5s6.3 1.8 7.5 5.5" />
+      <rect x="3.5" y="5" width="17" height="16" rx="2" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
     </svg>
   );
 }
