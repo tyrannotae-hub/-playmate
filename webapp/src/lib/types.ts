@@ -212,6 +212,7 @@ export type FacilityHomeCategory = {
   id: string;
   name: string;
   classIds: string[];
+  displayRows: 1 | 2;
 };
 
 export type FacilityHome = {

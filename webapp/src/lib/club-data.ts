@@ -79,7 +79,7 @@ export async function getMyHomeCategories(facilityId: string): Promise<FacilityH
   const supabase = await createClient();
   const { data: categories } = await supabase
     .from("facility_home_categories")
-    .select("id, name")
+    .select("id, name, display_rows")
     .eq("facility_id", facilityId)
     .order("sort_order", { ascending: true });
 
@@ -98,6 +98,7 @@ export async function getMyHomeCategories(facilityId: string): Promise<FacilityH
     id: c.id,
     name: c.name,
     classIds: (links ?? []).filter((l) => l.category_id === c.id).map((l) => l.team_class_id),
+    displayRows: (c.display_rows === 2 ? 2 : 1) as 1 | 2,
   }));
 }
 

@@ -39,7 +39,7 @@ export default async function ClubHomePage() {
       <HomeCategoriesManager
         facilityId={facility.id}
         initialCategories={homeCategories}
-        myClasses={myClasses.map((c) => ({ id: c.id, name: c.name }))}
+        myClasses={myClasses.map((c) => ({ id: c.id, name: c.name, coverImage: c.images[0] }))}
       />
 
       <div>

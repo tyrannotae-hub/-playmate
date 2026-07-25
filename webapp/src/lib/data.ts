@@ -393,7 +393,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
       .order("sort_order", { ascending: true }),
     supabase
       .from("facility_home_categories")
-      .select("id, name, facility_home_category_classes(team_class_id)")
+      .select("id, name, display_rows, facility_home_category_classes(team_class_id)")
       .eq("facility_id", facilityId)
       .order("sort_order", { ascending: true }),
   ]);
@@ -434,12 +434,14 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
       (categoryRows ?? []) as unknown as {
         id: string;
         name: string;
+        display_rows: number;
         facility_home_category_classes: { team_class_id: string }[];
       }[]
     ).map((c) => ({
       id: c.id,
       name: c.name,
       classIds: c.facility_home_category_classes.map((l) => l.team_class_id),
+      displayRows: (c.display_rows === 2 ? 2 : 1) as 1 | 2,
     })),
     instagramUrl: facility.instagram_url ?? "",
     ownerType: (facility.owner_type as "club" | "solo_coach") ?? "club",

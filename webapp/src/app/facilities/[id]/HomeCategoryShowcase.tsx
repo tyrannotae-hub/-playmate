@@ -25,7 +25,13 @@ export default function HomeCategoryShowcase({
         return (
           <div key={category.id} className="mt-8">
             <h2 className="mb-3 px-4 text-lg font-bold">{category.name}</h2>
-            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
+            <div
+              className={
+                category.displayRows === 2
+                  ? "grid grid-flow-col grid-rows-2 gap-3 overflow-x-auto px-4 pb-1"
+                  : "flex gap-3 overflow-x-auto px-4 pb-1"
+              }
+            >
               {classes.map((c) => (
                 <ClassCardCompact
                   key={c.id}
