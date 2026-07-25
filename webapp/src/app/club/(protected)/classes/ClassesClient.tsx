@@ -492,8 +492,6 @@ export default function ClassesClient({
             key={c.id}
             item={c}
             sports={sports}
-            facilityId={facilityId}
-            instructors={instructors}
             offersAcademy={offersAcademy}
             offersLesson={offersLesson}
           />

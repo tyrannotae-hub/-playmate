@@ -139,15 +139,17 @@ export async function getMyInstructors(facilityId: string): Promise<FacilityInst
   }));
 }
 
-export async function getMyClasses(facilityId: string): Promise<ClubClass[]> {
+export async function getMyClasses(facilityId: string, classId?: string): Promise<ClubClass[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  let query = supabase
     .from("teams_classes")
     .select(
       "id, name, sport_id, age_min, age_max, class_type, service_type, region_code, banner_title, banner_subtitle, price, price_unit, description, collect_height, collect_shoe_size, collect_residence, trial_price, show_price, show_trial_price, discount_price, discount_start_date, discount_end_date, trial_discount_price, trial_discount_start_date, trial_discount_end_date, class_instructors(instructor:instructors(id,name)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
     )
     .eq("facility_id", facilityId)
     .order("created_at", { ascending: false });
+  if (classId) query = query.eq("id", classId);
+  const { data } = await query;
 
   return (data ?? []).map((row) => {
     const instructors = (

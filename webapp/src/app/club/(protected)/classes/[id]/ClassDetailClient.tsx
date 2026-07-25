@@ -1,0 +1,854 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
+import { buttonClass, cardClass } from "@/lib/ui";
+import { REGION_OPTIONS } from "@/lib/region-meta";
+import ClassMediaManager from "../ClassMediaManager";
+import DayLabelPicker from "@/components/club/DayLabelPicker";
+import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
+
+const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
+  group: "그룹",
+  individual: "개인",
+  team: "팀",
+};
+
+export default function ClassDetailClient({
+  item,
+  sports,
+  facilityId,
+  instructors,
+  offersAcademy,
+  offersLesson,
+}: {
+  item: ClubClass;
+  sports: Sport[];
+  facilityId: string;
+  instructors: FacilityInstructor[];
+  offersAcademy: boolean;
+  offersLesson: boolean;
+}) {
+  const router = useRouter();
+  const [addingSchedule, setAddingSchedule] = useState(false);
+  const [dayLabel, setDayLabel] = useState("");
+  const [timeLabel, setTimeLabel] = useState("");
+  const [capacity, setCapacity] = useState(6);
+  const [newScheduleAllowTrial, setNewScheduleAllowTrial] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [editName, setEditName] = useState(item.name);
+  const [editSportId, setEditSportId] = useState(item.sportId);
+  const [editClassType, setEditClassType] = useState(item.classType);
+  const [editServiceType, setEditServiceType] = useState(item.serviceType);
+  const [editRegionCode, setEditRegionCode] = useState(item.regionCode ?? "");
+  const [editBannerTitle, setEditBannerTitle] = useState(item.bannerTitle ?? "");
+  const [editBannerSubtitle, setEditBannerSubtitle] = useState(item.bannerSubtitle ?? "");
+  const [editAgeMin, setEditAgeMin] = useState(item.ageMin);
+  const [editAgeMax, setEditAgeMax] = useState(item.ageMax);
+  const [editPrice, setEditPrice] = useState(item.price);
+  const [editPriceUnit, setEditPriceUnit] = useState(item.priceUnit);
+  const [editInstructorIds, setEditInstructorIds] = useState<string[]>(
+    item.instructors.map((i) => i.id)
+  );
+  const [editCollectHeight, setEditCollectHeight] = useState(item.collectHeight);
+  const [editCollectShoeSize, setEditCollectShoeSize] = useState(item.collectShoeSize);
+  const [editCollectResidence, setEditCollectResidence] = useState(item.collectResidence);
+  const [editShowPrice, setEditShowPrice] = useState(item.showPrice);
+  const [editTrialPrice, setEditTrialPrice] = useState(
+    item.trialPrice != null ? String(item.trialPrice) : ""
+  );
+  const [editShowTrialPrice, setEditShowTrialPrice] = useState(item.showTrialPrice);
+  const [editUseDiscount, setEditUseDiscount] = useState(item.discountPrice != null);
+  const [editDiscountPrice, setEditDiscountPrice] = useState(
+    item.discountPrice != null ? String(item.discountPrice) : ""
+  );
+  const [editDiscountStartDate, setEditDiscountStartDate] = useState(
+    item.discountStartDate ?? ""
+  );
+  const [editDiscountEndDate, setEditDiscountEndDate] = useState(item.discountEndDate ?? "");
+  const [editUseTrialDiscount, setEditUseTrialDiscount] = useState(
+    item.trialDiscountPrice != null
+  );
+  const [editTrialDiscountPrice, setEditTrialDiscountPrice] = useState(
+    item.trialDiscountPrice != null ? String(item.trialDiscountPrice) : ""
+  );
+  const [editTrialDiscountStartDate, setEditTrialDiscountStartDate] = useState(
+    item.trialDiscountStartDate ?? ""
+  );
+  const [editTrialDiscountEndDate, setEditTrialDiscountEndDate] = useState(
+    item.trialDiscountEndDate ?? ""
+  );
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [savedEdit, setSavedEdit] = useState(false);
+  const [editErrorMsg, setEditErrorMsg] = useState("");
+
+  const [addingHoliday, setAddingHoliday] = useState(false);
+  const [newHoliday, setNewHoliday] = useState("");
+  const [holidayErrorMsg, setHolidayErrorMsg] = useState("");
+
+  function toggleEditInstructor(id: string) {
+    setEditInstructorIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  }
+
+  async function saveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    setEditErrorMsg("");
+    setSavedEdit(false);
+
+    if (
+      editUseDiscount &&
+      (!editDiscountPrice || !editDiscountStartDate || !editDiscountEndDate)
+    ) {
+      setEditErrorMsg("할인 적용 시 할인가와 시작일·종료일을 모두 입력해주세요.");
+      return;
+    }
+
+    if (
+      editUseTrialDiscount &&
+      (!editTrialDiscountPrice || !editTrialDiscountStartDate || !editTrialDiscountEndDate)
+    ) {
+      setEditErrorMsg("원데이 할인 적용 시 할인가와 시작일·종료일을 모두 입력해주세요.");
+      return;
+    }
+
+    setSavingEdit(true);
+    const supabase = createClient();
+
+    const { error: updateError } = await supabase
+      .from("teams_classes")
+      .update({
+        name: editName,
+        sport_id: editSportId,
+        class_type: editClassType,
+        service_type: editServiceType,
+        region_code: editRegionCode || null,
+        banner_title: editBannerTitle.trim() || null,
+        banner_subtitle: editBannerSubtitle.trim() || null,
+        age_min: editAgeMin,
+        age_max: editAgeMax,
+        price: editPrice,
+        price_unit: editPriceUnit,
+        collect_height: editCollectHeight,
+        collect_shoe_size: editCollectShoeSize,
+        collect_residence: editCollectResidence,
+        show_price: editShowPrice,
+        trial_price: item.allowTrial && editTrialPrice ? Number(editTrialPrice) : null,
+        show_trial_price: editShowTrialPrice,
+        discount_price: editUseDiscount ? Number(editDiscountPrice) : null,
+        discount_start_date: editUseDiscount ? editDiscountStartDate : null,
+        discount_end_date: editUseDiscount ? editDiscountEndDate : null,
+        trial_discount_price:
+          item.allowTrial && editUseTrialDiscount && editTrialDiscountPrice
+            ? Number(editTrialDiscountPrice)
+            : null,
+        trial_discount_start_date:
+          item.allowTrial && editUseTrialDiscount ? editTrialDiscountStartDate : null,
+        trial_discount_end_date:
+          item.allowTrial && editUseTrialDiscount ? editTrialDiscountEndDate : null,
+      })
+      .eq("id", item.id);
+
+    if (updateError) {
+      setSavingEdit(false);
+      setEditErrorMsg("저장에 실패했어요. 다시 시도해주세요.");
+      return;
+    }
+
+    const { error: deleteLinksError } = await supabase
+      .from("class_instructors")
+      .delete()
+      .eq("team_class_id", item.id);
+
+    if (deleteLinksError) {
+      setSavingEdit(false);
+      setEditErrorMsg("코치 배정 수정에 실패했어요.");
+      return;
+    }
+
+    if (editInstructorIds.length > 0) {
+      const { error: insertLinksError } = await supabase.from("class_instructors").insert(
+        editInstructorIds.map((instructorId) => ({
+          team_class_id: item.id,
+          instructor_id: instructorId,
+        }))
+      );
+      if (insertLinksError) {
+        setSavingEdit(false);
+        setEditErrorMsg("코치 배정 수정에 실패했어요.");
+        return;
+      }
+    }
+
+    setSavingEdit(false);
+    setSavedEdit(true);
+    router.refresh();
+  }
+
+  async function addSchedule(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrorMsg("");
+    const supabase = createClient();
+
+    if (!dayLabel) {
+      setSubmitting(false);
+      setErrorMsg("요일을 하나 이상 선택해주세요.");
+      return;
+    }
+
+    const { error } = await supabase.from("class_schedules").insert({
+      team_class_id: item.id,
+      day_label: dayLabel,
+      time_label: timeLabel,
+      slot_capacity: capacity,
+      allow_trial: newScheduleAllowTrial,
+    });
+
+    setSubmitting(false);
+    if (error) {
+      setErrorMsg("시간대 추가에 실패했어요.");
+      return;
+    }
+    setDayLabel("");
+    setTimeLabel("");
+    setCapacity(6);
+    setNewScheduleAllowTrial(false);
+    setAddingSchedule(false);
+    router.refresh();
+  }
+
+  async function deleteSchedule(scheduleId: string) {
+    if (item.schedules.length <= 1) {
+      alert("클래스에는 시간대가 최소 1개 있어야 해요. 마지막 시간대는 삭제할 수 없어요.");
+      return;
+    }
+    const supabase = createClient();
+    const { error } = await supabase.from("class_schedules").delete().eq("id", scheduleId);
+    if (!error) router.refresh();
+  }
+
+  async function toggleScheduleTrial(scheduleId: string, allowTrial: boolean) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("class_schedules")
+      .update({ allow_trial: allowTrial })
+      .eq("id", scheduleId);
+    if (!error) router.refresh();
+  }
+
+  async function addHoliday(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newHoliday) return;
+    setAddingHoliday(true);
+    setHolidayErrorMsg("");
+    const supabase = createClient();
+
+    const { error } = await supabase
+      .from("class_holidays")
+      .insert({ team_class_id: item.id, holiday_date: newHoliday });
+
+    setAddingHoliday(false);
+    if (error) {
+      setHolidayErrorMsg(
+        error.code === "23505" ? "이미 등록된 날짜예요." : "휴일 추가에 실패했어요."
+      );
+      return;
+    }
+    setNewHoliday("");
+    router.refresh();
+  }
+
+  async function deleteHoliday(holidayDate: string) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("class_holidays")
+      .delete()
+      .eq("team_class_id", item.id)
+      .eq("holiday_date", holidayDate)
+      .is("class_schedule_id", null);
+    if (!error) router.refresh();
+  }
+
+  async function deleteClass() {
+    if (!confirm(`"${item.name}" 클래스를 삭제할까요?`)) return;
+    const supabase = createClient();
+    const { error } = await supabase.rpc("delete_class", { p_class_id: item.id });
+    if (error) {
+      alert(
+        error.message === "ACTIVE_BOOKINGS_EXIST"
+          ? "신청/확정 상태인 예약이 있어 삭제할 수 없어요. 먼저 완료 또는 취소 처리해주세요."
+          : "삭제에 실패했어요. 다시 시도해주세요."
+      );
+      return;
+    }
+    router.push("/club/classes");
+    router.refresh();
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <Link href="/club/classes" className="text-sm font-bold text-rink-deep">
+          ← 클래스 목록
+        </Link>
+        <button
+          onClick={deleteClass}
+          className={buttonClass({ variant: "outline", size: "sm", full: false })}
+        >
+          클래스 삭제
+        </button>
+      </div>
+
+      <Link
+        href={`/club/bookings?classId=${item.id}`}
+        className="text-xs font-bold text-rink-deep"
+      >
+        이 클래스 예약 현황 보기 →
+      </Link>
+
+      <form onSubmit={saveEdit} className={cardClass("flex flex-col gap-3")}>
+        <p className="text-sm font-bold">기본 정보</p>
+        <div>
+          <label className="mb-1.5 block text-xs font-bold text-muted">클래스 이름</label>
+          <input
+            required
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+          />
+        </div>
+        <div className="flex gap-2">
+          <div className="min-w-0 flex-1">
+            <label className="mb-1.5 block text-xs font-bold text-muted">종목</label>
+            <select
+              value={editSportId}
+              onChange={(e) => setEditSportId(e.target.value)}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            >
+              {sports.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="min-w-0 flex-1">
+            <label className="mb-1.5 block text-xs font-bold text-muted">클래스 형태</label>
+            <select
+              value={editClassType}
+              onChange={(e) => setEditClassType(e.target.value as ClubClass["classType"])}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            >
+              {Object.entries(CLASS_TYPE_LABEL).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {offersAcademy && offersLesson && (
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">구분</label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setEditServiceType("academy")}
+                className={buttonClass({
+                  variant: editServiceType === "academy" ? "secondary" : "outline",
+                  size: "sm",
+                  full: false,
+                  className: "flex-1",
+                })}
+              >
+                아카데미
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditServiceType("lesson")}
+                className={buttonClass({
+                  variant: editServiceType === "lesson" ? "secondary" : "outline",
+                  size: "sm",
+                  full: false,
+                  className: "flex-1",
+                })}
+              >
+                레슨
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div>
+          <label className="mb-1.5 block text-xs font-bold text-muted">
+            지역 <span className="font-normal">(선택, 시설이 여러 지점을 운영할 때 이 클래스가 있는 지역)</span>
+          </label>
+          <select
+            value={editRegionCode}
+            onChange={(e) => setEditRegionCode(e.target.value)}
+            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+          >
+            <option value="">선택 안 함</option>
+            {REGION_OPTIONS.map((r) => (
+              <option key={r.code} value={r.code}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-bold text-muted">
+            배너 문구 <span className="font-normal">(선택, 클래스 대표사진 위에 표시돼요)</span>
+          </label>
+          <input
+            value={editBannerTitle}
+            onChange={(e) => setEditBannerTitle(e.target.value.slice(0, 20))}
+            maxLength={20}
+            placeholder="제목 (최대 20자)"
+            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+          />
+          <input
+            value={editBannerSubtitle}
+            onChange={(e) => setEditBannerSubtitle(e.target.value.slice(0, 40))}
+            maxLength={40}
+            placeholder="소제목 (최대 40자)"
+            className="mt-2 w-full rounded-xs border border-line bg-background px-3.5 py-3 text-xs"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-xs font-bold text-muted">
+            담당 코치 (선택, 복수 선택 가능)
+          </label>
+          {instructors.length === 0 ? (
+            <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              먼저{" "}
+              <Link href="/club/instructors" className="font-bold text-rink-deep underline">
+                코치 관리
+              </Link>
+              에서 코치를 등록해주세요.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5">
+              {instructors.map((i) => {
+                const selected = editInstructorIds.includes(i.id);
+                return (
+                  <button
+                    key={i.id}
+                    type="button"
+                    onClick={() => toggleEditInstructor(i.id)}
+                    className={buttonClass({
+                      variant: selected ? "secondary" : "outline",
+                      size: "sm",
+                      full: false,
+                    })}
+                  >
+                    {selected ? "✓ " : ""}
+                    {i.name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <div className="min-w-0 flex-1">
+            <label className="mb-1.5 block text-xs font-bold text-muted">최소 나이</label>
+            <input
+              type="number"
+              required
+              min={0}
+              value={editAgeMin}
+              onChange={(e) => setEditAgeMin(Number(e.target.value))}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <label className="mb-1.5 block text-xs font-bold text-muted">최대 나이</label>
+            <input
+              type="number"
+              required
+              min={0}
+              value={editAgeMax}
+              onChange={(e) => setEditAgeMax(Number(e.target.value))}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="min-w-0 flex-1">
+            <label className="mb-1.5 block text-xs font-bold text-muted">가격</label>
+            <input
+              type="number"
+              required
+              min={0}
+              value={editPrice}
+              onChange={(e) => setEditPrice(Number(e.target.value))}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+          <div className="w-24">
+            <label className="mb-1.5 block text-xs font-bold text-muted">단위</label>
+            <input
+              required
+              value={editPriceUnit}
+              onChange={(e) => setEditPriceUnit(e.target.value)}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+        </div>
+        <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+          <span className="text-sm font-bold">
+            가격 공개
+            <span className="mt-0.5 block text-xs font-normal text-muted">
+              끄면 학부모 화면에 가격 대신 &quot;가격 문의&quot;로 표시돼요
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            checked={editShowPrice}
+            onChange={(e) => setEditShowPrice(e.target.checked)}
+            className="h-5 w-5 flex-shrink-0 accent-rink"
+          />
+        </label>
+        <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+          원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
+          시간대마다 원데이 가능을 켜고 끌 수 있어요.
+        </p>
+        {item.allowTrial && (
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={editTrialPrice}
+              onChange={(e) => setEditTrialPrice(e.target.value)}
+              placeholder="예: 30000"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+          </div>
+        )}
+        {item.allowTrial && (
+          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              체험가 공개
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                끄면 학부모 화면에 체험 가격 대신 &quot;가격 문의&quot;로 표시돼요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={editShowTrialPrice}
+              onChange={(e) => setEditShowTrialPrice(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+        )}
+        <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+          <span className="text-sm font-bold">
+            할인 적용
+            <span className="mt-0.5 block text-xs font-normal text-muted">
+              기간을 정해 정가 대신 할인가를 노출해요
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            checked={editUseDiscount}
+            onChange={(e) => setEditUseDiscount(e.target.checked)}
+            className="h-5 w-5 flex-shrink-0 accent-rink"
+          />
+        </label>
+        {editUseDiscount && (
+          <div className="flex flex-col gap-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">할인가</label>
+              <input
+                type="number"
+                min={0}
+                value={editDiscountPrice}
+                onChange={(e) => setEditDiscountPrice(e.target.value)}
+                placeholder="예: 25000"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+            <div className="flex gap-2">
+              <div className="min-w-0 flex-1">
+                <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
+                <input
+                  type="date"
+                  value={editDiscountStartDate}
+                  onChange={(e) => setEditDiscountStartDate(e.target.value)}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
+                <input
+                  type="date"
+                  value={editDiscountEndDate}
+                  onChange={(e) => setEditDiscountEndDate(e.target.value)}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {item.allowTrial && (
+          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+            <span className="text-sm font-bold">
+              원데이 할인 적용
+              <span className="mt-0.5 block text-xs font-normal text-muted">
+                정가 할인과 별개로, 원데이 체험가만 다른 기간에 할인할 수 있어요
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={editUseTrialDiscount}
+              onChange={(e) => setEditUseTrialDiscount(e.target.checked)}
+              className="h-5 w-5 flex-shrink-0 accent-rink"
+            />
+          </label>
+        )}
+        {item.allowTrial && editUseTrialDiscount && (
+          <div className="flex flex-col gap-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-muted">원데이 할인가</label>
+              <input
+                type="number"
+                min={0}
+                value={editTrialDiscountPrice}
+                onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
+                placeholder="예: 20000"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              />
+            </div>
+            <div className="flex gap-2">
+              <div className="min-w-0 flex-1">
+                <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
+                <input
+                  type="date"
+                  value={editTrialDiscountStartDate}
+                  onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
+                <input
+                  type="date"
+                  value={editTrialDiscountEndDate}
+                  onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        <div>
+          <p className="mb-1.5 text-xs font-bold text-muted">
+            예약 신청 시 추가로 받을 정보 (성별·나이·연락처는 항상 받아요)
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {(
+              [
+                ["키", editCollectHeight, setEditCollectHeight],
+                ["발사이즈", editCollectShoeSize, setEditCollectShoeSize],
+                ["거주지", editCollectResidence, setEditCollectResidence],
+              ] as const
+            ).map(([label, checked, setChecked]) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => setChecked(!checked)}
+                className={buttonClass({
+                  variant: checked ? "secondary" : "outline",
+                  size: "sm",
+                  full: false,
+                })}
+              >
+                {checked ? "✓ " : ""}
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {editErrorMsg && <p className="text-xs text-negative">{editErrorMsg}</p>}
+        <button
+          type="submit"
+          disabled={savingEdit}
+          className={buttonClass({
+            variant: "custom",
+            size: "sm",
+            className: "bg-rink text-white",
+          })}
+        >
+          {savingEdit ? "저장 중..." : savedEdit ? "저장됨 ✓" : "저장"}
+        </button>
+      </form>
+
+      <div className={cardClass("flex flex-col gap-1.5")}>
+        <p className="mb-0.5 text-sm font-bold">시간대</p>
+        {item.schedules.map((s) => (
+          <div
+            key={s.id}
+            className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
+          >
+            <span>
+              {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
+            </span>
+            <div className="flex shrink-0 items-center gap-3">
+              <label className="flex items-center gap-1.5 font-bold text-muted">
+                <input
+                  type="checkbox"
+                  checked={s.allowTrial}
+                  onChange={(e) => toggleScheduleTrial(s.id, e.target.checked)}
+                  className="h-4 w-4 accent-rink"
+                />
+                원데이 가능
+              </label>
+              <button
+                onClick={() => deleteSchedule(s.id)}
+                className="font-bold text-muted"
+                aria-label="시간대 삭제"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        ))}
+        {item.schedules.length === 0 && (
+          <p className="text-xs text-muted">등록된 시간대가 없어요.</p>
+        )}
+
+        {!addingSchedule ? (
+          <button
+            onClick={() => setAddingSchedule(true)}
+            className={buttonClass({
+              variant: "custom",
+              size: "sm",
+              className: "mt-1.5 border border-dashed border-line text-muted",
+            })}
+          >
+            + 시간대 추가
+          </button>
+        ) : (
+          <form onSubmit={addSchedule} className="mt-1.5 flex flex-col gap-2">
+            <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
+            <input
+              required
+              value={timeLabel}
+              onChange={(e) => setTimeLabel(e.target.value)}
+              placeholder="시간 (예: 16:00)"
+              className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
+            />
+            <input
+              type="number"
+              required
+              min={1}
+              value={capacity}
+              onChange={(e) => setCapacity(Number(e.target.value))}
+              placeholder="정원"
+              className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
+            />
+            <label className="flex items-center gap-1.5 text-xs font-bold text-muted">
+              <input
+                type="checkbox"
+                checked={newScheduleAllowTrial}
+                onChange={(e) => setNewScheduleAllowTrial(e.target.checked)}
+                className="h-4 w-4 accent-rink"
+              />
+              원데이 체험 가능
+            </label>
+            {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={submitting}
+                className={buttonClass({
+                  variant: "custom",
+                  size: "sm",
+                  full: false,
+                  className: "flex-1 bg-rink text-white",
+                })}
+              >
+                추가
+              </button>
+              <button
+                type="button"
+                onClick={() => setAddingSchedule(false)}
+                className={buttonClass({ variant: "outline", size: "sm", full: false, className: "px-4" })}
+              >
+                취소
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+
+      <div className={cardClass()}>
+        <p className="mb-1.5 text-sm font-bold">휴일(운영 안 하는 날)</p>
+        <div className="flex flex-col gap-1.5">
+          {item.holidays
+            .slice()
+            .sort()
+            .map((d) => (
+              <div
+                key={d}
+                className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
+              >
+                <span>{formatIsoDateToKoreanShort(d)}</span>
+                <button
+                  onClick={() => deleteHoliday(d)}
+                  className="font-bold text-muted"
+                  aria-label="휴일 삭제"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          {item.holidays.length === 0 && (
+            <p className="text-xs text-muted">등록된 휴일이 없어요.</p>
+          )}
+        </div>
+        <form onSubmit={addHoliday} className="mt-2 flex gap-2">
+          <input
+            type="date"
+            required
+            value={newHoliday}
+            onChange={(e) => setNewHoliday(e.target.value)}
+            className="flex-1 rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
+          />
+          <button
+            type="submit"
+            disabled={addingHoliday}
+            className={buttonClass({ variant: "outline", size: "sm", full: false })}
+          >
+            추가
+          </button>
+        </form>
+        {holidayErrorMsg && <p className="mt-1 text-xs text-negative">{holidayErrorMsg}</p>}
+      </div>
+
+      <div className={cardClass()}>
+        <p className="mb-1.5 text-sm font-bold">사진/소개</p>
+        <ClassMediaManager
+          facilityId={facilityId}
+          classId={item.id}
+          initialImages={item.images}
+          initialDescription={item.description}
+        />
+      </div>
+    </div>
+  );
+}
