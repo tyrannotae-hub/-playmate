@@ -33,7 +33,11 @@ export default async function ClubHomePage() {
       </div>
 
       <div>
-        <PromoImagesManager facilityId={facility.id} initialImages={promoImages} />
+        <PromoImagesManager
+          facilityId={facility.id}
+          initialImages={promoImages}
+          categories={homeCategories.map((c) => ({ id: c.id, name: c.name }))}
+        />
       </div>
 
       <HomeCategoriesManager

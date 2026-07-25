@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 const AUTO_SLIDE_MS = 4000;
 
-export type PromoSlide = { url: string; title?: string };
+export type PromoSlide = { url: string; title?: string; categoryId?: string };
 
 function SlideCaption({ title }: { title?: string }) {
   if (!title) return null;
@@ -14,6 +15,24 @@ function SlideCaption({ title }: { title?: string }) {
       <p className="text-xl font-extrabold tracking-tight">{title}</p>
     </div>
   );
+}
+
+function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
+  const content = (
+    <>
+      <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover" />
+      <SlideCaption title={slide.title} />
+    </>
+  );
+
+  if (slide.categoryId) {
+    return (
+      <Link href={`#category-${slide.categoryId}`} className={className}>
+        {content}
+      </Link>
+    );
+  }
+  return <div className={className}>{content}</div>;
 }
 
 export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
@@ -33,12 +52,7 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
   if (images.length === 0) return null;
 
   if (images.length === 1) {
-    return (
-      <div className="relative aspect-square w-full">
-        <Image src={images[0].url} alt="" fill sizes="100vw" className="object-cover" />
-        <SlideCaption title={images[0].title} />
-      </div>
-    );
+    return <Slide slide={images[0]} className="relative block aspect-square w-full" />;
   }
 
   return (
@@ -47,10 +61,11 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
       className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {images.map((slide, i) => (
-        <div key={i} className="relative aspect-square w-full shrink-0 snap-center">
-          <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover" />
-          <SlideCaption title={slide.title} />
-        </div>
+        <Slide
+          key={i}
+          slide={slide}
+          className="relative block aspect-square w-full shrink-0 snap-center"
+        />
       ))}
     </div>
   );

@@ -59,19 +59,20 @@ export const getMyFacility = cache(async (facilityId: string): Promise<ClubFacil
   };
 });
 
-export type PromoImage = { url: string; title: string };
+export type PromoImage = { url: string; title: string; categoryId: string };
 
 export async function getMyPromoImages(facilityId: string): Promise<PromoImage[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("facility_promo_images")
-    .select("url, title")
+    .select("url, title, category_id")
     .eq("facility_id", facilityId)
     .order("sort_order", { ascending: true });
 
   return (data ?? []).map((row) => ({
     url: row.url,
     title: row.title ?? "",
+    categoryId: row.category_id ?? "",
   }));
 }
 

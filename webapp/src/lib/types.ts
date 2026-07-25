@@ -223,7 +223,7 @@ export type FacilityHome = {
   description: string;
   coverImageUrl: string;
   profileImageUrl: string;
-  promoImages: { url: string; title?: string }[];
+  promoImages: { url: string; title?: string; categoryId?: string }[];
   homeCategories: FacilityHomeCategory[];
   instagramUrl: string;
   ownerType: "club" | "solo_coach";

@@ -23,7 +23,7 @@ export default function HomeCategoryShowcase({
         if (classes.length === 0) return null;
 
         return (
-          <div key={category.id} className="mt-8">
+          <div key={category.id} id={`category-${category.id}`} className="mt-8 scroll-mt-16">
             <h2 className="mb-3 px-4 text-lg font-bold">{category.name}</h2>
             <div
               className={

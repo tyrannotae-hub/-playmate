@@ -388,7 +388,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     wishCountMap(),
     supabase
       .from("facility_promo_images")
-      .select("url, title")
+      .select("url, title, category_id")
       .eq("facility_id", facilityId)
       .order("sort_order", { ascending: true }),
     supabase
@@ -429,6 +429,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     promoImages: (promoRows ?? []).map((r) => ({
       url: r.url,
       title: r.title ?? undefined,
+      categoryId: r.category_id ?? undefined,
     })),
     homeCategories: (
       (categoryRows ?? []) as unknown as {

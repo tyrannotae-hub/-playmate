@@ -81,9 +81,15 @@ README부터 읽으세요.**
 - `facility-instagram.sql` — 인스타그램 링크
 - `facility-profile-photo.sql`, `facility-promo-images.sql` — 프로필 사진(정방형) +
   홍보 캐러셀(여러 장)
-- `facility-home-categories.sql` — 홈 진열장(카테고리 2개, 클럽오너가 직접 큐레이션)
+- `facility-home-categories.sql` — ⚠️ "카테고리 2개 제한"은 프론트 제약이었을 뿐이고
+  `home-categories-rows-and-unlimited.sql`에서 그 제한을 없앰. 테이블 구조 자체는
+  계속 유효.
 - `facility-regions.sql` — 시설이 여러 지역에 노출될 수 있도록 다중 지역 지원
   (`facility_regions` 테이블, `facilities.region_code`는 대표 지역으로 남음)
+- `home-categories-rows-and-unlimited.sql` — ✅ 최신. `facility_home_categories.
+  display_rows`(1 또는 2) 추가 — 공개 페이지에서 카테고리별 1줄/2줄 노출 선택.
+- `promo-image-category-link.sql` — ✅ 최신. `facility_promo_images.category_id`
+  추가 — 홍보 배너를 홈 진열장 카테고리에 연결(누르면 해당 카테고리로 스크롤).
 
 ## 찜(위시리스트) · 알림 · 기타
 - `wishlists.sql`, `wishlist-counts.sql`, `instructor-wishlists.sql`,
