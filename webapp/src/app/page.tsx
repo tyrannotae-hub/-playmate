@@ -67,6 +67,10 @@ export default async function HomePage({
       <TopNav />
       <ServiceTypeTabs active={type} />
       <main className="pb-10">
+        <div className="pt-3">
+          <PromoBanner />
+        </div>
+
         <div className="px-4 pt-4">
           <div className="mb-5 flex items-center gap-2.5">
             {child?.photoUrl && (
@@ -115,10 +119,6 @@ export default async function HomePage({
             <SportCategoryRow sports={sports} counts={sportCounts} />
           </div>
         )}
-
-        <div className="mt-8">
-          <PromoBanner />
-        </div>
 
         {classes.length > 0 && (
           <DayFilterBrowser classes={classes} sports={sports} wishedIds={wishedIds} />
