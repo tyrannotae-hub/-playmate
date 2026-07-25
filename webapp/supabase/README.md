@@ -90,6 +90,8 @@ README부터 읽으세요.**
   display_rows`(1 또는 2) 추가 — 공개 페이지에서 카테고리별 1줄/2줄 노출 선택.
 - `promo-image-category-link.sql` — ✅ 최신. `facility_promo_images.category_id`
   추가 — 홍보 배너를 홈 진열장 카테고리에 연결(누르면 해당 카테고리로 스크롤).
+- `promo-image-title-two-lines.sql` — ✅ 최신. 배너 제목 글자수 제한 20→40자로
+  상향(Enter로 줄바꿈해서 2줄까지 입력 가능하게).
 
 ## 찜(위시리스트) · 알림 · 기타
 - `wishlists.sql`, `wishlist-counts.sql`, `instructor-wishlists.sql`,

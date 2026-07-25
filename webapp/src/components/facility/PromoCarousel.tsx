@@ -11,8 +11,10 @@ export type PromoSlide = { url: string; title?: string; categoryId?: string };
 function SlideCaption({ title }: { title?: string }) {
   if (!title) return null;
   return (
-    <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
-      <p className="text-xl font-extrabold tracking-tight">{title}</p>
+    <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white">
+      <p className="animate-fade-up-bright whitespace-pre-line text-xl font-extrabold leading-snug tracking-tight">
+        {title}
+      </p>
     </div>
   );
 }
@@ -60,14 +62,14 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
 
   if (images.length === 1) {
     return (
-      <div className="relative mx-auto w-[90%] overflow-hidden rounded-xs shadow-elevated">
-        <Slide slide={images[0]} className="relative block aspect-square w-full" />
+      <div className="relative mx-auto w-[85%] overflow-hidden rounded-xs shadow-elevated">
+        <Slide slide={images[0]} className="relative block aspect-video w-full" />
       </div>
     );
   }
 
   return (
-    <div className="relative mx-auto w-[90%] overflow-hidden rounded-xs shadow-elevated">
+    <div className="relative mx-auto w-[85%] overflow-hidden rounded-xs shadow-elevated">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
@@ -77,7 +79,7 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
           <Slide
             key={i}
             slide={slide}
-            className="relative block aspect-square w-full shrink-0 snap-center"
+            className="relative block aspect-video w-full shrink-0 snap-center"
           />
         ))}
       </div>

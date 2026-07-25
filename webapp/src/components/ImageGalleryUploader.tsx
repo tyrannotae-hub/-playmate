@@ -43,7 +43,7 @@ export default function ImageGalleryUploader({
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const inputId = `image-gallery-input-${pathPrefix.replace(/[^a-zA-Z0-9]/g, "-")}`;
-  const TITLE_MAX = 20;
+  const TITLE_MAX = 40;
 
   function captionOf(url: string): Caption {
     return captions[url] ?? { title: "" };
@@ -144,7 +144,9 @@ export default function ImageGalleryUploader({
 
       {onCaptionSave && images.length > 0 && (
         <div className="mt-3 flex flex-col gap-2.5">
-          <p className="text-xs font-bold text-muted">사진 위에 표시할 문구 (선택)</p>
+          <p className="text-xs font-bold text-muted">
+            사진 위에 표시할 문구 (선택, Enter로 줄바꿈해서 2줄로 만들 수 있어요)
+          </p>
           {images.map((url) => {
             const caption = captionOf(url);
             return (
@@ -152,13 +154,14 @@ export default function ImageGalleryUploader({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-xs object-cover" />
                 <div className="min-w-0 flex-1">
-                  <input
+                  <textarea
                     value={caption.title}
                     onChange={(e) => setCaptionField(url, "title", e.target.value.slice(0, TITLE_MAX))}
                     onBlur={() => saveCaption(url)}
                     maxLength={TITLE_MAX}
+                    rows={2}
                     placeholder="제목"
-                    className="w-full rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
+                    className="w-full resize-none rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
                   />
                 </div>
                 {savingCaption === url && <span className="shrink-0 text-[10px] text-muted">저장중</span>}
