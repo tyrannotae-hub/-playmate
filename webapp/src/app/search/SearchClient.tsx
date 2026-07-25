@@ -7,7 +7,7 @@ import ClassCard from "@/components/ClassCard";
 import ClassSearchBox from "@/components/ClassSearchBox";
 import FacilityCard from "@/components/FacilityCard";
 import SportIcon from "@/components/icons/SportIcon";
-import { FacilitySummary, Sport, TeamClass } from "@/lib/types";
+import { FacilitySummary, ServiceType, Sport, TeamClass } from "@/lib/types";
 import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import { effectivePrice } from "@/lib/pricing";
@@ -43,6 +43,7 @@ export default function SearchClient({
 
   const [sportId, setSportId] = useState(initialSport);
   const [region, setRegion] = useState(initialRegion || "all");
+  const [serviceType, setServiceType] = useState<ServiceType | "all">("all");
   const [sort, setSort] = useState<SortKey>("distance");
 
   const regions = useMemo(() => {
@@ -65,8 +66,10 @@ export default function SearchClient({
       sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
     const byRegion =
       region === "all" ? bySport : bySport.filter((c) => c.facility.regions.includes(region));
-    return [...byRegion].sort(SORTERS[sort]);
-  }, [classes, sportId, region, sort, initialQuery]);
+    const byServiceType =
+      serviceType === "all" ? byRegion : byRegion.filter((c) => c.serviceType === serviceType);
+    return [...byServiceType].sort(SORTERS[sort]);
+  }, [classes, sportId, region, serviceType, sort, initialQuery]);
 
   const matchedFacilities = useMemo(() => {
     const q = initialQuery.trim().toLowerCase();
@@ -112,6 +115,42 @@ export default function SearchClient({
               {s.name}
             </button>
           ))}
+        </div>
+
+        <div className="mb-3 flex gap-2 px-4">
+          <button
+            onClick={() => setServiceType("all")}
+            className={buttonClass({
+              variant: serviceType === "all" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-1",
+            })}
+          >
+            전체
+          </button>
+          <button
+            onClick={() => setServiceType("academy")}
+            className={buttonClass({
+              variant: serviceType === "academy" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-1",
+            })}
+          >
+            아카데미
+          </button>
+          <button
+            onClick={() => setServiceType("lesson")}
+            className={buttonClass({
+              variant: serviceType === "lesson" ? "secondary" : "outline",
+              size: "sm",
+              full: false,
+              className: "flex-1",
+            })}
+          >
+            레슨
+          </button>
         </div>
 
         <div className="mb-4 flex gap-2 px-4">
