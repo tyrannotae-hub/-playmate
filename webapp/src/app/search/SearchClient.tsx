@@ -8,7 +8,7 @@ import ClassSearchBox from "@/components/ClassSearchBox";
 import FacilityCard from "@/components/FacilityCard";
 import SportIcon from "@/components/icons/SportIcon";
 import { FacilitySummary, ServiceType, Sport, TeamClass } from "@/lib/types";
-import { regionLabel } from "@/lib/region-meta";
+import { classRegionCodes, regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import { effectivePrice } from "@/lib/pricing";
 
@@ -47,8 +47,10 @@ export default function SearchClient({
   const [sort, setSort] = useState<SortKey>("recent");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(classes.flatMap((c) => c.facility.regions)));
-    return codes.map((code) => ({ code, label: regionLabel(code) }));
+    const codes = Array.from(new Set(classes.flatMap(classRegionCodes)));
+    return codes
+      .map((code) => ({ code, label: regionLabel(code) }))
+      .sort((a, b) => a.label.localeCompare(b.label, "ko"));
   }, [classes]);
 
   const results = useMemo(() => {
@@ -65,11 +67,7 @@ export default function SearchClient({
     const bySport =
       sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
     const byRegion =
-      region === "all"
-        ? bySport
-        : bySport.filter((c) =>
-            c.regionCode ? c.regionCode === region : c.facility.regions.includes(region)
-          );
+      region === "all" ? bySport : bySport.filter((c) => classRegionCodes(c).includes(region));
     const byServiceType =
       serviceType === "all" ? byRegion : byRegion.filter((c) => c.serviceType === serviceType);
     return [...byServiceType].sort(SORTERS[sort]);

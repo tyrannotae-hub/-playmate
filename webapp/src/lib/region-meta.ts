@@ -59,6 +59,17 @@ export const REGION_LABEL: Record<string, string> = {
   "gyeonggi-yeoncheon": "경기 연천군",
 };
 
+// 클래스가 실제로 매칭돼야 할 지역 코드 목록. 클래스 자체에 region_code가
+// 지정돼 있으면 그것만(한 시설이 여러 지점을 운영할 수 있어서 시설 전체
+// 지역으로 잡으면 안 됨), 없으면 예전처럼 시설의 다중 지역(facility_regions)
+// 전부를 후보로 본다.
+export function classRegionCodes(item: {
+  regionCode?: string;
+  facility: { regions: string[] };
+}): string[] {
+  return item.regionCode ? [item.regionCode] : item.facility.regions;
+}
+
 export function regionLabel(code: string | null | undefined): string {
   if (!code) return "";
   return REGION_LABEL[code] ?? code;

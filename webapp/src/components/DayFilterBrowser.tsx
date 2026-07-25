@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sport, TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
-import { regionLabel } from "@/lib/region-meta";
+import { classRegionCodes, regionLabel } from "@/lib/region-meta";
 import { parseDayLabel, timeSlotOf } from "@/lib/schedule-dates";
 import WishlistButton from "@/components/WishlistButton";
 
@@ -31,8 +31,10 @@ export default function DayFilterBrowser({
   const [sportId, setSportId] = useState("all");
 
   const regions = useMemo(() => {
-    const codes = Array.from(new Set(classes.flatMap((c) => c.facility.regions)));
-    return codes.map((code) => ({ code, label: regionLabel(code) }));
+    const codes = Array.from(new Set(classes.flatMap(classRegionCodes)));
+    return codes
+      .map((code) => ({ code, label: regionLabel(code) }))
+      .sort((a, b) => a.label.localeCompare(b.label, "ko"));
   }, [classes]);
 
   const matches = useMemo(() => {
@@ -47,12 +49,7 @@ export default function DayFilterBrowser({
       })
       .filter((row): row is { item: TeamClass; schedule: TeamClass["schedules"][number] } => {
         if (!row) return false;
-        if (region !== "all") {
-          const matchesRegion = row.item.regionCode
-            ? row.item.regionCode === region
-            : row.item.facility.regions.includes(region);
-          if (!matchesRegion) return false;
-        }
+        if (region !== "all" && !classRegionCodes(row.item).includes(region)) return false;
         if (sportId !== "all" && row.item.sportId !== sportId) return false;
         return true;
       });
