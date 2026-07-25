@@ -94,7 +94,7 @@ export default function BookingForm({
     }
     const age =
       new Date().getFullYear() - new Date(data.birth_date).getFullYear();
-    const newChild = { id: data.id, name: data.name, age, photoUrl: "" };
+    const newChild = { id: data.id, name: data.name, age, birthDate: data.birth_date, photoUrl: "" };
     setChildren([newChild]);
     setChildId(newChild.id);
     setPhase("form");

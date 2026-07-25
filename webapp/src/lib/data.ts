@@ -553,6 +553,7 @@ export async function getMyChildren(): Promise<Child[]> {
     id: c.id,
     name: c.name,
     age: yearsSince(c.birth_date),
+    birthDate: c.birth_date,
     photoUrl: c.photo_url ?? "",
   }));
 }

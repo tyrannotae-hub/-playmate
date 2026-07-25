@@ -68,7 +68,7 @@ export async function POST(
       await sendPushToParent(booking.parent_id, {
         title: "PlayMate",
         body: message,
-        url: "/mypage",
+        url: "/notifications",
       }).catch(() => {
         // 푸시 발송 실패(구독 없음/만료 등)도 예약 상태 처리를 막지 않음
       });
