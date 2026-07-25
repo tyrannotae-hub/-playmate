@@ -23,23 +23,22 @@ export default function ClassGallery({
   }
 
   return (
-    <div className="relative">
-      <div className="flex aspect-square w-full snap-x snap-mandatory overflow-x-auto">
-        {images.map((url, i) => (
-          <div key={i} className="relative h-full w-full flex-shrink-0 snap-center">
-            <Image src={url} alt="" fill sizes="100vw" className="object-cover" />
-          </div>
-        ))}
-      </div>
-      {(bannerTitle || bannerSubtitle) && (
-        <>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-6 px-5 text-white">
-            {bannerTitle && <p className="text-xl font-extrabold tracking-tight">{bannerTitle}</p>}
-            {bannerSubtitle && <p className="mt-1 text-xs text-white/85">{bannerSubtitle}</p>}
-          </div>
-        </>
-      )}
+    <div className="flex aspect-square w-full snap-x snap-mandatory overflow-x-auto">
+      {images.map((url, i) => (
+        <div key={i} className="relative h-full w-full flex-shrink-0 snap-center">
+          <Image src={url} alt="" fill sizes="100vw" className="object-cover" />
+          {/* 배너 문구는 첫 장에서만 노출(스크롤로 넘어가면 사라짐) */}
+          {i === 0 && (bannerTitle || bannerSubtitle) && (
+            <>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-6 px-5 text-white">
+                {bannerTitle && <p className="text-xl font-extrabold tracking-tight">{bannerTitle}</p>}
+                {bannerSubtitle && <p className="mt-1 text-xs text-white/85">{bannerSubtitle}</p>}
+              </div>
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

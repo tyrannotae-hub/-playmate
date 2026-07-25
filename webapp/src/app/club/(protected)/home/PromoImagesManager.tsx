@@ -33,11 +33,11 @@ export default function PromoImagesManager({
     router.refresh();
   }
 
-  async function onCaptionSave(url: string, caption: { title: string; subtitle: string }) {
+  async function onCaptionSave(url: string, caption: { title: string }) {
     const supabase = createClient();
     const { error } = await supabase
       .from("facility_promo_images")
-      .update({ title: caption.title || null, subtitle: caption.subtitle || null })
+      .update({ title: caption.title || null })
       .eq("url", url);
     if (error) return;
     router.refresh();
@@ -49,12 +49,12 @@ export default function PromoImagesManager({
       pathPrefix={`${facilityId}/promo`}
       initialImages={initialImages.map((img) => img.url)}
       initialCaptions={Object.fromEntries(
-        initialImages.map((img) => [img.url, { title: img.title, subtitle: img.subtitle }])
+        initialImages.map((img) => [img.url, { title: img.title }])
       )}
       onCaptionSave={onCaptionSave}
       maxImages={MAX_IMAGES}
       label="홍보/이벤트 사진"
-      helperText="클럽 홈 최상단에 슬라이드로 노출돼요. 사진 위에 제목/소제목 문구를 얹을 수 있어요."
+      helperText="클럽 홈 최상단에 슬라이드로 노출돼요. 사진 위에 제목 문구를 얹을 수 있어요."
       afterUpload={afterUpload}
       onDelete={onDelete}
     />

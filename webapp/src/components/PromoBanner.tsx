@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const PUFFINS_FACILITY_ID = "b59ee112-2b7d-4155-98ad-c30b4b828875";
 const PUFFINS_RINK_PHOTO =
@@ -54,21 +54,9 @@ const BANNERS: Banner[] = [
   },
 ];
 
-const AUTO_SLIDE_MS = 4000;
-
 export default function PromoBanner() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      const next = (Math.round(el.scrollLeft / el.clientWidth) + 1) % BANNERS.length;
-      el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
-    }, AUTO_SLIDE_MS);
-    return () => clearInterval(timer);
-  }, []);
 
   function handleScroll() {
     const el = scrollRef.current;
@@ -96,40 +84,24 @@ export default function PromoBanner() {
               b.gradientClassName ?? ""
             }`}
           >
-            {b.backgroundImageUrl && (
-              <div
-                className={`absolute inset-0 ${
-                  b.layout === "logo"
-                    ? "bg-gradient-to-b from-black/55 via-black/20 to-black/60"
-                    : "bg-gradient-to-t from-black/80 via-black/10 to-transparent"
-                }`}
-              />
-            )}
-
             {b.layout === "logo" ? (
-              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-4 text-center">
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
                 <p className="text-2xl font-extrabold tracking-tight">
                   PlayMate<span className="text-energy">.</span>
                 </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
-              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-6">
+              <div className="relative flex flex-1 flex-col justify-end px-4 pb-9 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
                 <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
-                <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
               </div>
             )}
           </Link>
         ))}
       </div>
-      <div className="absolute inset-x-0 bottom-0 flex">
-        {BANNERS.map((b, i) => (
-          <span
-            key={b.id}
-            className={`h-[3px] flex-1 transition-colors ${i === index ? "bg-white" : "bg-white/35"}`}
-          />
-        ))}
-      </div>
+      <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold text-white">
+        {index + 1}/{BANNERS.length}
+      </span>
     </div>
   );
 }

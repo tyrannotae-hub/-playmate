@@ -10,7 +10,7 @@ import { resizeImageToCover } from "@/lib/image-resize";
 // afterUpload/onDelete 콜백으로 호출자에게 위임한다.
 const IMAGE_PIXELS = 960;
 
-type Caption = { title: string; subtitle: string };
+type Caption = { title: string };
 
 export default function ImageGalleryUploader({
   bucket,
@@ -44,10 +44,9 @@ export default function ImageGalleryUploader({
   const [errorMsg, setErrorMsg] = useState("");
   const inputId = `image-gallery-input-${pathPrefix.replace(/[^a-zA-Z0-9]/g, "-")}`;
   const TITLE_MAX = 20;
-  const SUBTITLE_MAX = 40;
 
   function captionOf(url: string): Caption {
-    return captions[url] ?? { title: "", subtitle: "" };
+    return captions[url] ?? { title: "" };
   }
 
   function setCaptionField(url: string, field: keyof Caption, value: string) {
@@ -160,16 +159,6 @@ export default function ImageGalleryUploader({
                     maxLength={TITLE_MAX}
                     placeholder="제목"
                     className="w-full rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
-                  />
-                  <input
-                    value={caption.subtitle}
-                    onChange={(e) =>
-                      setCaptionField(url, "subtitle", e.target.value.slice(0, SUBTITLE_MAX))
-                    }
-                    onBlur={() => saveCaption(url)}
-                    maxLength={SUBTITLE_MAX}
-                    placeholder="소제목"
-                    className="mt-1 w-full rounded-xs border border-line bg-background px-2.5 py-1.5 text-[11px]"
                   />
                 </div>
                 {savingCaption === url && <span className="shrink-0 text-[10px] text-muted">저장중</span>}
