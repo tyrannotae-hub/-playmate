@@ -76,18 +76,12 @@ export default function PromoBanner() {
     setIndex(Math.round(el.scrollLeft / el.clientWidth));
   }
 
-  function goTo(i: number) {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
-  }
-
   return (
-    <div>
+    <div className="relative mx-auto w-[90%] overflow-hidden rounded-xs shadow-elevated">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-xs shadow-elevated [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {BANNERS.map((b) => (
           <Link
@@ -98,7 +92,7 @@ export default function PromoBanner() {
                 ? { backgroundImage: `url(${b.backgroundImageUrl})` }
                 : undefined
             }
-            className={`relative flex aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xs bg-cover bg-center text-white ${
+            className={`relative flex aspect-square w-full shrink-0 snap-center bg-cover bg-center text-white ${
               b.gradientClassName ?? ""
             }`}
           >
@@ -113,14 +107,14 @@ export default function PromoBanner() {
             )}
 
             {b.layout === "logo" ? (
-              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 text-center">
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-4 text-center">
                 <p className="text-2xl font-extrabold tracking-tight">
                   PlayMate<span className="text-energy">.</span>
                 </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
-              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-4">
+              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-6">
                 <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
                 <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
               </div>
@@ -128,16 +122,11 @@ export default function PromoBanner() {
           </Link>
         ))}
       </div>
-      <div className="mt-2.5 flex items-center justify-center gap-1.5">
+      <div className="absolute inset-x-0 bottom-0 flex">
         {BANNERS.map((b, i) => (
-          <button
+          <span
             key={b.id}
-            type="button"
-            aria-label={`${i + 1}번째 배너로 이동`}
-            onClick={() => goTo(i)}
-            className={`h-1.5 rounded-full transition-all ${
-              i === index ? "w-4 bg-rink" : "w-1.5 bg-line"
-            }`}
+            className={`h-[3px] flex-1 transition-colors ${i === index ? "bg-white" : "bg-white/35"}`}
           />
         ))}
       </div>
