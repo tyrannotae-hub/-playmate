@@ -27,7 +27,7 @@ export default async function ClubBookingDetailPage({
         href={`/club/bookings?classId=${booking.classId}`}
         className="mt-4 inline-block text-xs font-bold text-rink-deep"
       >
-        이 클래스의 예약 전체 보기 →
+        이 클래스의 예약 전체 보기 {">"}
       </Link>
     </>
   );

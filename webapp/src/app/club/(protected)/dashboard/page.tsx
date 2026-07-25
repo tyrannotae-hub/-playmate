@@ -102,13 +102,13 @@ export default async function ClubDashboardPage() {
 
       <Link href="/club/home" className={cardClass("mt-6 block transition hover:border-rink")}>
         <p className="font-bold">{isSoloCoach ? "프로필 꾸미기" : "클럽 홈 꾸미기"}</p>
-        <p className="mt-1 text-sm text-muted">프로필·홍보사진·진열장·소개·공지사항을 관리해요 →</p>
+        <p className="mt-1 text-sm text-muted">프로필·홍보사진·진열장·소개·공지사항을 관리해요 {">"}</p>
       </Link>
 
       <div className="mt-7 flex items-center justify-between">
         <p className="text-sm font-bold text-muted">승인 대기 중인 예약</p>
         <Link href="/club/bookings" className="text-xs font-bold text-rink">
-          전체 예약 보기 →
+          전체 예약 보기 {">"}
         </Link>
       </div>
       <div className="mt-2.5 flex flex-col gap-2.5">

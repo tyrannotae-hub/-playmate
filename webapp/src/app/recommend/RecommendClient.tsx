@@ -92,7 +92,7 @@ export default function RecommendClient({
               </div>
               <p className="mt-2 text-sm text-rink-deep">{top.sport.traits.join(" · ")}</p>
               <p className="mt-3 text-sm font-bold text-rink-deep">
-                이 지역 클래스 {classCounts[top.sport.id] ?? 0}개 보기 →
+                이 지역 클래스 {classCounts[top.sport.id] ?? 0}개 보기 {">"}
               </p>
             </Link>
           )}
@@ -172,7 +172,7 @@ export default function RecommendClient({
 
         <div className="mt-8 flex flex-col gap-2.5">
           <button onClick={() => setStep((s) => s + 1)} className={buttonClass()}>
-            {step === STEPS.length - 1 ? "결과 보기 →" : "다음 →"}
+            {step === STEPS.length - 1 ? "결과 보기 >" : "다음 >"}
           </button>
           <button
             onClick={() => setStep((s) => s + 1)}

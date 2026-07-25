@@ -100,7 +100,7 @@ export default async function ClassDetailPage({
           <div className="mt-5 border-t border-line pt-5">
             <div className="flex items-start justify-between gap-3">
               <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
-                {item.facility.name} →
+                {item.facility.name} {">"}
               </Link>
               <div className="flex shrink-0 items-center gap-1">
                 <FacilityContactLinks
