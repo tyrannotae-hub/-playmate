@@ -42,7 +42,7 @@ export default function WishlistTabs({
       {tab === "클래스" ? (
         <div className="flex flex-col gap-3">
           {classes.map((c) => (
-            <ClassCard key={c.id} item={c} wished />
+            <ClassCard key={c.id} item={c} wished showPhoto={false} />
           ))}
           {classes.length === 0 && (
             <p className="py-10 text-center text-sm text-muted">

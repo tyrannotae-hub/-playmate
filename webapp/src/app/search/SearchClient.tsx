@@ -94,7 +94,7 @@ export default function SearchClient({
           <button
             onClick={() => setSportId("all")}
             className={buttonClass({
-              variant: sportId === "all" ? "secondary" : "outline",
+              variant: sportId === "all" ? "tabActive" : "tabInactive",
               size: "sm",
               full: false,
               radius: "round",
@@ -108,7 +108,7 @@ export default function SearchClient({
               key={s.id}
               onClick={() => setSportId(s.id)}
               className={buttonClass({
-                variant: sportId === s.id ? "secondary" : "outline",
+                variant: sportId === s.id ? "tabActive" : "tabInactive",
                 size: "sm",
                 full: false,
                 radius: "round",
@@ -125,7 +125,7 @@ export default function SearchClient({
           <button
             onClick={() => setServiceType("all")}
             className={buttonClass({
-              variant: serviceType === "all" ? "secondary" : "outline",
+              variant: serviceType === "all" ? "tabActive" : "tabInactive",
               size: "sm",
               full: false,
               radius: "round",
@@ -137,7 +137,7 @@ export default function SearchClient({
           <button
             onClick={() => setServiceType("academy")}
             className={buttonClass({
-              variant: serviceType === "academy" ? "secondary" : "outline",
+              variant: serviceType === "academy" ? "tabActive" : "tabInactive",
               size: "sm",
               full: false,
               radius: "round",
@@ -149,7 +149,7 @@ export default function SearchClient({
           <button
             onClick={() => setServiceType("lesson")}
             className={buttonClass({
-              variant: serviceType === "lesson" ? "secondary" : "outline",
+              variant: serviceType === "lesson" ? "tabActive" : "tabInactive",
               size: "sm",
               full: false,
               radius: "round",

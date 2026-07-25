@@ -7,7 +7,15 @@ import { regionLabel } from "@/lib/region-meta";
 import WishlistButton from "@/components/WishlistButton";
 import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
-export default function ClassCard({ item, wished = false }: { item: TeamClass; wished?: boolean }) {
+export default function ClassCard({
+  item,
+  wished = false,
+  showPhoto = true,
+}: {
+  item: TeamClass;
+  wished?: boolean;
+  showPhoto?: boolean;
+}) {
   const schedule = item.schedules[0] as typeof item.schedules[number] | undefined;
   const isFull = !!schedule && schedule.booked >= schedule.capacity;
   const cover = item.images[0];
@@ -22,13 +30,15 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
       href={`/classes/${item.id}`}
       className={cardClass("flex gap-3 transition hover:border-rink")}
     >
-      <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
-        {cover ? (
-          <Image src={cover} alt="" fill sizes="80px" className="object-cover" />
-        ) : (
-          <SportIcon sportId={item.sportId} size={28} />
-        )}
-      </div>
+      {showPhoto && (
+        <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+          {cover ? (
+            <Image src={cover} alt="" fill sizes="80px" className="object-cover" />
+          ) : (
+            <SportIcon sportId={item.sportId} size={28} />
+          )}
+        </div>
+      )}
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3">
@@ -58,7 +68,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted tabular-nums">
+        <div className="mt-3 flex min-h-[2.75rem] flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted tabular-nums">
           {region && (
             <>
               <span>{region}</span>

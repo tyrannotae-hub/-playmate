@@ -4,7 +4,14 @@
 // 한글 UI라 uppercase는 의미가 없어서 대신 살짝 넓은 letter-spacing(.btn-label)으로
 // "시스템 라벨" 느낌만 차용.
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "custom";
+type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "custom"
+  | "tabActive"
+  | "tabInactive";
 type ButtonSize = "md" | "sm";
 
 const BUTTON_SIZES: Record<ButtonSize, string> = {
@@ -18,6 +25,10 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   outline: "border border-line text-muted",
   ghost: "text-muted",
   custom: "",
+  // 홈 탭 요일 선택 필(bg-rink/text-foreground)과 동일한 배색 — 검색 필터 등
+  // 다른 화면의 선택형 칩도 이 톤으로 통일할 때 씀.
+  tabActive: "bg-rink text-white",
+  tabInactive: "text-foreground",
 };
 
 export function buttonClass({

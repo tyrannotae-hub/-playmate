@@ -19,7 +19,15 @@ function SlideCaption({ title }: { title?: string }) {
   );
 }
 
-function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
+function Slide({
+  slide,
+  facilityId,
+  className,
+}: {
+  slide: PromoSlide;
+  facilityId: string;
+  className: string;
+}) {
   const content = (
     <>
       <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover brightness-75" />
@@ -29,7 +37,7 @@ function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
 
   if (slide.categoryId) {
     return (
-      <Link href={`#category-${slide.categoryId}`} className={className}>
+      <Link href={`/facilities/${facilityId}/category/${slide.categoryId}`} className={className}>
         {content}
       </Link>
     );
@@ -37,7 +45,13 @@ function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
   return <div className={className}>{content}</div>;
 }
 
-export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
+export default function PromoCarousel({
+  images,
+  facilityId,
+}: {
+  images: PromoSlide[];
+  facilityId: string;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
@@ -63,7 +77,11 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
   if (images.length === 1) {
     return (
       <div className="relative overflow-hidden rounded-xl shadow-elevated">
-        <Slide slide={images[0]} className="relative block aspect-video w-full" />
+        <Slide
+          slide={images[0]}
+          facilityId={facilityId}
+          className="relative block aspect-video w-full"
+        />
       </div>
     );
   }
@@ -79,6 +97,7 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
           <Slide
             key={i}
             slide={slide}
+            facilityId={facilityId}
             className="relative block aspect-video w-full shrink-0 snap-center"
           />
         ))}

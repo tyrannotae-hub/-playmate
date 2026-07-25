@@ -48,7 +48,7 @@ export default async function FacilityHomePage({
       <main className="pb-10">
         <div className="px-4 pt-3">
           {heroImages.length > 0 ? (
-            <PromoCarousel images={heroImages} />
+            <PromoCarousel images={heroImages} facilityId={facility.id} />
           ) : (
             <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-rink-soft">
               <span className="text-4xl">🏟️</span>
