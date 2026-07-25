@@ -1,13 +1,12 @@
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
-import ServiceTypeTabs from "@/components/ServiceTypeTabs";
+import ServiceTypeTabs, { HomeTab } from "@/components/ServiceTypeTabs";
 import ClassCardCompact from "@/components/ClassCardCompact";
 import FacilityCard from "@/components/FacilityCard";
 import SportCategoryRow from "@/components/SportCategoryRow";
 import PromoBanner from "@/components/PromoBanner";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
-import { ServiceType } from "@/lib/types";
 import { namesWithSuffix } from "@/lib/korean";
 import {
   facilitiesFromClasses,
@@ -29,7 +28,9 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const type: ServiceType = (await searchParams).type === "lesson" ? "lesson" : "academy";
+  const typeParam = (await searchParams).type;
+  const type: HomeTab =
+    typeParam === "lesson" ? "lesson" : typeParam === "trial" ? "trial" : "academy";
 
   const [allClasses, sports, instructors, user] = await Promise.all([
     getAllClasses(),
@@ -37,7 +38,8 @@ export default async function HomePage({
     getFeaturedInstructors(),
     getCurrentParent(),
   ]);
-  const classes = allClasses.filter((c) => c.serviceType === type);
+  const classes =
+    type === "trial" ? allClasses.filter((c) => c.allowTrial) : allClasses.filter((c) => c.serviceType === type);
   const facilities = await facilitiesFromClasses(classes);
   const popularFacilities = [...facilities]
     .sort((a, b) => b.popularity - a.popularity || b.classCount - a.classCount)
