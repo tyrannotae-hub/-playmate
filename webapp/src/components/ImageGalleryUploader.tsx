@@ -12,6 +12,19 @@ const IMAGE_PIXELS = 960;
 
 type Caption = { title: string };
 
+// 배너 폭(85%, text-base 굵게)에서 한 줄이 넘치지 않는 선의 글자수. 줄바꿈은
+// 최대 2줄까지만 허용하고, 그 이후 입력은 그냥 잘라낸다.
+const LINE_MAX = 16;
+const MAX_LINES = 2;
+
+function clampLines(value: string): string {
+  return value
+    .split("\n")
+    .slice(0, MAX_LINES)
+    .map((line) => line.slice(0, LINE_MAX))
+    .join("\n");
+}
+
 export default function ImageGalleryUploader({
   bucket,
   pathPrefix,
@@ -43,7 +56,6 @@ export default function ImageGalleryUploader({
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const inputId = `image-gallery-input-${pathPrefix.replace(/[^a-zA-Z0-9]/g, "-")}`;
-  const TITLE_MAX = 40;
 
   function captionOf(url: string): Caption {
     return captions[url] ?? { title: "" };
@@ -145,7 +157,8 @@ export default function ImageGalleryUploader({
       {onCaptionSave && images.length > 0 && (
         <div className="mt-3 flex flex-col gap-2.5">
           <p className="text-xs font-bold text-muted">
-            사진 위에 표시할 문구 (선택, Enter로 줄바꿈해서 2줄로 만들 수 있어요)
+            사진 위에 표시할 문구 (선택, 한 줄 {LINE_MAX}자까지, Enter로 줄바꿈해서 2줄로
+            만들 수 있어요)
           </p>
           {images.map((url) => {
             const caption = captionOf(url);
@@ -156,9 +169,8 @@ export default function ImageGalleryUploader({
                 <div className="min-w-0 flex-1">
                   <textarea
                     value={caption.title}
-                    onChange={(e) => setCaptionField(url, "title", e.target.value.slice(0, TITLE_MAX))}
+                    onChange={(e) => setCaptionField(url, "title", clampLines(e.target.value))}
                     onBlur={() => saveCaption(url)}
-                    maxLength={TITLE_MAX}
                     rows={2}
                     placeholder="제목"
                     className="w-full resize-none rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"

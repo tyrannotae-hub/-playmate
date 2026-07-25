@@ -12,7 +12,7 @@ function SlideCaption({ title }: { title?: string }) {
   if (!title) return null;
   return (
     <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white">
-      <p className="animate-fade-up-bright whitespace-pre-line text-xl font-extrabold leading-snug tracking-tight">
+      <p className="animate-fade-up-bright whitespace-pre-line text-base font-extrabold leading-snug tracking-tight">
         {title}
       </p>
     </div>
