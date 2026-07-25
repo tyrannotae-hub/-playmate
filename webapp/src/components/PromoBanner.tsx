@@ -64,11 +64,11 @@ export default function PromoBanner() {
   }
 
   return (
-    <div className="px-4">
+    <div>
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="mx-auto flex w-48 snap-x snap-mandatory overflow-x-auto rounded-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {BANNERS.map((b) => (
           <Link
