@@ -75,24 +75,25 @@ export default function PromoBanner() {
           <Link
             key={b.id}
             href={b.href}
-            style={
-              b.backgroundImageUrl
-                ? { backgroundImage: `url(${b.backgroundImageUrl})` }
-                : undefined
-            }
-            className={`relative flex aspect-square w-full shrink-0 snap-center bg-cover bg-center text-white ${
+            className={`relative flex aspect-square w-full shrink-0 snap-center text-white ${
               b.gradientClassName ?? ""
             }`}
           >
+            {b.backgroundImageUrl && (
+              <div
+                style={{ backgroundImage: `url(${b.backgroundImageUrl})` }}
+                className="absolute inset-0 bg-cover bg-center brightness-75"
+              />
+            )}
             {b.layout === "logo" ? (
-              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center">
                 <p className="text-2xl font-extrabold tracking-tight">
                   PlayMate<span className="text-energy">.</span>
                 </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
-              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-9 [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
+              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-9">
                 <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
                 <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
               </div>

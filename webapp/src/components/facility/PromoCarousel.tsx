@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const AUTO_SLIDE_MS = 4000;
 
@@ -20,7 +20,7 @@ function SlideCaption({ title }: { title?: string }) {
 function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
   const content = (
     <>
-      <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover" />
+      <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover brightness-75" />
       <SlideCaption title={slide.title} />
     </>
   );
@@ -37,6 +37,7 @@ function Slide({ slide, className }: { slide: PromoSlide; className: string }) {
 
 export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     if (images.length < 2) return;
@@ -49,24 +50,40 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
     return () => clearInterval(timer);
   }, [images.length]);
 
+  function handleScroll() {
+    const el = scrollRef.current;
+    if (!el || el.clientWidth === 0) return;
+    setIndex(Math.round(el.scrollLeft / el.clientWidth));
+  }
+
   if (images.length === 0) return null;
 
   if (images.length === 1) {
-    return <Slide slide={images[0]} className="relative block aspect-square w-full" />;
+    return (
+      <div className="relative mx-auto w-[90%] overflow-hidden rounded-xs shadow-elevated">
+        <Slide slide={images[0]} className="relative block aspect-square w-full" />
+      </div>
+    );
   }
 
   return (
-    <div
-      ref={scrollRef}
-      className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
-      {images.map((slide, i) => (
-        <Slide
-          key={i}
-          slide={slide}
-          className="relative block aspect-square w-full shrink-0 snap-center"
-        />
-      ))}
+    <div className="relative mx-auto w-[90%] overflow-hidden rounded-xs shadow-elevated">
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {images.map((slide, i) => (
+          <Slide
+            key={i}
+            slide={slide}
+            className="relative block aspect-square w-full shrink-0 snap-center"
+          />
+        ))}
+      </div>
+      <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold text-white">
+        {index + 1}/{images.length}
+      </span>
     </div>
   );
 }
