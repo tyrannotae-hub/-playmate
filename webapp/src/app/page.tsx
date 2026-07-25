@@ -8,6 +8,7 @@ import PromoBanner from "@/components/PromoBanner";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import { ServiceType } from "@/lib/types";
+import { namesWithSuffix } from "@/lib/korean";
 import {
   facilitiesFromClasses,
   getAllClasses,
@@ -49,7 +50,11 @@ export default async function HomePage({
         getMyFacilityWishlistIds(user.id),
       ])
     : [[], [], [], []];
-  const child = children[0];
+  const greetingNames = children.map((c) => `${c.name}(${c.age}세)`).join(", ");
+  const recommendCta =
+    children.length > 0
+      ? `${namesWithSuffix(children.map((c) => c.name))}에게 맞는 운동 찾기`
+      : "우리 아이에게 맞는 운동 찾기";
   const wishedSet = new Set(wishedIds);
   const wishedFacilitySet = new Set(wishedFacilityIds);
 
@@ -72,42 +77,53 @@ export default async function HomePage({
         </div>
 
         <div className="px-4 pt-4">
-          <div className="mb-5 flex items-center gap-2.5">
-            {child?.photoUrl && (
-              <div
-                className="h-8 w-8 shrink-0 rounded-full border border-line bg-surface-2 bg-cover bg-center"
-                style={{ backgroundImage: `url(${child.photoUrl})` }}
-              />
-            )}
-            <p className="text-[15px] text-muted">
-              {child
-                ? `안녕하세요 👋 ${child.name}(${child.age}세)의 운동을 찾아볼까요?`
-                : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
-            </p>
-          </div>
-
           <Link
             href="/recommend"
             className="flex items-center gap-3 rounded-md bg-rink-deep px-4 py-4 text-white transition hover:opacity-90"
           >
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="shrink-0"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M9.5 9.5a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.3" />
-              <path d="M12 17.5v.1" />
-            </svg>
+            {children.length >= 2 ? (
+              <div className="flex shrink-0 -space-x-3">
+                {children.slice(0, 2).map((c) => (
+                  <div
+                    key={c.id}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-rink-deep bg-white/15 bg-cover bg-center text-sm font-bold"
+                    style={c.photoUrl ? { backgroundImage: `url(${c.photoUrl})` } : undefined}
+                  >
+                    {!c.photoUrl && c.name.slice(0, 1)}
+                  </div>
+                ))}
+              </div>
+            ) : children.length === 1 ? (
+              <div
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 bg-cover bg-center text-base font-bold"
+                style={children[0].photoUrl ? { backgroundImage: `url(${children[0].photoUrl})` } : undefined}
+              >
+                {!children[0].photoUrl && children[0].name.slice(0, 1)}
+              </div>
+            ) : (
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M9.5 9.5a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.3" />
+                <path d="M12 17.5v.1" />
+              </svg>
+            )}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold">아직 종목을 못 정하셨나요?</p>
-              <p className="text-xs text-white/75">우리 아이에게 맞는 운동 추천받기</p>
+              <p className="text-xs text-white/75">
+                {children.length > 0
+                  ? `안녕하세요 👋 ${greetingNames}의 운동을 찾아볼까요?`
+                  : "안녕하세요 👋 우리 아이에게 맞는 운동을 찾아볼까요?"}
+              </p>
+              <p className="mt-0.5 text-sm font-bold">{recommendCta}</p>
             </div>
             <span className="shrink-0 text-lg">→</span>
           </Link>
