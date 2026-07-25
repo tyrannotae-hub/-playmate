@@ -83,7 +83,7 @@ export default function RecommendClient({
           {top && (
             <Link
               href={`/search?sport=${top.sport.id}`}
-              className="block rounded-md border-2 border-rink bg-rink-soft p-5 transition hover:opacity-90"
+              className="block rounded-xs border-2 border-rink bg-rink-soft p-5 transition hover:opacity-90"
             >
               <p className="btn-label text-xs font-bold text-rink-deep">가장 잘 맞아요</p>
               <div className="mt-2 flex items-center gap-2 text-rink-deep">
@@ -157,7 +157,7 @@ export default function RecommendClient({
               <button
                 key={option}
                 onClick={() => toggle(option)}
-                className={`rounded-md border px-4 py-3.5 text-left text-sm font-semibold transition ${
+                className={`rounded-xs border px-4 py-3.5 text-left text-sm font-semibold transition ${
                   active
                     ? "border-rink bg-rink-soft text-rink-deep"
                     : "border-line bg-surface text-foreground"

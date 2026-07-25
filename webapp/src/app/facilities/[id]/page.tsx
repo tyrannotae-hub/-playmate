@@ -51,7 +51,7 @@ export default async function FacilityHomePage({
 
         <div className="px-4 pt-4">
           <div className="flex items-start gap-3">
-            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-rink-soft text-rink-deep">
+            <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xs border border-line bg-rink-soft text-rink-deep">
               {facility.profileImageUrl ? (
                 <Image
                   src={facility.profileImageUrl}

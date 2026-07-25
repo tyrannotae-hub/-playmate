@@ -137,14 +137,14 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="닉네임 (예: 민준맘, 비워두면 '학부모'로 표시)"
-          className="mt-4 w-full rounded-md border border-line bg-surface p-3.5 text-sm"
+          className="mt-4 w-full rounded-xs border border-line bg-surface p-3.5 text-sm"
         />
 
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="후기를 남겨주세요..."
-          className="mt-3 w-full rounded-md border border-line bg-surface p-3.5 text-sm"
+          className="mt-3 w-full rounded-xs border border-line bg-surface p-3.5 text-sm"
           rows={5}
         />
 
@@ -162,7 +162,7 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
             {photos.map((photo, i) => (
               <div key={photo.previewUrl} className="relative aspect-square">
                 <div
-                  className="h-full w-full rounded-md border border-line bg-surface-2 bg-cover bg-center"
+                  className="h-full w-full rounded-xs border border-line bg-surface-2 bg-cover bg-center"
                   style={{ backgroundImage: `url(${photo.previewUrl})` }}
                 />
                 <button
@@ -179,7 +179,7 @@ export default function ReviewForm({ booking }: { booking: Booking }) {
             {photos.length < MAX_PHOTOS && (
               <label
                 htmlFor="review-photo-input"
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
+                className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xs border border-dashed border-line text-xs text-muted"
               >
                 <span className="text-lg leading-none">+</span>
                 사진 추가

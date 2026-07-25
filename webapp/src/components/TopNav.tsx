@@ -34,10 +34,10 @@ export default function TopNav({
               aria-label="종목별 카테고리 열기"
               className="-ml-1.5 flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-line/50"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M3 5h14" />
-                <path d="M3 10h14" />
-                <path d="M3 15h14" />
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <rect x="2" y="4" width="16" height="2.6" rx="1.3" />
+                <rect x="2" y="8.7" width="16" height="2.6" rx="1.3" />
+                <rect x="2" y="13.4" width="16" height="2.6" rx="1.3" />
               </svg>
             </button>
           )}
@@ -55,18 +55,8 @@ export default function TopNav({
               aria-label="마이페이지"
               className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="10" cy="6.5" r="3" />
-                <path d="M4 17c1-3.2 3.4-4.8 6-4.8s5 1.6 6 4.8" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z" />
               </svg>
             </Link>
           </div>

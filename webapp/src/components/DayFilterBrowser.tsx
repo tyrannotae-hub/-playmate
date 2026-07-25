@@ -62,7 +62,7 @@ export default function DayFilterBrowser({
           <select
             value={sportId}
             onChange={(e) => setSportId(e.target.value)}
-            className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
+            className="h-9 flex-shrink-0 rounded-xs border border-line bg-surface px-2.5 text-xs font-bold"
           >
             <option value="all">전체 종목</option>
             {sports.map((s) => (
@@ -75,7 +75,7 @@ export default function DayFilterBrowser({
         <select
           value={region}
           onChange={(e) => setRegion(e.target.value)}
-          className="h-9 flex-shrink-0 rounded-md border border-line bg-surface px-2.5 text-xs font-bold"
+          className="h-9 flex-shrink-0 rounded-xs border border-line bg-surface px-2.5 text-xs font-bold"
         >
           <option value="all">전체 지역</option>
           {regions.map((r) => (
@@ -91,7 +91,7 @@ export default function DayFilterBrowser({
           <button
             key={t}
             onClick={() => setTime(t)}
-            className={`h-9 flex-shrink-0 rounded-md px-3.5 text-xs font-bold transition ${
+            className={`h-9 flex-shrink-0 rounded-xs px-3.5 text-xs font-bold transition ${
               time === t ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
             }`}
           >
@@ -122,7 +122,7 @@ export default function DayFilterBrowser({
             href={`/classes/${item.id}`}
             className="flex items-center gap-3 py-3"
           >
-            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md bg-rink-soft text-rink-deep">
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
               {item.images[0] ? (
                 <Image src={item.images[0]} alt="" fill sizes="56px" className="object-cover" />
               ) : (

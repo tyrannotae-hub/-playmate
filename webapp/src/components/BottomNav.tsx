@@ -38,71 +38,32 @@ export default function BottomNav() {
 
 function HomeIcon({ active }: { active: boolean }) {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={active ? 2.4 : 2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 11.5 12 4l9 7.5" />
-      <path d="M5.5 10v9a1 1 0 0 0 1 1H9.5v-6h5v6H17.5a1 1 0 0 0 1-1v-9" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
     </svg>
   );
 }
 
 function SearchIcon({ active }: { active: boolean }) {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={active ? 2.4 : 2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="6.5" />
-      <path d="m20 20-4.3-4.3" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+      <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z" />
     </svg>
   );
 }
 
 function HeartIcon({ active }: { active: boolean }) {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill={active ? "currentColor" : "none"}
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 20.5s-7.5-4.6-10-9.4C0.3 7.7 1.8 4 5.5 3.4c2.1-0.3 4 0.8 5 2.6 1-1.8 2.9-2.9 5-2.6C19.2 4 20.7 7.7 19 11.1c-2.5 4.8-7 9.4-7 9.4Z" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+      <path d="M12 21.35 10.55 20C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54Z" />
     </svg>
   );
 }
 
 function ClassIcon({ active }: { active: boolean }) {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={active ? 2.4 : 2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3.5" y="5" width="17" height="16" rx="2" />
-      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+      <path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1zm3 18H5V8h14Z" />
     </svg>
   );
 }

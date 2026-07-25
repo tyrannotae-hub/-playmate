@@ -92,16 +92,15 @@ export default async function MyPage() {
 
 function CalendarIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3.5" y="5" width="17" height="16" rx="2" />
-      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1zm3 18H5V8h14Z" />
     </svg>
   );
 }
 
 function StarIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 3.5 14.8 9.2 21 10.1 16.5 14.5 17.6 20.7 12 17.7 6.4 20.7 7.5 14.5 3 10.1 9.2 9.2Z" />
     </svg>
   );
@@ -109,8 +108,8 @@ function StarIcon() {
 
 function ChevronIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-line">
-      <path d="m9 6 6 6-6 6" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-line">
+      <path d="M8.5 5 7.1 6.4l5.6 5.6-5.6 5.6L8.5 19l7-7Z" />
     </svg>
   );
 }

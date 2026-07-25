@@ -149,7 +149,7 @@ export default function TrialClassesCalendar({ classes }: { classes: ClubClass[]
       <div className="flex items-center justify-between">
         <button
           onClick={goToPrevMonth}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-rink-soft"
+          className="flex h-8 w-8 items-center justify-center rounded-xs text-muted hover:bg-rink-soft"
           aria-label="이전 달"
         >
           ‹
@@ -159,7 +159,7 @@ export default function TrialClassesCalendar({ classes }: { classes: ClubClass[]
         </p>
         <button
           onClick={goToNextMonth}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-rink-soft"
+          className="flex h-8 w-8 items-center justify-center rounded-xs text-muted hover:bg-rink-soft"
           aria-label="다음 달"
         >
           ›
@@ -187,7 +187,7 @@ export default function TrialClassesCalendar({ classes }: { classes: ClubClass[]
                 <button
                   key={j}
                   onClick={() => setSelectedDate(date)}
-                  className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-md text-sm transition ${
+                  className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-xs text-sm transition ${
                     isSelected
                       ? "bg-rink text-white font-bold"
                       : isToday

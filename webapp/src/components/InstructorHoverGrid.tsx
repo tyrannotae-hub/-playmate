@@ -26,7 +26,7 @@ export default function InstructorHoverGrid({
           <Link
             key={item.id}
             href={`/facilities/${item.facilityId}`}
-            className="relative block h-40 w-32 flex-shrink-0 overflow-hidden rounded-md bg-surface-2"
+            className="relative block h-40 w-32 flex-shrink-0 overflow-hidden rounded-xs bg-surface-2"
             onMouseEnter={() => setActiveId(item.id)}
             onMouseLeave={() => setActiveId(null)}
             onFocus={() => setActiveId(item.id)}

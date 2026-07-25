@@ -93,7 +93,7 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
       <div className="flex items-center justify-between">
         <button
           onClick={goToPrevMonth}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-rink-soft"
+          className="flex h-8 w-8 items-center justify-center rounded-xs text-muted hover:bg-rink-soft"
           aria-label="이전 달"
         >
           ‹
@@ -103,7 +103,7 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
         </p>
         <button
           onClick={goToNextMonth}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-rink-soft"
+          className="flex h-8 w-8 items-center justify-center rounded-xs text-muted hover:bg-rink-soft"
           aria-label="다음 달"
         >
           ›
@@ -130,7 +130,7 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
                 <button
                   key={j}
                   onClick={() => setSelectedDate(date)}
-                  className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-md text-sm transition ${
+                  className={`flex h-11 flex-col items-center justify-center gap-0.5 rounded-xs text-sm transition ${
                     isSelected
                       ? "bg-rink text-white font-bold"
                       : isToday
@@ -165,11 +165,11 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
                 className="flex items-center gap-2 py-2.5"
               >
                 {m.isTrial ? (
-                  <span className="shrink-0 rounded-md bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
+                  <span className="shrink-0 rounded-xs bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
                     원데이
                   </span>
                 ) : (
-                  <span className="shrink-0 rounded-md bg-rink-soft px-1.5 py-0.5 text-[10px] font-bold text-rink-deep">
+                  <span className="shrink-0 rounded-xs bg-rink-soft px-1.5 py-0.5 text-[10px] font-bold text-rink-deep">
                     정규
                   </span>
                 )}

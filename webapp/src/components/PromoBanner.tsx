@@ -87,7 +87,7 @@ export default function PromoBanner() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-md shadow-elevated [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-xs shadow-elevated [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {BANNERS.map((b) => (
           <Link
@@ -98,7 +98,7 @@ export default function PromoBanner() {
                 ? { backgroundImage: `url(${b.backgroundImageUrl})` }
                 : undefined
             }
-            className={`relative flex aspect-square w-full shrink-0 snap-center overflow-hidden rounded-md bg-cover bg-center text-white ${
+            className={`relative flex aspect-square w-full shrink-0 snap-center overflow-hidden rounded-xs bg-cover bg-center text-white ${
               b.gradientClassName ?? ""
             }`}
           >

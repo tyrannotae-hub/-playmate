@@ -126,7 +126,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
 
   if (booking.changeRequestedAt) {
     return (
-      <div className="mt-3 rounded-md border border-energy bg-energy-soft px-3 py-2.5">
+      <div className="mt-3 rounded-xs border border-energy bg-energy-soft px-3 py-2.5">
         <p className="text-xs font-bold text-[color:var(--foreground)]">
           변경 요청 중
           {booking.requestedScheduleLabel && ` · ${booking.requestedScheduleLabel}`}
@@ -157,7 +157,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
           일정 변경 요청
         </button>
       ) : (
-        <form onSubmit={submit} className="rounded-md border border-line px-3 py-3">
+        <form onSubmit={submit} className="rounded-xs border border-line px-3 py-3">
           {loading ? (
             <p className="text-xs text-muted">불러오는 중...</p>
           ) : booking.bookingType === "trial" ? (
@@ -170,7 +170,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
                   required
                   value={trialDate}
                   onChange={(e) => setTrialDate(e.target.value)}
-                  className="w-full rounded-md border border-line bg-surface px-3 py-2.5 text-sm"
+                  className="w-full rounded-xs border border-line bg-surface px-3 py-2.5 text-sm"
                 >
                   <option value="">날짜를 선택해주세요</option>
                   {trialDateOptions
@@ -192,7 +192,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
                 required
                 value={scheduleId}
                 onChange={(e) => setScheduleId(e.target.value)}
-                className="w-full rounded-md border border-line bg-surface px-3 py-2.5 text-sm"
+                className="w-full rounded-xs border border-line bg-surface px-3 py-2.5 text-sm"
               >
                 <option value="">시간대를 선택해주세요</option>
                 {scheduleOptions
@@ -216,7 +216,7 @@ export default function ChangeBookingButton({ booking }: { booking: Booking }) {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="예: 아이 학원 시간이 바뀌었어요"
-              className="w-full rounded-md border border-line bg-surface px-3 py-2.5 text-sm"
+              className="w-full rounded-xs border border-line bg-surface px-3 py-2.5 text-sm"
             />
           </div>
 

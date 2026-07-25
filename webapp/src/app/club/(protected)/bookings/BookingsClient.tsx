@@ -76,7 +76,7 @@ function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
           <button
             key={t.key}
             onClick={() => setTypeTab(t.key)}
-            className={`h-8 flex-shrink-0 rounded-md px-3 text-xs font-bold transition ${
+            className={`h-8 flex-shrink-0 rounded-xs px-3 text-xs font-bold transition ${
               typeTab === t.key ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
             }`}
           >
@@ -86,7 +86,7 @@ function BookingsClientInner({ bookings }: { bookings: ClubBooking[] }) {
       </div>
 
       {classId && (
-        <div className="mt-3 flex items-center justify-between rounded-md border border-line bg-surface-2 px-3 py-2">
+        <div className="mt-3 flex items-center justify-between rounded-xs border border-line bg-surface-2 px-3 py-2">
           <p className="text-xs font-bold text-muted">
             {className ?? "선택한 클래스"} 예약만 보는 중
           </p>

@@ -79,7 +79,7 @@ export default function ImageGalleryUploader({
       {helperText && <p className="mb-2 text-xs text-muted">{helperText}</p>}
       <div className="flex flex-wrap gap-2">
         {images.map((url) => (
-          <div key={url} className="relative h-16 w-16 overflow-hidden rounded-md">
+          <div key={url} className="relative h-16 w-16 overflow-hidden rounded-xs">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className="h-full w-full object-cover" />
             <button
@@ -103,7 +103,7 @@ export default function ImageGalleryUploader({
             />
             <label
               htmlFor={inputId}
-              className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-md border border-dashed border-line text-xs text-muted"
+              className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-xs border border-dashed border-line text-xs text-muted"
             >
               {uploading ? "..." : "+ 추가"}
             </label>

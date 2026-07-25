@@ -303,7 +303,7 @@ export default function ClassCard({
             <p className="mt-0.5 break-words font-bold">
               {item.name}
               {offersAcademy && offersLesson && (
-                <span className="ml-1.5 rounded-md bg-surface-2 px-1.5 py-0.5 align-middle text-[11px] font-bold text-muted">
+                <span className="ml-1.5 rounded-xs bg-surface-2 px-1.5 py-0.5 align-middle text-[11px] font-bold text-muted">
                   {item.serviceType === "academy" ? "아카데미" : "레슨"}
                 </span>
               )}
@@ -313,7 +313,7 @@ export default function ClassCard({
               {item.showPrice ? `${item.price.toLocaleString()}원/${item.priceUnit}` : "가격 비공개"}
             </p>
             {item.allowTrial && (
-              <span className="mt-1 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
+              <span className="mt-1 inline-block rounded-xs bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
                 원데이 체험 가능
                 {item.trialPrice != null && ` · ${item.trialPrice.toLocaleString()}원`}
               </span>
@@ -348,7 +348,7 @@ export default function ClassCard({
               required
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div className="flex gap-2">
@@ -357,7 +357,7 @@ export default function ClassCard({
               <select
                 value={editSportId}
                 onChange={(e) => setEditSportId(e.target.value)}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -371,7 +371,7 @@ export default function ClassCard({
               <select
                 value={editClassType}
                 onChange={(e) => setEditClassType(e.target.value as ClubClass["classType"])}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {Object.entries(CLASS_TYPE_LABEL).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -419,7 +419,7 @@ export default function ClassCard({
               담당 코치 (선택, 복수 선택 가능)
             </label>
             {instructors.length === 0 ? (
-              <p className="rounded-md border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
                 먼저{" "}
                 <Link href="/club/instructors" className="font-bold text-rink-deep underline">
                   코치 관리
@@ -458,7 +458,7 @@ export default function ClassCard({
                 min={0}
                 value={editAgeMin}
                 onChange={(e) => setEditAgeMin(Number(e.target.value))}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="min-w-0 flex-1">
@@ -469,7 +469,7 @@ export default function ClassCard({
                 min={0}
                 value={editAgeMax}
                 onChange={(e) => setEditAgeMax(Number(e.target.value))}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -482,7 +482,7 @@ export default function ClassCard({
                 min={0}
                 value={editPrice}
                 onChange={(e) => setEditPrice(Number(e.target.value))}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="w-24">
@@ -491,11 +491,11 @@ export default function ClassCard({
                 required
                 value={editPriceUnit}
                 onChange={(e) => setEditPriceUnit(e.target.value)}
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
-          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
             <span className="text-sm font-bold">
               가격 공개
               <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -509,7 +509,7 @@ export default function ClassCard({
               className="h-5 w-5 flex-shrink-0 accent-rink"
             />
           </label>
-          <p className="rounded-md border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+          <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
             원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
             시간대마다 원데이 가능을 켜고 끌 수 있어요.
           </p>
@@ -524,12 +524,12 @@ export default function ClassCard({
                 value={editTrialPrice}
                 onChange={(e) => setEditTrialPrice(e.target.value)}
                 placeholder="예: 30000"
-                className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           )}
           {item.allowTrial && (
-            <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 체험가 공개
                 <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -544,7 +544,7 @@ export default function ClassCard({
               />
             </label>
           )}
-          <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
             <span className="text-sm font-bold">
               할인 적용
               <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -568,7 +568,7 @@ export default function ClassCard({
                   value={editDiscountPrice}
                   onChange={(e) => setEditDiscountPrice(e.target.value)}
                   placeholder="예: 25000"
-                  className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                 />
               </div>
               <div className="flex gap-2">
@@ -578,7 +578,7 @@ export default function ClassCard({
                     type="date"
                     value={editDiscountStartDate}
                     onChange={(e) => setEditDiscountStartDate(e.target.value)}
-                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -587,14 +587,14 @@ export default function ClassCard({
                     type="date"
                     value={editDiscountEndDate}
                     onChange={(e) => setEditDiscountEndDate(e.target.value)}
-                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
               </div>
             </div>
           )}
           {item.allowTrial && (
-            <label className="flex items-center justify-between rounded-md border border-line px-3.5 py-3">
+            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 원데이 할인 적용
                 <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -619,7 +619,7 @@ export default function ClassCard({
                   value={editTrialDiscountPrice}
                   onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
                   placeholder="예: 20000"
-                  className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                 />
               </div>
               <div className="flex gap-2">
@@ -629,7 +629,7 @@ export default function ClassCard({
                     type="date"
                     value={editTrialDiscountStartDate}
                     onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
-                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -638,7 +638,7 @@ export default function ClassCard({
                     type="date"
                     value={editTrialDiscountEndDate}
                     onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
-                    className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
               </div>
@@ -703,7 +703,7 @@ export default function ClassCard({
         {item.schedules.map((s) => (
           <div
             key={s.id}
-            className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
+            className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
           >
             <span>
               {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
@@ -752,7 +752,7 @@ export default function ClassCard({
             value={timeLabel}
             onChange={(e) => setTimeLabel(e.target.value)}
             placeholder="시간 (예: 16:00)"
-            className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+            className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
           />
           <input
             type="number"
@@ -761,7 +761,7 @@ export default function ClassCard({
             value={capacity}
             onChange={(e) => setCapacity(Number(e.target.value))}
             placeholder="정원"
-            className="w-full rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+            className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
           />
           <label className="flex items-center gap-1.5 text-xs font-bold text-muted">
             <input
@@ -806,7 +806,7 @@ export default function ClassCard({
             .map((d) => (
               <div
                 key={d}
-                className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs"
+                className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
               >
                 <span>{formatIsoDateToKoreanShort(d)}</span>
                 <button
@@ -828,7 +828,7 @@ export default function ClassCard({
             required
             value={newHoliday}
             onChange={(e) => setNewHoliday(e.target.value)}
-            className="flex-1 rounded-md border border-line bg-background px-3 py-2.5 text-xs"
+            className="flex-1 rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
           />
           <button
             type="submit"

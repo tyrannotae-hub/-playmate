@@ -151,13 +151,13 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={ownerType === "club" ? "클럽/팀 이름" : "코치 이름"}
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           />
           <select
             required
             value={sportId}
             onChange={(e) => setSportId(e.target.value)}
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           >
             {sports.map((s) => (
               <option key={s.id} value={s.id}>
@@ -170,7 +170,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             <p className="mb-1.5 text-xs font-bold text-muted">운영 형태 (하나 이상 선택)</p>
             <div className="flex gap-2">
               <label
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2.5 text-sm font-bold transition ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-xs border py-2.5 text-sm font-bold transition ${
                   wantsAcademy ? "border-rink bg-rink-soft text-rink-deep" : "border-line text-muted"
                 }`}
               >
@@ -183,7 +183,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
                 아카데미
               </label>
               <label
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2.5 text-sm font-bold transition ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-xs border py-2.5 text-sm font-bold transition ${
                   wantsLesson ? "border-rink bg-rink-soft text-rink-deep" : "border-line text-muted"
                 }`}
               >
@@ -207,7 +207,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             value={businessRegNumber}
             onChange={(e) => setBusinessRegNumber(e.target.value)}
             placeholder="사업자등록번호 (선택, 나중에 정산 시 필요할 수 있어요)"
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           />
 
           <input
@@ -217,7 +217,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             onChange={(e) => setUsername(e.target.value.trim())}
             placeholder="아이디"
             autoCapitalize="none"
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           />
           <input
             type="password"
@@ -225,7 +225,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호"
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           />
           <p className="-mt-1 text-left text-xs text-muted">영문+숫자 포함 8자 이상</p>
           <input
@@ -234,7 +234,7 @@ export default function ClubSignupClient({ sports }: { sports: Sport[] }) {
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
             placeholder="비밀번호 확인"
-            className="w-full rounded-md border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
           />
         </div>
 

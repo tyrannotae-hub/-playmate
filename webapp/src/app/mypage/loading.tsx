@@ -10,14 +10,14 @@ export default function Loading() {
 
         <Skeleton className="mb-2.5 mt-6 h-4 w-16" />
         <div className="flex gap-2">
-          <Skeleton className="h-16 w-20 flex-shrink-0 rounded-2xl" />
-          <Skeleton className="h-16 w-20 flex-shrink-0 rounded-2xl" />
+          <Skeleton className="h-16 w-20 flex-shrink-0 rounded-xs" />
+          <Skeleton className="h-16 w-20 flex-shrink-0 rounded-xs" />
         </div>
 
         <Skeleton className="mb-2.5 mt-7 h-4 w-20" />
         <div className="flex flex-col gap-2.5">
-          <Skeleton className="h-20 rounded-2xl" />
-          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-xs" />
+          <Skeleton className="h-20 rounded-xs" />
         </div>
       </main>
     </>

@@ -79,7 +79,7 @@ export default async function HomePage({
         <div className="px-4 pt-4">
           <Link
             href="/recommend"
-            className="flex items-center gap-3 rounded-md bg-rink-deep px-4 py-4 text-white transition hover:opacity-90"
+            className="flex items-center gap-3 rounded-xs bg-rink-deep px-4 py-4 text-white transition hover:opacity-90"
           >
             {children.length >= 2 ? (
               <div className="flex shrink-0 -space-x-3">
@@ -101,20 +101,8 @@ export default async function HomePage({
                 {!children[0].photoUrl && children[0].name.slice(0, 1)}
               </div>
             ) : (
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="shrink-0"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M9.5 9.5a2.5 2.5 0 0 1 4.7 1.2c0 1.6-2.2 1.8-2.2 3.3" />
-                <path d="M12 17.5v.1" />
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" className="shrink-0">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm1 17h-2v-2h2Zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25Z" />
               </svg>
             )}
             <div className="min-w-0 flex-1">

@@ -81,7 +81,7 @@ function CategorySlot({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="카테고리 이름"
-            className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
           />
           <button
             type="submit"
@@ -203,7 +203,7 @@ function ExistingCategorySlot({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="카테고리 이름"
-          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
         />
         <button
           onClick={saveName}
@@ -224,7 +224,7 @@ function ExistingCategorySlot({
         {myClasses.map((c) => (
           <label
             key={c.id}
-            className="flex items-center gap-2.5 rounded-md border border-line px-3.5 py-2.5 text-sm"
+            className="flex items-center gap-2.5 rounded-xs border border-line px-3.5 py-2.5 text-sm"
           >
             <input
               type="checkbox"

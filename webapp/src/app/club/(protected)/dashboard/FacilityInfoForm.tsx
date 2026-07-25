@@ -114,7 +114,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
               key={r.code}
               type="button"
               onClick={() => toggleRegion(r.code)}
-              className={`rounded-md px-2.5 py-1.5 text-xs font-bold transition ${
+              className={`rounded-xs px-2.5 py-1.5 text-xs font-bold transition ${
                 regions.includes(r.code) ? "bg-rink text-white" : "bg-rink-soft text-rink-deep"
               }`}
             >
@@ -128,7 +128,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <input
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -136,7 +136,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
         <input
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -145,7 +145,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       <div>
@@ -154,7 +154,7 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
           value={instagramUrl}
           onChange={(e) => setInstagramUrl(e.target.value)}
           placeholder="https://www.instagram.com/우리클럽"
-          className="w-full rounded-md border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
         />
       </div>
       {errorMsg && <p className="text-xs text-negative">{errorMsg}</p>}

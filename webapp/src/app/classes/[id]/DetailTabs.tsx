@@ -154,7 +154,7 @@ export default function DetailTabs({
                     {r.photoUrls.map((url) => (
                       <div
                         key={url}
-                        className="h-16 w-16 shrink-0 rounded-md border border-line bg-surface-2 bg-cover bg-center"
+                        className="h-16 w-16 shrink-0 rounded-xs border border-line bg-surface-2 bg-cover bg-center"
                         style={{ backgroundImage: `url(${url})` }}
                       />
                     ))}

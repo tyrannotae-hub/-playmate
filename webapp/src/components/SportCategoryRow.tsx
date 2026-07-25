@@ -44,14 +44,10 @@ export default function SportCategoryRow({
             width="26"
             height="26"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            fill="currentColor"
             className={`transition-transform ${expanded ? "rotate-180" : ""}`}
           >
-            <path d="m6 9 6 6 6-6" />
+            <path d="M7 10l5 5 5-5z" />
           </svg>
           <p className="text-center text-xs font-bold">{expanded ? "접기" : "더보기"}</p>
         </button>

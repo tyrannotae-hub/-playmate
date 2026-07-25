@@ -37,18 +37,8 @@ export default function NotificationBell() {
       aria-label={count > 0 ? `알림 (안읽음 ${count}개)` : "알림"}
       className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
     >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M4.5 8a5.5 5.5 0 0 1 11 0c0 3 .8 4.2 1.5 5H3c.7-.8 1.5-2 1.5-5Z" />
-        <path d="M8.3 15.5a1.9 1.9 0 0 0 3.4 0" />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2Zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5S10.5 3.17 10.5 4v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1Z" />
       </svg>
       {count > 0 && (
         <span className="absolute right-0.5 top-0.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-negative px-1 text-[9px] font-bold leading-none text-white">

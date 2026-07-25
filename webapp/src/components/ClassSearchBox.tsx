@@ -28,21 +28,16 @@ export default function ClassSearchBox({
           width="16"
           height="16"
           viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          fill="currentColor"
           className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
         >
-          <circle cx="11" cy="11" r="6.5" />
-          <path d="m20 20-4.3-4.3" />
+          <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z" />
         </svg>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="클래스, 팀, 코치 이름으로 검색"
-          className="w-full rounded-md border border-line bg-surface py-3 pl-10 pr-3.5 text-sm"
+          className="w-full rounded-xs border border-line bg-surface py-3 pl-10 pr-3.5 text-sm"
         />
       </div>
     </form>

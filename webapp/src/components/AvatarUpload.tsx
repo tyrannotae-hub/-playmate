@@ -76,7 +76,7 @@ export default function AvatarUpload({
     <div className="flex items-center gap-3">
       <div
         className={`flex shrink-0 items-center justify-center overflow-hidden border border-line bg-surface-2 bg-cover bg-center text-sm font-bold text-muted ${
-          shape === "circle" ? "rounded-full" : "rounded-xl"
+          shape === "circle" ? "rounded-full" : "rounded-xs"
         }`}
         style={{
           width: size,

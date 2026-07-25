@@ -59,7 +59,7 @@ export default function ClubMenuDrawer({
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`btn-label rounded-md px-3 py-2.5 text-sm font-bold transition ${
+                  className={`btn-label rounded-xs px-3 py-2.5 text-sm font-bold transition ${
                     active
                       ? "bg-rink-soft text-rink-deep"
                       : "text-foreground hover:bg-rink-soft"
@@ -79,7 +79,7 @@ export default function ClubMenuDrawer({
               onClose();
               onLogout();
             }}
-            className="btn-label block w-full rounded-md px-3 py-2.5 text-left text-sm font-bold text-muted transition hover:bg-rink-soft"
+            className="btn-label block w-full rounded-xs px-3 py-2.5 text-left text-sm font-bold text-muted transition hover:bg-rink-soft"
           >
             로그아웃
           </button>

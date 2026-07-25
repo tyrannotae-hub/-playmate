@@ -32,10 +32,10 @@ export default function ClubNav({
             aria-label="메뉴 열기"
             className="-ml-1.5 flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-line/50"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M3 5h14" />
-              <path d="M3 10h14" />
-              <path d="M3 15h14" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="4" width="16" height="2.6" rx="1.3" />
+              <rect x="2" y="8.7" width="16" height="2.6" rx="1.3" />
+              <rect x="2" y="13.4" width="16" height="2.6" rx="1.3" />
             </svg>
           </button>
           <Image
@@ -43,7 +43,7 @@ export default function ClubNav({
             alt="PlayMate"
             width={28}
             height={28}
-            className="shrink-0 rounded-md"
+            className="shrink-0 rounded-xs"
           />
           <div className="min-w-0">
             <p className="btn-label text-xs font-bold text-muted">클럽 관리센터</p>

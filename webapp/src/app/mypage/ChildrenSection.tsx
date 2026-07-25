@@ -62,7 +62,7 @@ export default function ChildrenSection({
         {children.map((c) => (
           <div
             key={c.id}
-            className="flex items-center gap-3 rounded-md border border-line bg-surface p-3"
+            className="flex items-center gap-3 rounded-xs border border-line bg-surface p-3"
           >
             <AvatarUpload
               path={`${parentId}/child-${c.id}.jpg`}
@@ -79,7 +79,7 @@ export default function ChildrenSection({
         {!adding && (
           <button
             onClick={() => setAdding(true)}
-            className="rounded-md border border-dashed border-line px-4 py-3 text-left text-sm font-bold text-muted"
+            className="rounded-xs border border-dashed border-line px-4 py-3 text-left text-sm font-bold text-muted"
           >
             + 자녀 추가
           </button>
@@ -89,7 +89,7 @@ export default function ChildrenSection({
       {adding && (
         <form
           onSubmit={addChild}
-          className="mt-3 flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4"
+          className="mt-3 flex flex-col gap-3 rounded-xs border border-line bg-surface p-4"
         >
           <div>
             <label className="mb-1.5 block text-sm font-bold">자녀 이름</label>
@@ -98,7 +98,7 @@ export default function ChildrenSection({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="예: 서준"
-              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div>
@@ -108,7 +108,7 @@ export default function ChildrenSection({
               required
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}

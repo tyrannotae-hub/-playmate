@@ -103,7 +103,7 @@ export default function BookingRow({
           <div className="flex flex-wrap items-center gap-1.5">
             <p className="break-words font-bold">{booking.className}</p>
             <span
-              className={`btn-label inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+              className={`btn-label inline-flex items-center rounded-xs px-1.5 py-0.5 text-[10px] font-bold ${
                 booking.bookingType === "trial"
                   ? "bg-energy-soft text-[color:var(--foreground)]"
                   : "border border-line text-muted"
@@ -146,7 +146,7 @@ export default function BookingRow({
       </div>
 
       {booking.changeRequestedAt && (
-        <div className="mt-3 rounded-md border border-energy bg-energy-soft px-3 py-2.5">
+        <div className="mt-3 rounded-xs border border-energy bg-energy-soft px-3 py-2.5">
           <p className="text-xs font-bold text-[color:var(--foreground)]">
             변경 요청됨
             {booking.requestedScheduleLabel && ` · ${booking.requestedScheduleLabel}`}
@@ -182,7 +182,7 @@ export default function BookingRow({
       )}
 
       {booking.cancelRequestedAt && (
-        <div className="mt-3 rounded-md border border-negative bg-negative/5 px-3 py-2.5">
+        <div className="mt-3 rounded-xs border border-negative bg-negative/5 px-3 py-2.5">
           <p className="text-xs font-bold text-negative">취소 요청됨</p>
           {cancelErrorMsg && <p className="mt-1.5 text-xs text-negative">{cancelErrorMsg}</p>}
           <div className="mt-2 flex gap-2">

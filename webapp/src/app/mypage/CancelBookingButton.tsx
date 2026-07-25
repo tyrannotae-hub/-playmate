@@ -50,7 +50,7 @@ export default function CancelBookingButton({ booking }: { booking: Booking }) {
 
   if (booking.cancelRequestedAt) {
     return (
-      <div className="mt-3 rounded-md border border-negative bg-negative/5 px-3 py-2.5">
+      <div className="mt-3 rounded-xs border border-negative bg-negative/5 px-3 py-2.5">
         <p className="text-xs font-bold text-negative">취소 요청 중</p>
         <p className="mt-1 text-xs text-muted">클럽에서 승인하면 최종 취소돼요.</p>
         <button

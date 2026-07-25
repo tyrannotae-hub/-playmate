@@ -114,7 +114,7 @@ export default async function ClassDetailPage({
               · {item.facility.address}
             </p>
             {item.allowTrial && (
-              <span className="mt-2 inline-block rounded-md bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
+              <span className="mt-2 inline-block rounded-xs bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
                 원데이 체험 가능
               </span>
             )}

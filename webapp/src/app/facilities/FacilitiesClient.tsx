@@ -86,7 +86,7 @@ export default function FacilitiesClient({
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="flex-1 rounded-md border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="flex-1 rounded-xs border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="all">전체 지역</option>
             {regions.map((r) => (
@@ -98,7 +98,7 @@ export default function FacilitiesClient({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-md border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="rounded-xs border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="popular">인기순</option>
             <option value="rating">평점순</option>
