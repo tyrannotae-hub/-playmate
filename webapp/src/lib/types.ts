@@ -54,7 +54,6 @@ export type TeamClass = {
   bannerSubtitle?: string;
   price: number;
   priceUnit: string;
-  distanceKm: number;
   rating: number;
   reviewCount: number;
   wishCount: number;

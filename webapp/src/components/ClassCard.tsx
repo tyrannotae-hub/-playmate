@@ -3,6 +3,7 @@ import Link from "next/link";
 import { TeamClass } from "@/lib/types";
 import SportIcon from "@/components/icons/SportIcon";
 import { cardClass } from "@/lib/ui";
+import { regionLabel } from "@/lib/region-meta";
 import WishlistButton from "@/components/WishlistButton";
 import { effectivePrice, isDiscountActive } from "@/lib/pricing";
 
@@ -10,6 +11,11 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
   const schedule = item.schedules[0] as typeof item.schedules[number] | undefined;
   const isFull = !!schedule && schedule.booked >= schedule.capacity;
   const cover = item.images[0];
+  const region = item.regionCode
+    ? regionLabel(item.regionCode)
+    : item.facility.regions[0]
+      ? regionLabel(item.facility.regions[0])
+      : "";
 
   return (
     <Link
@@ -53,8 +59,12 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted tabular-nums">
-          <span>{item.distanceKm.toFixed(1)}km</span>
-          <span aria-hidden>·</span>
+          {region && (
+            <>
+              <span>{region}</span>
+              <span aria-hidden>·</span>
+            </>
+          )}
           <span>
             {item.showPrice ? (
               isDiscountActive(item) ? (

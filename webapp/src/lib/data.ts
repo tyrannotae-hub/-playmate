@@ -21,11 +21,6 @@ export async function getSports(): Promise<Sport[]> {
   return (data ?? []) as Sport[];
 }
 
-const DISTANCE_KM: Record<string, number> = {
-  "아이스웍스 역삼점": 0.8,
-  "제니스 스포츠클럽 아이스링크": 3.2,
-};
-
 type RawSchedule = {
   id: string;
   day_label: string;
@@ -193,7 +188,6 @@ function toTeamClass(
     bannerSubtitle: row.banner_subtitle ?? undefined,
     price: row.price,
     priceUnit: row.price_unit,
-    distanceKm: DISTANCE_KM[row.facility?.name ?? ""] ?? 1.5,
     rating,
     reviewCount: agg?.count ?? 0,
     wishCount: wishCounts.get(row.id) ?? 0,

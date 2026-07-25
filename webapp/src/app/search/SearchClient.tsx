@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
-import ClassCard from "@/components/ClassCard";
+import ClassCardCompact from "@/components/ClassCardCompact";
 import ClassSearchBox from "@/components/ClassSearchBox";
 import FacilityCard from "@/components/FacilityCard";
 import SportIcon from "@/components/icons/SportIcon";
@@ -12,10 +12,10 @@ import { regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import { effectivePrice } from "@/lib/pricing";
 
-type SortKey = "distance" | "rating" | "price";
+type SortKey = "recent" | "rating" | "price";
 
 const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
-  distance: (a, b) => a.distanceKm - b.distanceKm,
+  recent: (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
   rating: (a, b) => b.rating - a.rating,
   price: (a, b) => effectivePrice(a) - effectivePrice(b),
 };
@@ -44,7 +44,7 @@ export default function SearchClient({
   const [sportId, setSportId] = useState(initialSport);
   const [region, setRegion] = useState(initialRegion || "all");
   const [serviceType, setServiceType] = useState<ServiceType | "all">("all");
-  const [sort, setSort] = useState<SortKey>("distance");
+  const [sort, setSort] = useState<SortKey>("recent");
 
   const regions = useMemo(() => {
     const codes = Array.from(new Set(classes.flatMap((c) => c.facility.regions)));
@@ -175,7 +175,7 @@ export default function SearchClient({
             onChange={(e) => setSort(e.target.value as SortKey)}
             className="rounded-xs border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
-            <option value="distance">거리순</option>
+            <option value="recent">최신순</option>
             <option value="rating">평점순</option>
             <option value="price">가격순</option>
           </select>
@@ -199,16 +199,14 @@ export default function SearchClient({
           {region === "all" ? "전체 지역" : regionLabel(region)} · {results.length}개 결과
         </p>
 
-        <div className="flex flex-col gap-3 px-4">
+        <div className="grid grid-cols-2 gap-3 px-4">
           {results.map((c) => (
-            <ClassCard key={c.id} item={c} wished={wishedSet.has(c.id)} />
+            <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} variant="grid" />
           ))}
-          {results.length === 0 && (
-            <p className="py-10 text-center text-sm text-muted">
-              조건에 맞는 클래스가 아직 없어요.
-            </p>
-          )}
         </div>
+        {results.length === 0 && (
+          <p className="py-10 text-center text-sm text-muted">조건에 맞는 클래스가 아직 없어요.</p>
+        )}
       </main>
     </>
   );
