@@ -3,35 +3,54 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-type Banner = {
-  id: string;
-  title: string;
-  subtitle: string;
-  href: string;
-  className: string;
-};
+const PUFFINS_FACILITY_ID = "b59ee112-2b7d-4155-98ad-c30b4b828875";
+const PUFFINS_RINK_PHOTO =
+  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/cover.jpg";
+const PUFFINS_PROMO_PHOTO =
+  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/promo/626c4b06-9b06-4638-9f79-25d8275e64e5.jpg";
+
+type Banner =
+  | {
+      id: string;
+      href: string;
+      backgroundImageUrl?: string;
+      gradientClassName?: string;
+      layout: "logo";
+      caption: string;
+    }
+  | {
+      id: string;
+      href: string;
+      backgroundImageUrl?: string;
+      gradientClassName?: string;
+      layout: "text";
+      title: string;
+      subtitle: string;
+    };
 
 const BANNERS: Banner[] = [
   {
+    id: "playmate",
+    href: "/",
+    backgroundImageUrl: PUFFINS_RINK_PHOTO,
+    layout: "logo",
+    caption: "우리아이 체육은 플레이메이트랑 함께 시작해요",
+  },
+  {
+    id: "puffins",
+    href: `/facilities/${PUFFINS_FACILITY_ID}`,
+    backgroundImageUrl: PUFFINS_PROMO_PHOTO,
+    layout: "text",
+    title: "퍼핀스 아카데미",
+    subtitle: "역삼・목동・신사・동탄, 4개 지점 아이스하키 아카데미",
+  },
+  {
     id: "recommend",
-    title: "종목 추천받기",
-    subtitle: "아직 어떤 운동이 좋을지 모르겠다면? 3가지 질문으로 찾아드려요",
     href: "/recommend",
-    className: "bg-rink text-white",
-  },
-  {
-    id: "popular",
-    title: "인기 클래스 확인하기",
-    subtitle: "다른 부모들이 많이 찜한 클래스를 만나보세요",
-    href: "/#popular",
-    className: "bg-energy text-[#1a0e08]",
-  },
-  {
-    id: "search",
-    title: "우리 아이에게 맞는 클래스 찾기",
-    subtitle: "종목·지역으로 딱 맞는 클래스를 검색해보세요",
-    href: "/search",
-    className: "bg-rink-deep text-white",
+    gradientClassName: "bg-gradient-to-br from-rink-deep to-rink",
+    layout: "text",
+    title: "플레이메이트가 찾아줘요",
+    subtitle: "우리 아이에게 맞는 운동 찾기",
   },
 ];
 
@@ -68,16 +87,47 @@ export default function PromoBanner() {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mx-auto flex w-[85%] snap-x snap-mandatory overflow-x-auto rounded-md shadow-elevated [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {BANNERS.map((b) => (
           <Link
             key={b.id}
             href={b.href}
-            className={`flex aspect-square w-full shrink-0 snap-center flex-col justify-center gap-1.5 rounded-md px-4 ${b.className}`}
+            style={
+              b.backgroundImageUrl
+                ? { backgroundImage: `url(${b.backgroundImageUrl})` }
+                : undefined
+            }
+            className={`relative flex aspect-square w-full shrink-0 snap-center overflow-hidden rounded-md bg-cover bg-center text-white ${
+              b.gradientClassName ?? ""
+            }`}
           >
-            <p className="text-base font-extrabold">{b.title}</p>
-            <p className="text-xs opacity-90">{b.subtitle}</p>
+            {b.backgroundImageUrl && (
+              <div
+                className={`absolute inset-0 ${
+                  b.layout === "logo"
+                    ? "bg-gradient-to-b from-black/55 via-black/20 to-black/60"
+                    : "bg-gradient-to-t from-black/80 via-black/10 to-transparent"
+                }`}
+              />
+            )}
+
+            {b.layout === "logo" ? (
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 text-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/icon.png"
+                  alt="PlayMate"
+                  className="h-14 w-14 rounded-2xl shadow-elevated ring-1 ring-white/40"
+                />
+                <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
+              </div>
+            ) : (
+              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-4">
+                <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
+                <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
+              </div>
+            )}
           </Link>
         ))}
       </div>
