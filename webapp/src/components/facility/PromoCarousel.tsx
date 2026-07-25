@@ -62,14 +62,14 @@ export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
 
   if (images.length === 1) {
     return (
-      <div className="relative mx-auto w-[85%] overflow-hidden rounded-xs shadow-elevated">
+      <div className="relative overflow-hidden rounded-xl shadow-elevated">
         <Slide slide={images[0]} className="relative block aspect-video w-full" />
       </div>
     );
   }
 
   return (
-    <div className="relative mx-auto w-[85%] overflow-hidden rounded-xs shadow-elevated">
+    <div className="relative overflow-hidden rounded-xl shadow-elevated">
       <div
         ref={scrollRef}
         onScroll={handleScroll}

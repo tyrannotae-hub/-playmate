@@ -74,7 +74,7 @@ export default async function HomePage({
       <TopNav />
       <ServiceTypeTabs active={type} />
       <main className="pb-10">
-        <div className="pt-3">
+        <div className="px-4 pt-3">
           <PromoBanner />
         </div>
 

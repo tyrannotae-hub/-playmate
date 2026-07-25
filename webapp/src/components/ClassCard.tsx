@@ -22,7 +22,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
       href={`/classes/${item.id}`}
       className={cardClass("flex gap-3 transition hover:border-rink")}
     >
-      <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
+      <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="80px" className="object-cover" />
         ) : (

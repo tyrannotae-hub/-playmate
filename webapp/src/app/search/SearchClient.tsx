@@ -97,6 +97,7 @@ export default function SearchClient({
               variant: sportId === "all" ? "secondary" : "outline",
               size: "sm",
               full: false,
+              radius: "round",
               className: "flex-shrink-0",
             })}
           >
@@ -110,6 +111,7 @@ export default function SearchClient({
                 variant: sportId === s.id ? "secondary" : "outline",
                 size: "sm",
                 full: false,
+                radius: "round",
                 className: "flex-shrink-0",
               })}
             >
@@ -126,6 +128,7 @@ export default function SearchClient({
               variant: serviceType === "all" ? "secondary" : "outline",
               size: "sm",
               full: false,
+              radius: "round",
               className: "flex-1",
             })}
           >
@@ -137,6 +140,7 @@ export default function SearchClient({
               variant: serviceType === "academy" ? "secondary" : "outline",
               size: "sm",
               full: false,
+              radius: "round",
               className: "flex-1",
             })}
           >
@@ -148,6 +152,7 @@ export default function SearchClient({
               variant: serviceType === "lesson" ? "secondary" : "outline",
               size: "sm",
               full: false,
+              radius: "round",
               className: "flex-1",
             })}
           >
@@ -159,7 +164,7 @@ export default function SearchClient({
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="flex-1 rounded-xs border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="flex-1 rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="all">전체 지역</option>
             {regions.map((r) => (
@@ -171,7 +176,7 @@ export default function SearchClient({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-xs border border-line bg-surface px-3 py-2 text-sm font-semibold"
+            className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold"
           >
             <option value="recent">최신순</option>
             <option value="rating">평점순</option>

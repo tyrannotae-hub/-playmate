@@ -37,7 +37,7 @@ export default function ClassSearchBox({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="클래스, 팀, 코치 이름으로 검색"
-          className="w-full rounded-xs border border-line bg-surface py-3 pl-10 pr-3.5 text-sm"
+          className="w-full rounded-lg border border-line bg-surface py-3 pl-10 pr-3.5 text-sm"
         />
       </div>
     </form>

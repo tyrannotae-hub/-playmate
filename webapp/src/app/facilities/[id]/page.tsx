@@ -46,13 +46,15 @@ export default async function FacilityHomePage({
     <>
       <TopNav back />
       <main className="pb-10">
-        {heroImages.length > 0 ? (
-          <PromoCarousel images={heroImages} />
-        ) : (
-          <div className="flex aspect-square w-full items-center justify-center bg-rink-soft">
-            <span className="text-4xl">🏟️</span>
-          </div>
-        )}
+        <div className="px-4 pt-3">
+          {heroImages.length > 0 ? (
+            <PromoCarousel images={heroImages} />
+          ) : (
+            <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-rink-soft">
+              <span className="text-4xl">🏟️</span>
+            </div>
+          )}
+        </div>
 
         <div className="px-4 pt-4">
           <div className="flex items-start gap-3">

@@ -25,14 +25,18 @@ export function buttonClass({
   size = "md",
   className = "",
   full = true,
+  radius = "sharp",
 }: {
   variant?: ButtonVariant;
   size?: ButtonSize;
   className?: string;
   full?: boolean;
+  /** "sharp"(기본, rounded-xs) | "round"(검색/필터 칩용, rounded-lg) */
+  radius?: "sharp" | "round";
 } = {}) {
   return [
-    "btn-label inline-flex items-center justify-center gap-1.5 rounded-xs font-bold transition disabled:opacity-40 disabled:pointer-events-none",
+    "btn-label inline-flex items-center justify-center gap-1.5 font-bold transition disabled:opacity-40 disabled:pointer-events-none",
+    radius === "round" ? "rounded-lg" : "rounded-xs",
     full ? "w-full" : "",
     BUTTON_SIZES[size],
     BUTTON_VARIANTS[variant],
