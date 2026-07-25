@@ -125,7 +125,9 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
               if (!date) return <div key={j} />;
               const isToday = isSameDate(date, today);
               const isSelected = isSameDate(date, selectedDate);
-              const hasClasses = matchesForDate(classes, date).length > 0;
+              const dayMatches = matchesForDate(classes, date);
+              const hasRegular = dayMatches.some((m) => !m.isTrial);
+              const hasTrial = dayMatches.some((m) => m.isTrial);
               return (
                 <button
                   key={j}
@@ -139,10 +141,21 @@ export default function FacilityScheduleCalendar({ classes }: { classes: TeamCla
                   }`}
                 >
                   {date.getDate()}
-                  {hasClasses && (
-                    <span
-                      className={`h-1 w-1 rounded-full ${isSelected ? "bg-white" : "bg-rink"}`}
-                    />
+                  {(hasRegular || hasTrial) && (
+                    <span className="flex gap-0.5">
+                      {hasRegular && (
+                        <span
+                          className={`h-1 w-1 rounded-full ${isSelected ? "bg-white" : "bg-[#0d3f63]"}`}
+                          aria-label="정규 운영"
+                        />
+                      )}
+                      {hasTrial && (
+                        <span
+                          className={`h-1 w-1 rounded-full ${isSelected ? "bg-white/70" : "bg-[#ff6b35]"}`}
+                          aria-label="원데이 가능"
+                        />
+                      )}
+                    </span>
                   )}
                 </button>
               );

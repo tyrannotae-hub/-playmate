@@ -81,7 +81,7 @@ export default async function HomePage({
         <div className="px-4 pt-4">
           <Link
             href="/recommend"
-            className="flex items-center gap-3 rounded-xs bg-rink-deep px-4 py-4 text-white transition hover:opacity-90"
+            className="flex items-center gap-3 rounded-xs bg-[#0d3f63] px-4 py-4 text-white transition hover:opacity-90"
           >
             {children.length >= 2 ? (
               <div className="flex shrink-0 -space-x-3">
