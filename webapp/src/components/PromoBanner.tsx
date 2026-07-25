@@ -114,12 +114,9 @@ export default function PromoBanner() {
 
             {b.layout === "logo" ? (
               <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 text-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/icon.png"
-                  alt="PlayMate"
-                  className="h-14 w-14 rounded-2xl shadow-elevated ring-1 ring-white/40"
-                />
+                <p className="text-2xl font-extrabold tracking-tight">
+                  PlayMate<span className="text-energy">.</span>
+                </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
