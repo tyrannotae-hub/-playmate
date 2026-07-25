@@ -85,15 +85,16 @@ export default function PromoBanner() {
             }`}
           >
             {b.layout === "logo" ? (
-              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
                 <p className="text-2xl font-extrabold tracking-tight">
                   PlayMate<span className="text-energy">.</span>
                 </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
-              <div className="relative flex flex-1 flex-col justify-end px-4 pb-9 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
+              <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-9 [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
                 <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
+                <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
               </div>
             )}
           </Link>

@@ -11,7 +11,7 @@ export type PromoSlide = { url: string; title?: string; categoryId?: string };
 function SlideCaption({ title }: { title?: string }) {
   if (!title) return null;
   return (
-    <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
+    <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white [text-shadow:0_1px_1.5px_rgba(0,0,0,0.2)]">
       <p className="text-xl font-extrabold tracking-tight">{title}</p>
     </div>
   );
