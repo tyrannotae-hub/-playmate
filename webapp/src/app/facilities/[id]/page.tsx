@@ -35,7 +35,12 @@ export default async function FacilityHomePage({
   if (!facility) notFound();
 
   // 홍보 캐러셀에 올릴 사진이 아직 없으면, 예전 방식으로 올려둔 커버 사진 1장을 그대로 보여준다.
-  const heroImages = facility.promoImages.length > 0 ? facility.promoImages : facility.coverImageUrl ? [facility.coverImageUrl] : [];
+  const heroImages =
+    facility.promoImages.length > 0
+      ? facility.promoImages
+      : facility.coverImageUrl
+        ? [{ url: facility.coverImageUrl }]
+        : [];
 
   return (
     <>

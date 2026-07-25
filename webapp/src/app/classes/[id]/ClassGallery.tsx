@@ -7,9 +7,13 @@ import SportIcon from "@/components/icons/SportIcon";
 export default function ClassGallery({
   images,
   sportId,
+  bannerTitle,
+  bannerSubtitle,
 }: {
   images: string[];
   sportId: string;
+  bannerTitle?: string;
+  bannerSubtitle?: string;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -42,6 +46,15 @@ export default function ClassGallery({
           </div>
         ))}
       </div>
+      {(bannerTitle || bannerSubtitle) && (
+        <>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 px-5 text-white">
+            {bannerTitle && <p className="text-xl font-extrabold tracking-tight">{bannerTitle}</p>}
+            {bannerSubtitle && <p className="mt-1 text-xs text-white/85">{bannerSubtitle}</p>}
+          </div>
+        </>
+      )}
       {images.length > 1 && (
         <div className="absolute inset-x-0 bottom-2.5 flex justify-center gap-1.5">
           {images.map((_, i) => (

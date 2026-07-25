@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import ImageGalleryUploader from "@/components/ImageGalleryUploader";
+import { PromoImage } from "@/lib/club-data";
 
 // 클럽 홈 최상단 슬라이드 배너용 사진, 규격은 정방형 고정
 const MAX_IMAGES = 8;
@@ -12,7 +13,7 @@ export default function PromoImagesManager({
   initialImages,
 }: {
   facilityId: string;
-  initialImages: string[];
+  initialImages: PromoImage[];
 }) {
   const router = useRouter();
 
@@ -32,14 +33,28 @@ export default function PromoImagesManager({
     router.refresh();
   }
 
+  async function onCaptionSave(url: string, caption: { title: string; subtitle: string }) {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("facility_promo_images")
+      .update({ title: caption.title || null, subtitle: caption.subtitle || null })
+      .eq("url", url);
+    if (error) return;
+    router.refresh();
+  }
+
   return (
     <ImageGalleryUploader
       bucket="facility-covers"
       pathPrefix={`${facilityId}/promo`}
-      initialImages={initialImages}
+      initialImages={initialImages.map((img) => img.url)}
+      initialCaptions={Object.fromEntries(
+        initialImages.map((img) => [img.url, { title: img.title, subtitle: img.subtitle }])
+      )}
+      onCaptionSave={onCaptionSave}
       maxImages={MAX_IMAGES}
       label="홍보/이벤트 사진"
-      helperText="클럽 홈 최상단에 슬라이드로 노출돼요"
+      helperText="클럽 홈 최상단에 슬라이드로 노출돼요. 사진 위에 제목/소제목 문구를 얹을 수 있어요."
       afterUpload={afterUpload}
       onDelete={onDelete}
     />

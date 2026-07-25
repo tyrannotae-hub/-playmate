@@ -5,7 +5,22 @@ import { useEffect, useRef, useState } from "react";
 
 const AUTO_SLIDE_MS = 4000;
 
-export default function PromoCarousel({ images }: { images: string[] }) {
+export type PromoSlide = { url: string; title?: string; subtitle?: string };
+
+function SlideCaption({ title, subtitle }: { title?: string; subtitle?: string }) {
+  if (!title && !subtitle) return null;
+  return (
+    <>
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+      <div className="absolute inset-x-0 bottom-6 px-5 text-white">
+        {title && <p className="text-xl font-extrabold tracking-tight">{title}</p>}
+        {subtitle && <p className="mt-1 text-xs text-white/85">{subtitle}</p>}
+      </div>
+    </>
+  );
+}
+
+export default function PromoCarousel({ images }: { images: PromoSlide[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
@@ -25,7 +40,8 @@ export default function PromoCarousel({ images }: { images: string[] }) {
   if (images.length === 1) {
     return (
       <div className="relative aspect-square w-full">
-        <Image src={images[0]} alt="" fill sizes="100vw" className="object-cover" />
+        <Image src={images[0].url} alt="" fill sizes="100vw" className="object-cover" />
+        <SlideCaption title={images[0].title} subtitle={images[0].subtitle} />
       </div>
     );
   }
@@ -43,9 +59,10 @@ export default function PromoCarousel({ images }: { images: string[] }) {
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {images.map((url, i) => (
+        {images.map((slide, i) => (
           <div key={i} className="relative aspect-square w-full shrink-0 snap-center">
-            <Image src={url} alt="" fill sizes="100vw" className="object-cover" />
+            <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover" />
+            <SlideCaption title={slide.title} subtitle={slide.subtitle} />
           </div>
         ))}
       </div>

@@ -50,6 +50,8 @@ export type TeamClass = {
   classType: "individual" | "group" | "team";
   serviceType: ServiceType;
   regionCode?: string;
+  bannerTitle?: string;
+  bannerSubtitle?: string;
   price: number;
   priceUnit: string;
   distanceKm: number;
@@ -221,7 +223,7 @@ export type FacilityHome = {
   description: string;
   coverImageUrl: string;
   profileImageUrl: string;
-  promoImages: string[];
+  promoImages: { url: string; title?: string; subtitle?: string }[];
   homeCategories: FacilityHomeCategory[];
   instagramUrl: string;
   ownerType: "club" | "solo_coach";
@@ -255,6 +257,8 @@ export type ClubClass = {
   classType: "individual" | "group" | "team";
   serviceType: ServiceType;
   regionCode?: string;
+  bannerTitle?: string;
+  bannerSubtitle?: string;
   price: number;
   priceUnit: string;
   schedules: ClubSchedule[];

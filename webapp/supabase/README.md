@@ -46,6 +46,9 @@ README부터 읽으세요.**
   `request_booking_change()`를 한 번 더 갱신).
 - `class-holiday-per-schedule.sql` — ✅ 최신. 원데이 휴무도 `class_holidays.
   class_schedule_id`로 시간대 단위 지정 가능(null이면 클래스 전체 휴무).
+- `banner-captions.sql` — ✅ 최신. `facility_promo_images`(사진별)와
+  `teams_classes.banner_title`/`banner_subtitle`(클래스 대표사진에 한 벌)에
+  배너용 제목/소제목 텍스트 추가. 제목 20자·소제목 40자 DB 체크 제약.
 - `class-region.sql` — ✅ 최신. `teams_classes.region_code`(선택) 추가 — 한
   시설이 여러 지점을 운영할 때 클래스마다 실제 위치를 지정. 비어있으면
   검색에서 기존처럼 시설 단위 지역(`facility_regions`)으로 매칭됨.

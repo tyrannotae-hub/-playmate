@@ -40,6 +40,8 @@ export default function ClassesClient({
     offersAcademy ? "academy" : "lesson"
   );
   const [regionCode, setRegionCode] = useState("");
+  const [bannerTitle, setBannerTitle] = useState("");
+  const [bannerSubtitle, setBannerSubtitle] = useState("");
   const [price, setPrice] = useState(150000);
   const [priceUnit, setPriceUnit] = useState("월");
   const [dayLabel, setDayLabel] = useState("");
@@ -81,6 +83,8 @@ export default function ClassesClient({
         class_type: classType,
         service_type: serviceType,
         region_code: regionCode || null,
+        banner_title: bannerTitle.trim() || null,
+        banner_subtitle: bannerSubtitle.trim() || null,
         price,
         price_unit: priceUnit,
         collect_height: collectHeight,
@@ -143,6 +147,8 @@ export default function ClassesClient({
     setTrialPrice("");
     setServiceType(offersAcademy ? "academy" : "lesson");
     setRegionCode("");
+    setBannerTitle("");
+    setBannerSubtitle("");
     router.refresh();
   }
 
@@ -290,6 +296,27 @@ export default function ClassesClient({
               ))}
             </select>
           </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              배너 문구 <span className="font-normal">(선택, 클래스 대표사진 위에 표시돼요)</span>
+            </label>
+            <input
+              value={bannerTitle}
+              onChange={(e) => setBannerTitle(e.target.value.slice(0, 20))}
+              maxLength={20}
+              placeholder="제목 (최대 20자)"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+            <input
+              value={bannerSubtitle}
+              onChange={(e) => setBannerSubtitle(e.target.value.slice(0, 40))}
+              maxLength={40}
+              placeholder="소제목 (최대 40자)"
+              className="mt-2 w-full rounded-xs border border-line bg-background px-3.5 py-3 text-xs"
+            />
+          </div>
+
           <div className="flex gap-2">
             <div className="min-w-0 flex-1">
               <label className="mb-1.5 block text-xs font-bold text-muted">최소 나이</label>

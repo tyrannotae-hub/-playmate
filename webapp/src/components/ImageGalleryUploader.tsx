@@ -10,6 +10,8 @@ import { resizeImageToCover } from "@/lib/image-resize";
 // afterUpload/onDelete 콜백으로 호출자에게 위임한다.
 const IMAGE_PIXELS = 960;
 
+type Caption = { title: string; subtitle: string };
+
 export default function ImageGalleryUploader({
   bucket,
   pathPrefix,
@@ -19,6 +21,8 @@ export default function ImageGalleryUploader({
   helperText,
   afterUpload,
   onDelete,
+  initialCaptions,
+  onCaptionSave,
 }: {
   bucket: string;
   pathPrefix: string;
@@ -28,12 +32,34 @@ export default function ImageGalleryUploader({
   helperText?: string;
   afterUpload: (publicUrl: string, sortOrder: number) => Promise<void>;
   onDelete: (url: string) => Promise<void>;
+  /** 넣으면 사진마다 배너 제목/소제목을 입력할 수 있는 편집 영역이 함께 나온다. */
+  initialCaptions?: Record<string, Caption>;
+  onCaptionSave?: (url: string, caption: Caption) => Promise<void>;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState(initialImages);
+  const [captions, setCaptions] = useState<Record<string, Caption>>(initialCaptions ?? {});
+  const [savingCaption, setSavingCaption] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const inputId = `image-gallery-input-${pathPrefix.replace(/[^a-zA-Z0-9]/g, "-")}`;
+  const TITLE_MAX = 20;
+  const SUBTITLE_MAX = 40;
+
+  function captionOf(url: string): Caption {
+    return captions[url] ?? { title: "", subtitle: "" };
+  }
+
+  function setCaptionField(url: string, field: keyof Caption, value: string) {
+    setCaptions((prev) => ({ ...prev, [url]: { ...captionOf(url), [field]: value } }));
+  }
+
+  async function saveCaption(url: string) {
+    if (!onCaptionSave) return;
+    setSavingCaption(url);
+    await onCaptionSave(url, captionOf(url));
+    setSavingCaption(null);
+  }
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -69,6 +95,11 @@ export default function ImageGalleryUploader({
   async function deleteImage(url: string) {
     await onDelete(url);
     setImages((prev) => prev.filter((u) => u !== url));
+    setCaptions((prev) => {
+      const next = { ...prev };
+      delete next[url];
+      return next;
+    });
   }
 
   return (
@@ -111,6 +142,42 @@ export default function ImageGalleryUploader({
         )}
       </div>
       {errorMsg && <p className="mt-1.5 text-xs text-negative">{errorMsg}</p>}
+
+      {onCaptionSave && images.length > 0 && (
+        <div className="mt-3 flex flex-col gap-2.5">
+          <p className="text-xs font-bold text-muted">사진 위에 표시할 문구 (선택)</p>
+          {images.map((url) => {
+            const caption = captionOf(url);
+            return (
+              <div key={url} className="flex items-center gap-2.5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-xs object-cover" />
+                <div className="min-w-0 flex-1">
+                  <input
+                    value={caption.title}
+                    onChange={(e) => setCaptionField(url, "title", e.target.value.slice(0, TITLE_MAX))}
+                    onBlur={() => saveCaption(url)}
+                    maxLength={TITLE_MAX}
+                    placeholder="제목"
+                    className="w-full rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
+                  />
+                  <input
+                    value={caption.subtitle}
+                    onChange={(e) =>
+                      setCaptionField(url, "subtitle", e.target.value.slice(0, SUBTITLE_MAX))
+                    }
+                    onBlur={() => saveCaption(url)}
+                    maxLength={SUBTITLE_MAX}
+                    placeholder="소제목"
+                    className="mt-1 w-full rounded-xs border border-line bg-background px-2.5 py-1.5 text-[11px]"
+                  />
+                </div>
+                {savingCaption === url && <span className="shrink-0 text-[10px] text-muted">저장중</span>}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

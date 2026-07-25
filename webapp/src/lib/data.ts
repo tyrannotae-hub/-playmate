@@ -44,6 +44,8 @@ type RawClass = {
   class_type: "individual" | "group" | "team";
   service_type: "academy" | "lesson";
   region_code: string | null;
+  banner_title: string | null;
+  banner_subtitle: string | null;
   price: number;
   price_unit: string;
   description: string | null;
@@ -187,6 +189,8 @@ function toTeamClass(
     classType: row.class_type,
     serviceType: row.service_type,
     regionCode: row.region_code ?? undefined,
+    bannerTitle: row.banner_title ?? undefined,
+    bannerSubtitle: row.banner_subtitle ?? undefined,
     price: row.price,
     priceUnit: row.price_unit,
     distanceKm: DISTANCE_KM[row.facility?.name ?? ""] ?? 1.5,
@@ -390,7 +394,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     wishCountMap(),
     supabase
       .from("facility_promo_images")
-      .select("url")
+      .select("url, title, subtitle")
       .eq("facility_id", facilityId)
       .order("sort_order", { ascending: true }),
     supabase
@@ -428,7 +432,11 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     description: facility.description ?? "",
     coverImageUrl: facility.cover_image_url ?? "",
     profileImageUrl: facility.profile_image_url ?? "",
-    promoImages: (promoRows ?? []).map((r) => r.url),
+    promoImages: (promoRows ?? []).map((r) => ({
+      url: r.url,
+      title: r.title ?? undefined,
+      subtitle: r.subtitle ?? undefined,
+    })),
     homeCategories: (
       (categoryRows ?? []) as unknown as {
         id: string;

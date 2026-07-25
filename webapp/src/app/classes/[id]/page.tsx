@@ -45,7 +45,12 @@ export default async function ClassDetailPage({
     <>
       <TopNav back />
       <main className="pb-36">
-        <ClassGallery images={item.images} sportId={item.sportId} />
+        <ClassGallery
+          images={item.images}
+          sportId={item.sportId}
+          bannerTitle={item.bannerTitle}
+          bannerSubtitle={item.bannerSubtitle}
+        />
 
         <div className="px-4 pt-4">
           <div className="flex flex-col gap-1">

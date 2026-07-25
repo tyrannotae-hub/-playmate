@@ -50,6 +50,8 @@ export default function ClassCard({
   const [editClassType, setEditClassType] = useState(item.classType);
   const [editServiceType, setEditServiceType] = useState(item.serviceType);
   const [editRegionCode, setEditRegionCode] = useState(item.regionCode ?? "");
+  const [editBannerTitle, setEditBannerTitle] = useState(item.bannerTitle ?? "");
+  const [editBannerSubtitle, setEditBannerSubtitle] = useState(item.bannerSubtitle ?? "");
   const [editAgeMin, setEditAgeMin] = useState(item.ageMin);
   const [editAgeMax, setEditAgeMax] = useState(item.ageMax);
   const [editPrice, setEditPrice] = useState(item.price);
@@ -129,6 +131,8 @@ export default function ClassCard({
         class_type: editClassType,
         service_type: editServiceType,
         region_code: editRegionCode || null,
+        banner_title: editBannerTitle.trim() || null,
+        banner_subtitle: editBannerSubtitle.trim() || null,
         age_min: editAgeMin,
         age_max: editAgeMax,
         price: editPrice,
@@ -434,6 +438,26 @@ export default function ClassCard({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              배너 문구 <span className="font-normal">(선택, 클래스 대표사진 위에 표시돼요)</span>
+            </label>
+            <input
+              value={editBannerTitle}
+              onChange={(e) => setEditBannerTitle(e.target.value.slice(0, 20))}
+              maxLength={20}
+              placeholder="제목 (최대 20자)"
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            />
+            <input
+              value={editBannerSubtitle}
+              onChange={(e) => setEditBannerSubtitle(e.target.value.slice(0, 40))}
+              maxLength={40}
+              placeholder="소제목 (최대 40자)"
+              className="mt-2 w-full rounded-xs border border-line bg-background px-3.5 py-3 text-xs"
+            />
           </div>
 
           <div>
