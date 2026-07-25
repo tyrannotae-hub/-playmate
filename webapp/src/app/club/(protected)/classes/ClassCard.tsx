@@ -313,7 +313,7 @@ export default function ClassCard({
               {item.showPrice ? `${item.price.toLocaleString()}원/${item.priceUnit}` : "가격 비공개"}
             </p>
             {item.allowTrial && (
-              <span className="mt-1 inline-block rounded-xs bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
+              <span className="mt-1 inline-block rounded-xs bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
                 원데이 체험 가능
                 {item.trialPrice != null && ` · ${item.trialPrice.toLocaleString()}원`}
               </span>

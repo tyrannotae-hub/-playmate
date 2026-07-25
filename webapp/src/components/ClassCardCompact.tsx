@@ -42,11 +42,11 @@ export default function ClassCardCompact({
           />
         </div>
         <div className="absolute left-1.5 top-1.5 flex gap-1">
-          <span className="rounded-xs bg-foreground/70 px-1.5 py-0.5 text-[10px] font-bold text-background">
+          <span className="rounded-xs bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
             정기
           </span>
           {item.allowTrial && (
-            <span className="rounded-xs bg-rink px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-xs bg-[#1768ac] px-1.5 py-0.5 text-[10px] font-bold text-white">
               원데이
             </span>
           )}

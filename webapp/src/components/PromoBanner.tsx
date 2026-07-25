@@ -47,7 +47,7 @@ const BANNERS: Banner[] = [
   {
     id: "recommend",
     href: "/recommend",
-    gradientClassName: "bg-gradient-to-br from-rink-deep to-rink",
+    gradientClassName: "bg-gradient-to-br from-[#0d3f63] to-[#1768ac]",
     layout: "text",
     title: "플레이메이트가 찾아줘요",
     subtitle: "우리 아이에게 맞는 운동 찾기",

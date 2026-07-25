@@ -33,7 +33,7 @@ export default function ClassCard({ item, wished = false }: { item: TeamClass; w
             </div>
             <h3 className="break-words text-base font-bold">{item.name}</h3>
             {item.allowTrial && (
-              <span className="mt-1 inline-block rounded-xs bg-rink/10 px-2 py-0.5 text-[11px] font-bold text-rink-deep">
+              <span className="mt-1 inline-block rounded-xs bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
                 원데이 체험 가능
               </span>
             )}

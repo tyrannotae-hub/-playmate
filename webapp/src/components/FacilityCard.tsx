@@ -26,7 +26,7 @@ export default function FacilityCard({
         ) : (
           <span className="text-3xl">🏟️</span>
         )}
-        <span className="absolute left-1.5 top-1.5 rounded-xs bg-foreground/80 px-1.5 py-0.5 text-[10px] font-bold text-background">
+        <span className="absolute left-1.5 top-1.5 rounded-xs bg-black/80 px-1.5 py-0.5 text-[10px] font-bold text-white">
           {item.ownerType === "solo_coach" ? "개인 코치" : "클럽"}
         </span>
         <div className="absolute right-1.5 top-1.5">
