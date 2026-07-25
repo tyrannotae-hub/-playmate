@@ -65,7 +65,11 @@ export default function SearchClient({
     const bySport =
       sportId === "all" ? byQuery : byQuery.filter((c) => c.sportId === sportId);
     const byRegion =
-      region === "all" ? bySport : bySport.filter((c) => c.facility.regions.includes(region));
+      region === "all"
+        ? bySport
+        : bySport.filter((c) =>
+            c.regionCode ? c.regionCode === region : c.facility.regions.includes(region)
+          );
     const byServiceType =
       serviceType === "all" ? byRegion : byRegion.filter((c) => c.serviceType === serviceType);
     return [...byServiceType].sort(SORTERS[sort]);

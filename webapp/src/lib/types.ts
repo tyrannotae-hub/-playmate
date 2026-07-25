@@ -49,6 +49,7 @@ export type TeamClass = {
   ageMax: number;
   classType: "individual" | "group" | "team";
   serviceType: ServiceType;
+  regionCode?: string;
   price: number;
   priceUnit: string;
   distanceKm: number;
@@ -253,6 +254,7 @@ export type ClubClass = {
   ageMax: number;
   classType: "individual" | "group" | "team";
   serviceType: ServiceType;
+  regionCode?: string;
   price: number;
   priceUnit: string;
   schedules: ClubSchedule[];

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import { REGION_OPTIONS } from "@/lib/region-meta";
 import DayLabelPicker from "@/components/club/DayLabelPicker";
 import ClassCard from "./ClassCard";
 
@@ -38,6 +39,7 @@ export default function ClassesClient({
   const [serviceType, setServiceType] = useState<"academy" | "lesson">(
     offersAcademy ? "academy" : "lesson"
   );
+  const [regionCode, setRegionCode] = useState("");
   const [price, setPrice] = useState(150000);
   const [priceUnit, setPriceUnit] = useState("월");
   const [dayLabel, setDayLabel] = useState("");
@@ -78,6 +80,7 @@ export default function ClassesClient({
         age_max: ageMax,
         class_type: classType,
         service_type: serviceType,
+        region_code: regionCode || null,
         price,
         price_unit: priceUnit,
         collect_height: collectHeight,
@@ -139,6 +142,7 @@ export default function ClassesClient({
     setAllowTrial(false);
     setTrialPrice("");
     setServiceType(offersAcademy ? "academy" : "lesson");
+    setRegionCode("");
     router.refresh();
   }
 
@@ -268,6 +272,23 @@ export default function ClassesClient({
                 })}
               </div>
             )}
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              지역 <span className="font-normal">(선택, 시설이 여러 지점을 운영할 때 이 클래스가 있는 지역)</span>
+            </label>
+            <select
+              value={regionCode}
+              onChange={(e) => setRegionCode(e.target.value)}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            >
+              <option value="">선택 안 함</option>
+              {REGION_OPTIONS.map((r) => (
+                <option key={r.code} value={r.code}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex gap-2">
             <div className="min-w-0 flex-1">

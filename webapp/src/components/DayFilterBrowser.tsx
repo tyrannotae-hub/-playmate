@@ -47,7 +47,12 @@ export default function DayFilterBrowser({
       })
       .filter((row): row is { item: TeamClass; schedule: TeamClass["schedules"][number] } => {
         if (!row) return false;
-        if (region !== "all" && !row.item.facility.regions.includes(region)) return false;
+        if (region !== "all") {
+          const matchesRegion = row.item.regionCode
+            ? row.item.regionCode === region
+            : row.item.facility.regions.includes(region);
+          if (!matchesRegion) return false;
+        }
         if (sportId !== "all" && row.item.sportId !== sportId) return false;
         return true;
       });

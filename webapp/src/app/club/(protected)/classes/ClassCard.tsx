@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
+import { REGION_OPTIONS, regionLabel } from "@/lib/region-meta";
 import SportIcon from "@/components/icons/SportIcon";
 import ClassMediaManager from "./ClassMediaManager";
 import DayLabelPicker from "@/components/club/DayLabelPicker";
@@ -48,6 +49,7 @@ export default function ClassCard({
   const [editSportId, setEditSportId] = useState(item.sportId);
   const [editClassType, setEditClassType] = useState(item.classType);
   const [editServiceType, setEditServiceType] = useState(item.serviceType);
+  const [editRegionCode, setEditRegionCode] = useState(item.regionCode ?? "");
   const [editAgeMin, setEditAgeMin] = useState(item.ageMin);
   const [editAgeMax, setEditAgeMax] = useState(item.ageMax);
   const [editPrice, setEditPrice] = useState(item.price);
@@ -126,6 +128,7 @@ export default function ClassCard({
         sport_id: editSportId,
         class_type: editClassType,
         service_type: editServiceType,
+        region_code: editRegionCode || null,
         age_min: editAgeMin,
         age_max: editAgeMax,
         price: editPrice,
@@ -311,6 +314,7 @@ export default function ClassCard({
             <p className="mt-1 text-xs text-muted">
               {item.ageMin}~{item.ageMax}세 ·{" "}
               {item.showPrice ? `${item.price.toLocaleString()}원/${item.priceUnit}` : "가격 비공개"}
+              {item.regionCode && ` · ${regionLabel(item.regionCode)}`}
             </p>
             {item.allowTrial && (
               <span className="mt-1 inline-block rounded-xs bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
@@ -413,6 +417,24 @@ export default function ClassCard({
               </div>
             </div>
           )}
+
+          <div>
+            <label className="mb-1.5 block text-xs font-bold text-muted">
+              지역 <span className="font-normal">(선택, 시설이 여러 지점을 운영할 때 이 클래스가 있는 지역)</span>
+            </label>
+            <select
+              value={editRegionCode}
+              onChange={(e) => setEditRegionCode(e.target.value)}
+              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            >
+              <option value="">선택 안 함</option>
+              {REGION_OPTIONS.map((r) => (
+                <option key={r.code} value={r.code}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div>
             <label className="mb-1.5 block text-xs font-bold text-muted">
