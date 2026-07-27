@@ -90,14 +90,14 @@ export default function PromoBanner() {
             )}
             {b.layout === "logo" ? (
               <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center">
-                <p className="text-2xl font-extrabold tracking-tight">
+                <p className="font-banner-title text-2xl tracking-tight">
                   PlayMate<span className="text-energy">.</span>
                 </p>
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (
               <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-9">
-                <p className="text-lg font-extrabold tracking-tight">{b.title}</p>
+                <p className="font-banner-title text-lg tracking-tight">{b.title}</p>
                 <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
               </div>
             )}

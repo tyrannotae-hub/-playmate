@@ -1,6 +1,26 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
+
+// 본문용 그로테스크 — 브라우저 로컬 폰트에만 기대지 않도록 직접 셀프호스팅한다.
+const pretendard = localFont({
+  src: "../fonts/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  weight: "45 920",
+  display: "swap",
+});
+
+// 제목/배너용 디스플레이 폰트 — SemiBold(배너)/Bold(그 외 제목)를 한 family로 묶어
+// font-weight로 자동 선택되게 한다.
+const paperlogy = localFont({
+  src: [
+    { path: "../fonts/Paperlogy-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Paperlogy-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-paperlogy",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "PlayMate — 아이에게 맞는 운동을 찾는 가장 빠른 길",
@@ -14,7 +34,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className="h-full antialiased">
+    <html
+      lang="ko"
+      className={`h-full antialiased ${pretendard.variable} ${paperlogy.variable}`}
+    >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <AppShell>{children}</AppShell>
       </body>

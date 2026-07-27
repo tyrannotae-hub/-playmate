@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import CategoryDrawer from "./CategoryDrawer";
 import NotificationBell from "./NotificationBell";
+import PlayMateLogo from "./PlayMateLogo";
 
 export default function TopNav({
   title,
@@ -44,8 +45,8 @@ export default function TopNav({
           {title ? (
             <h1 className="text-base font-bold">{title}</h1>
           ) : (
-            <Link href="/" className="text-lg font-extrabold tracking-tight">
-              PlayMate<span className="text-energy">.</span>
+            <Link href="/" aria-label="PlayMate 홈">
+              <PlayMateLogo />
             </Link>
           )}
           <div className="-mr-1.5 ml-auto flex items-center">

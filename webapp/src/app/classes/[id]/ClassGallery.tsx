@@ -32,7 +32,7 @@ export default function ClassGallery({
             <>
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
               <div className="pointer-events-none absolute inset-x-0 bottom-6 px-5 text-white">
-                {bannerTitle && <p className="text-xl font-extrabold tracking-tight">{bannerTitle}</p>}
+                {bannerTitle && <p className="font-banner-title text-xl tracking-tight">{bannerTitle}</p>}
                 {bannerSubtitle && <p className="mt-1 text-xs text-white/85">{bannerSubtitle}</p>}
               </div>
             </>

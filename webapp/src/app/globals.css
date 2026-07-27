@@ -85,8 +85,21 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
-    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: var(--font-pretendard), "Pretendard Variable", "Pretendard", -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+/* 제목류(h1/h2)는 사이트 전용 디스플레이 폰트(Paperlogy Bold)로 — 본문 그로테스크와 구분 */
+h1,
+h2 {
+  font-family: var(--font-paperlogy), var(--font-pretendard), sans-serif;
+  font-weight: 700;
+}
+
+/* 배너 타이틀 전용 — 같은 디스플레이 폰트지만 좀 더 차분한 SemiBold */
+.font-banner-title {
+  font-family: var(--font-paperlogy), var(--font-pretendard), sans-serif;
+  font-weight: 600;
 }
 
 .shadow-card {
