@@ -14,6 +14,7 @@ export type Facility = {
   address: string;
   phone: string;
   instagramUrl: string;
+  profileImageUrl?: string;
 };
 
 export type ServiceType = "academy" | "lesson";

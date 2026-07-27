@@ -1,18 +1,20 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
+import SportIcon from "@/components/icons/SportIcon";
 import {
   getClassById,
   getCurrentParent,
   getMyInstructorWishlistIds,
   getMyWishlistIds,
   getReviewsForClass,
+  getSports,
 } from "@/lib/data";
 import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
-import FacilityContactLinks from "@/components/FacilityContactLinks";
 import {
   effectivePrice,
   effectiveTrialPrice,
@@ -29,10 +31,11 @@ export default async function ClassDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [item, reviews, user] = await Promise.all([
+  const [item, reviews, user, sports] = await Promise.all([
     getClassById(id),
     getReviewsForClass(id),
     getCurrentParent(),
+    getSports(),
   ]);
   if (!item) notFound();
 
@@ -40,6 +43,15 @@ export default async function ClassDetailPage({
     ? await Promise.all([getMyWishlistIds(user.id), getMyInstructorWishlistIds(user.id)])
     : [[], []];
   const wished = wishedIds.includes(item.id);
+  const sport = sports.find((s) => s.id === item.sportId);
+
+  const discountPct = isDiscountActive(item)
+    ? Math.round((1 - effectivePrice(item) / item.price) * 100)
+    : null;
+  const trialDiscountPct =
+    item.allowTrial && item.trialPrice != null && isTrialDiscountActive(item)
+      ? Math.round((1 - effectiveTrialPrice(item)! / item.trialPrice) * 100)
+      : null;
 
   return (
     <>
@@ -50,82 +62,141 @@ export default async function ClassDetailPage({
           sportId={item.sportId}
           bannerTitle={item.bannerTitle}
           bannerSubtitle={item.bannerSubtitle}
+          phone={item.facility.phone}
+          instagramUrl={item.facility.instagramUrl}
+          facilityName={item.facility.name}
         />
 
         <div className="px-4 pt-4">
-          <div className="flex flex-col gap-1">
-            <p className="text-lg font-extrabold tabular-nums">
-              <span className="mr-1.5 text-sm font-bold text-muted">정기</span>
-              {item.showPrice ? (
-                isDiscountActive(item) ? (
-                  <>
-                    <span className="text-sm text-muted line-through">
-                      {item.priceUnit} {item.price.toLocaleString()}원
-                    </span>{" "}
-                    <span className="text-energy">
-                      {item.priceUnit} {effectivePrice(item).toLocaleString()}원
-                    </span>
-                  </>
-                ) : (
-                  `${item.priceUnit} ${item.price.toLocaleString()}원`
-                )
-              ) : (
-                "가격문의"
-              )}
-            </p>
-            {item.allowTrial && item.trialPrice != null && (
-              <p className="text-lg font-extrabold tabular-nums">
-                <span className="mr-1.5 text-sm font-bold text-muted">원데이</span>
-                {item.showTrialPrice ? (
-                  isTrialDiscountActive(item) ? (
-                    <>
-                      <span className="text-sm text-muted line-through">
-                        {item.trialPrice.toLocaleString()}원
-                      </span>{" "}
-                      <span className="text-energy">
-                        {effectiveTrialPrice(item)!.toLocaleString()}원
-                      </span>
-                    </>
-                  ) : (
-                    `${item.trialPrice.toLocaleString()}원`
-                  )
-                ) : (
-                  "가격문의"
-                )}
-              </p>
+          <div className="mb-2.5 flex items-center gap-1.5">
+            {sport && (
+              <span className="btn-label inline-flex items-center gap-1 rounded-xs bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+                <SportIcon sportId={sport.id} size={14} /> {sport.name}
+              </span>
             )}
-            <p className="mt-1 text-xs text-muted">현장 결제 또는 계좌이체로 진행돼요</p>
-          </div>
-
-          <div className="mt-5 border-t border-line pt-5">
-            <div className="flex items-start justify-between gap-3">
-              <Link href={`/facilities/${item.facility.id}`} className="text-xs font-bold text-rink-deep">
-                {item.facility.name} {">"}
-              </Link>
-              <div className="flex shrink-0 items-center gap-1">
-                <FacilityContactLinks
-                  phone={item.facility.phone}
-                  instagramUrl={item.facility.instagramUrl}
-                  facilityName={item.facility.name}
-                />
-                <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
-              </div>
-            </div>
-            <h1 className="mt-1 text-xl font-extrabold">{item.name}</h1>
-            <p className="mt-1.5 text-sm text-muted">
-              {item.reviewCount > 0
-                ? `★ ${item.rating} (리뷰 ${item.reviewCount})`
-                : "아직 리뷰가 없어요"}{" "}
-              · {item.facility.address}
-            </p>
             {item.allowTrial && (
-              <span className="mt-2 inline-block rounded-xs bg-rink/10 px-2 py-0.5 text-xs font-bold text-rink-deep">
+              <span className="rounded-xs bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
                 원데이 체험 가능
               </span>
             )}
           </div>
 
-          <div className="mt-5">
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="text-xl leading-snug">{item.name}</h1>
+            <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
+          </div>
+
+          <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="shrink-0"
+            >
+              <path d="M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Z" />
+              <circle cx="12" cy="10.5" r="2.3" />
+            </svg>
+            <span className="truncate">
+              {item.facility.address}
+              {item.reviewCount > 0 && ` · ★ ${item.rating} (리뷰 ${item.reviewCount})`}
+            </span>
+          </div>
+
+          <div className="mt-4 rounded-xs border border-line bg-surface-2 p-4">
+            <div className="flex items-center justify-between border-b border-dashed border-line pb-3">
+              <div>
+                <p className="text-xs font-bold text-muted">정기</p>
+                <div className="mt-0.5 flex items-baseline gap-1.5 tabular-nums">
+                  {item.showPrice ? (
+                    isDiscountActive(item) ? (
+                      <>
+                        <span className="text-xs text-muted line-through">
+                          {item.priceUnit} {item.price.toLocaleString()}원
+                        </span>
+                        <span className="text-lg font-extrabold">
+                          {item.priceUnit} {effectivePrice(item).toLocaleString()}원
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-lg font-extrabold">
+                        {item.priceUnit} {item.price.toLocaleString()}원
+                      </span>
+                    )
+                  ) : (
+                    <span className="text-lg font-extrabold text-muted">가격문의</span>
+                  )}
+                </div>
+              </div>
+              {discountPct != null && (
+                <span className="shrink-0 rounded-xs bg-energy px-2.5 py-1 text-xs font-bold text-white">
+                  {discountPct}% 할인
+                </span>
+              )}
+            </div>
+
+            {item.allowTrial && item.trialPrice != null && (
+              <div className="flex items-center justify-between pt-3">
+                <div>
+                  <p className="text-xs font-bold text-muted">원데이</p>
+                  <div className="mt-0.5 flex items-baseline gap-1.5 tabular-nums">
+                    {item.showTrialPrice ? (
+                      isTrialDiscountActive(item) ? (
+                        <>
+                          <span className="text-xs text-muted line-through">
+                            {item.trialPrice.toLocaleString()}원
+                          </span>
+                          <span className="text-lg font-extrabold">
+                            {effectiveTrialPrice(item)!.toLocaleString()}원
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-lg font-extrabold">
+                          {item.trialPrice.toLocaleString()}원
+                        </span>
+                      )
+                    ) : (
+                      <span className="text-lg font-extrabold text-muted">가격문의</span>
+                    )}
+                  </div>
+                </div>
+                {trialDiscountPct != null && (
+                  <span className="shrink-0 rounded-xs bg-energy px-2.5 py-1 text-xs font-bold text-white">
+                    {trialDiscountPct}% 할인
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <p className="mt-2 text-xs text-muted">💳 현장 결제 또는 계좌이체로 진행돼요</p>
+
+          <Link
+            href={`/facilities/${item.facility.id}`}
+            className="mt-5 flex items-center gap-3 rounded-xs border border-line p-3"
+          >
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-gradient-to-br from-rink to-rink-deep text-base font-extrabold text-white">
+              {item.facility.profileImageUrl ? (
+                <Image
+                  src={item.facility.profileImageUrl}
+                  alt=""
+                  fill
+                  sizes="44px"
+                  className="object-cover"
+                />
+              ) : (
+                item.facility.name.slice(0, 1)
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-bold">{item.facility.name}</p>
+              <p className="truncate text-xs text-muted">{item.facility.address}</p>
+            </div>
+            <span className="shrink-0 text-muted">{">"}</span>
+          </Link>
+
+          <div className="mt-6">
             <DetailTabs item={item} reviews={reviews} wishedInstructorIds={wishedInstructorIds} />
           </div>
         </div>

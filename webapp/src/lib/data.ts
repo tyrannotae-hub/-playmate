@@ -65,6 +65,7 @@ type RawClass = {
     region_code: string | null;
     phone: string | null;
     instagram_url: string | null;
+    profile_image_url: string | null;
     facility_regions: { region_code: string }[];
   } | null;
   class_instructors: {
@@ -152,6 +153,7 @@ function toTeamClass(
       address: row.facility?.address ?? "",
       phone: row.facility?.phone ?? "",
       instagramUrl: row.facility?.instagram_url ?? "",
+      profileImageUrl: row.facility?.profile_image_url ?? "",
     },
     collectHeight: row.collect_height ?? false,
     collectShoeSize: row.collect_shoe_size ?? false,
@@ -217,7 +219,7 @@ function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter
   let query = supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
+      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,profile_image_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
     );
   if (filter?.id) query = query.eq("id", filter.id);
   if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);
