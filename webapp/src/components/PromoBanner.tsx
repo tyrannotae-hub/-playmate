@@ -36,7 +36,7 @@ const BANNERS: Banner[] = [
     href: "/",
     backgroundImageUrl: HOME_HERO_RINK_PHOTO,
     layout: "logo",
-    caption: "우리아이 체육은 플레이메이트랑 함께 시작해요",
+    caption: "우리 아이 첫 운동, 플레이메이트와 함께 시작해요",
   },
   {
     id: "puffins",
@@ -44,7 +44,7 @@ const BANNERS: Banner[] = [
     backgroundImageUrl: PUFFINS_PROMO_PHOTO,
     layout: "text",
     title: "퍼핀스 아카데미",
-    subtitle: "역삼・목동・신사・동탄, 4개 지점 아이스하키 아카데미",
+    subtitle: "역삼・목동・신사・동탄 4개 지점, 아이스하키 아카데미",
   },
   {
     id: "recommend",
@@ -52,7 +52,7 @@ const BANNERS: Banner[] = [
     backgroundImageUrl: HOME_FIVE_SPORTS_PHOTO,
     gradientClassName: "bg-gradient-to-br from-[#0d3f63] to-[#1768ac]",
     layout: "text",
-    title: "플레이메이트가 찾아줘요",
+    title: "플레이메이트가 찾아드려요",
     subtitle: "우리 아이에게 맞는 운동 찾기",
   },
 ];
