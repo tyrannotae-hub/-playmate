@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 
 const PUFFINS_FACILITY_ID = "b59ee112-2b7d-4155-98ad-c30b4b828875";
-const PUFFINS_RINK_PHOTO =
-  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/cover.jpg";
+const HOME_HERO_RINK_PHOTO =
+  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/site-assets/banners/home-hero-ice-rink.jpg";
 const PUFFINS_PROMO_PHOTO =
   "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/promo/626c4b06-9b06-4638-9f79-25d8275e64e5.jpg";
 
@@ -32,7 +32,7 @@ const BANNERS: Banner[] = [
   {
     id: "playmate",
     href: "/",
-    backgroundImageUrl: PUFFINS_RINK_PHOTO,
+    backgroundImageUrl: HOME_HERO_RINK_PHOTO,
     layout: "logo",
     caption: "우리아이 체육은 플레이메이트랑 함께 시작해요",
   },
