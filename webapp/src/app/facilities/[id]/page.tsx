@@ -92,6 +92,10 @@ export default async function FacilityHomePage({
           </div>
         </div>
 
+        <div className="mt-8 border-t border-line px-4 pt-6">
+          <FacilityDetailTabs facility={facility} wishedInstructorIds={wishedInstructorIds} />
+        </div>
+
         <HomeCategoryShowcase
           categories={facility.homeCategories}
           allClasses={facility.classes}
@@ -100,10 +104,6 @@ export default async function FacilityHomePage({
 
         <div className="mt-8">
           <FacilityClassGrid classes={facility.classes} wishedIds={wishedClassIds} />
-        </div>
-
-        <div className="mt-8 border-t border-line px-4 pt-6">
-          <FacilityDetailTabs facility={facility} wishedInstructorIds={wishedInstructorIds} />
         </div>
       </main>
     </>
