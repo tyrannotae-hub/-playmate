@@ -8,7 +8,7 @@ const ITEMS = [
   { href: "/search", label: "검색", Icon: SearchIcon },
   { href: "/wishlist", label: "찜", Icon: HeartIcon },
   { href: "/mypage/bookings", label: "내 클래스", Icon: ClassIcon },
-  { href: "/mypage", label: "마이페이지", Icon: ProfileIcon },
+  { href: "/mypage", label: "마이", Icon: ProfileIcon },
 ];
 
 export default function BottomNav() {
@@ -24,10 +24,10 @@ export default function BottomNav() {
               key={href}
               href={href}
               className={`btn-label flex flex-1 flex-col items-center justify-center gap-1 transition ${
-                active ? "text-rink" : "text-muted"
+                active ? "text-rink" : "text-foreground"
               }`}
             >
-              <Icon active={active} />
+              <Icon />
               <span className="text-[11px] font-bold leading-none">{label}</span>
             </Link>
           );
@@ -37,41 +37,44 @@ export default function BottomNav() {
   );
 }
 
-function HomeIcon({ active }: { active: boolean }) {
+function HomeIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
     </svg>
   );
 }
 
-function SearchIcon({ active }: { active: boolean }) {
+// 돋보기(검색) + 햄버거(카테고리) 를 하나로 합친 아이콘 — 원 안에 짧은 가로줄 2개
+function SearchIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z" />
+      <rect x="5.8" y="7.4" width="7.4" height="1.4" rx="0.7" />
+      <rect x="5.8" y="10.6" width="7.4" height="1.4" rx="0.7" />
     </svg>
   );
 }
 
-function HeartIcon({ active }: { active: boolean }) {
+function HeartIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 21.35 10.55 20C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54Z" />
     </svg>
   );
 }
 
-function ClassIcon({ active }: { active: boolean }) {
+function ClassIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1zm3 18H5V8h14Z" />
     </svg>
   );
 }
 
-function ProfileIcon({ active }: { active: boolean }) {
+function ProfileIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z" />
     </svg>
   );

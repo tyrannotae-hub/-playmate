@@ -42,6 +42,13 @@ export default function ClassDetailClient({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [scheduleEditId, setScheduleEditId] = useState<string | null>(null);
+  const [scheduleEditDay, setScheduleEditDay] = useState("");
+  const [scheduleEditTime, setScheduleEditTime] = useState("");
+  const [scheduleEditCapacity, setScheduleEditCapacity] = useState(6);
+  const [scheduleEditErrorMsg, setScheduleEditErrorMsg] = useState("");
+  const [savingScheduleEdit, setSavingScheduleEdit] = useState(false);
+
   const [editName, setEditName] = useState(item.name);
   const [editSportId, setEditSportId] = useState(item.sportId);
   const [editClassType, setEditClassType] = useState(item.classType);
@@ -247,6 +254,42 @@ export default function ClassDetailClient({
       .update({ allow_trial: allowTrial })
       .eq("id", scheduleId);
     if (!error) router.refresh();
+  }
+
+  function startEditSchedule(s: ClubClass["schedules"][number]) {
+    setScheduleEditId(s.id);
+    setScheduleEditDay(s.dayLabel);
+    setScheduleEditTime(s.timeLabel);
+    setScheduleEditCapacity(s.capacity);
+    setScheduleEditErrorMsg("");
+  }
+
+  async function saveScheduleEdit(scheduleId: string) {
+    if (!scheduleEditDay) {
+      setScheduleEditErrorMsg("요일을 하나 이상 선택해주세요.");
+      return;
+    }
+    if (!scheduleEditTime.includes(" - ")) {
+      setScheduleEditErrorMsg("시작·종료 시간을 모두 선택해주세요.");
+      return;
+    }
+    setSavingScheduleEdit(true);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("class_schedules")
+      .update({
+        day_label: scheduleEditDay,
+        time_label: scheduleEditTime,
+        slot_capacity: scheduleEditCapacity,
+      })
+      .eq("id", scheduleId);
+    setSavingScheduleEdit(false);
+    if (error) {
+      setScheduleEditErrorMsg("저장에 실패했어요.");
+      return;
+    }
+    setScheduleEditId(null);
+    router.refresh();
   }
 
   async function addHoliday(e: React.FormEvent) {
@@ -705,34 +748,84 @@ export default function ClassDetailClient({
 
       <div className={cardClass("flex flex-col gap-1.5")}>
         <p className="mb-0.5 text-sm font-bold">시간대</p>
-        {item.schedules.map((s) => (
-          <div
-            key={s.id}
-            className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
-          >
-            <span>
-              {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
-            </span>
-            <div className="flex shrink-0 items-center gap-3">
-              <label className="flex items-center gap-1.5 font-bold text-muted">
-                <input
-                  type="checkbox"
-                  checked={s.allowTrial}
-                  onChange={(e) => toggleScheduleTrial(s.id, e.target.checked)}
-                  className="h-4 w-4 accent-rink"
-                />
-                원데이 가능
-              </label>
-              <button
-                onClick={() => deleteSchedule(s.id)}
-                className="font-bold text-muted"
-                aria-label="시간대 삭제"
-              >
-                ✕
-              </button>
+        {item.schedules.map((s) =>
+          scheduleEditId === s.id ? (
+            <div key={s.id} className="flex flex-col gap-2 rounded-xs bg-background px-3 py-2.5">
+              <DayLabelPicker value={scheduleEditDay} onChange={setScheduleEditDay} />
+              <TimeRangePicker value={scheduleEditTime} onChange={setScheduleEditTime} />
+              <input
+                type="number"
+                min={1}
+                value={scheduleEditCapacity}
+                onChange={(e) => setScheduleEditCapacity(Number(e.target.value))}
+                placeholder="정원"
+                className="w-full rounded-xs border border-line bg-surface px-3 py-2 text-xs"
+              />
+              {scheduleEditErrorMsg && (
+                <p className="text-xs text-negative">{scheduleEditErrorMsg}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => saveScheduleEdit(s.id)}
+                  disabled={savingScheduleEdit}
+                  className={buttonClass({
+                    variant: "custom",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1 bg-rink text-white",
+                  })}
+                >
+                  {savingScheduleEdit ? "저장 중..." : "저장"}
+                </button>
+                <button
+                  onClick={() => setScheduleEditId(null)}
+                  className={buttonClass({
+                    variant: "outline",
+                    size: "sm",
+                    full: false,
+                    className: "flex-1",
+                  })}
+                >
+                  취소
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ) : (
+            <div
+              key={s.id}
+              className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
+            >
+              <span>
+                {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
+              </span>
+              <div className="flex shrink-0 items-center gap-3">
+                <label className="flex items-center gap-1.5 font-bold text-muted">
+                  <input
+                    type="checkbox"
+                    checked={s.allowTrial}
+                    onChange={(e) => toggleScheduleTrial(s.id, e.target.checked)}
+                    className="h-4 w-4 accent-rink"
+                  />
+                  원데이 가능
+                </label>
+                <button
+                  onClick={() => startEditSchedule(s)}
+                  className="font-bold text-muted"
+                  aria-label="시간대 수정"
+                >
+                  ✎
+                </button>
+                <button
+                  onClick={() => deleteSchedule(s.id)}
+                  className="font-bold text-muted"
+                  aria-label="시간대 삭제"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )
+        )}
         {item.schedules.length === 0 && (
           <p className="text-xs text-muted">등록된 시간대가 없어요.</p>
         )}

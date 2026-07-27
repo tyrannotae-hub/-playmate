@@ -50,16 +50,16 @@ export default function TopNav({
             </Link>
           )}
           <div className="-mr-1.5 ml-auto flex items-center">
-            <NotificationBell />
             <Link
-              href="/mypage"
-              aria-label="마이페이지"
+              href="/search"
+              aria-label="검색"
               className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition hover:bg-line/50"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z" />
+                <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.47 6.47 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z" />
               </svg>
             </Link>
+            <NotificationBell />
           </div>
         </div>
       </header>

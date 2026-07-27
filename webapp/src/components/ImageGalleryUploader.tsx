@@ -36,6 +36,10 @@ export default function ImageGalleryUploader({
   onDelete,
   initialCaptions,
   onCaptionSave,
+  targetWidth = IMAGE_PIXELS,
+  targetHeight = IMAGE_PIXELS,
+  previewAspectClass = "aspect-square",
+  onReorder,
 }: {
   bucket: string;
   pathPrefix: string;
@@ -48,6 +52,13 @@ export default function ImageGalleryUploader({
   /** 넣으면 사진마다 배너 제목/소제목을 입력할 수 있는 편집 영역이 함께 나온다. */
   initialCaptions?: Record<string, Caption>;
   onCaptionSave?: (url: string, caption: Caption) => Promise<void>;
+  /** 업로드 전 리사이즈할 목표 크기. 기본은 정방형(960x960) */
+  targetWidth?: number;
+  targetHeight?: number;
+  /** 썸네일 미리보기 비율 클래스 — 실제 노출 형태와 다르게 보이지 않도록 targetWidth/Height와 맞춰줄 것 */
+  previewAspectClass?: string;
+  /** 넣으면 사진마다 순서 이동(◀/▶) 버튼이 함께 나온다. 새 순서의 url 배열 전체를 넘겨준다. */
+  onReorder?: (orderedUrls: string[]) => Promise<void>;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState(initialImages);
@@ -81,7 +92,7 @@ export default function ImageGalleryUploader({
     const supabase = createClient();
 
     try {
-      const resized = await resizeImageToCover(file, IMAGE_PIXELS, IMAGE_PIXELS);
+      const resized = await resizeImageToCover(file, targetWidth, targetHeight);
       const path = `${pathPrefix}/${crypto.randomUUID()}.jpg`;
 
       const { error: uploadError } = await supabase.storage
@@ -113,6 +124,15 @@ export default function ImageGalleryUploader({
     });
   }
 
+  async function moveImage(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (!onReorder || target < 0 || target >= images.length) return;
+    const next = [...images];
+    [next[index], next[target]] = [next[target], next[index]];
+    setImages(next);
+    await onReorder(next);
+  }
+
   return (
     <div>
       <p className="mb-1.5 text-xs font-bold text-muted">
@@ -120,8 +140,11 @@ export default function ImageGalleryUploader({
       </p>
       {helperText && <p className="mb-2 text-xs text-muted">{helperText}</p>}
       <div className="flex flex-wrap gap-2">
-        {images.map((url) => (
-          <div key={url} className="relative h-16 w-16 overflow-hidden rounded-xs">
+        {images.map((url, i) => (
+          <div
+            key={url}
+            className={`relative w-24 shrink-0 overflow-hidden rounded-xs ${previewAspectClass}`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className="h-full w-full object-cover" />
             <button
@@ -131,6 +154,26 @@ export default function ImageGalleryUploader({
             >
               ✕
             </button>
+            {onReorder && images.length > 1 && (
+              <div className="absolute inset-x-0 bottom-0.5 flex justify-center gap-1">
+                <button
+                  onClick={() => moveImage(i, -1)}
+                  disabled={i === 0}
+                  aria-label="앞으로 이동"
+                  className="flex h-4 w-4 items-center justify-center rounded-full bg-black/60 text-[10px] text-white disabled:opacity-30"
+                >
+                  ◀
+                </button>
+                <button
+                  onClick={() => moveImage(i, 1)}
+                  disabled={i === images.length - 1}
+                  aria-label="뒤로 이동"
+                  className="flex h-4 w-4 items-center justify-center rounded-full bg-black/60 text-[10px] text-white disabled:opacity-30"
+                >
+                  ▶
+                </button>
+              </div>
+            )}
           </div>
         ))}
         {images.length < maxImages && (
@@ -145,7 +188,7 @@ export default function ImageGalleryUploader({
             />
             <label
               htmlFor={inputId}
-              className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-xs border border-dashed border-line text-xs text-muted"
+              className={`flex w-24 shrink-0 cursor-pointer items-center justify-center rounded-xs border border-dashed border-line text-xs text-muted ${previewAspectClass}`}
             >
               {uploading ? "..." : "+ 추가"}
             </label>
