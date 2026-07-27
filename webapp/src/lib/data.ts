@@ -245,6 +245,7 @@ type RawFacilityMeta = {
   address: string;
   region_code: string | null;
   cover_image_url: string | null;
+  profile_image_url: string | null;
   owner_type: string | null;
 };
 
@@ -252,7 +253,7 @@ async function facilityMetaMap() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("facilities")
-    .select("id, name, address, region_code, cover_image_url, owner_type");
+    .select("id, name, address, region_code, cover_image_url, profile_image_url, owner_type");
 
   const map = new Map<string, RawFacilityMeta>();
   ((data ?? []) as RawFacilityMeta[]).forEach((f) => map.set(f.id, f));
@@ -306,6 +307,7 @@ function summarizeFacilities(
       region: meta?.region_code ?? "",
       regions: a.regions,
       coverImageUrl: meta?.cover_image_url ?? "",
+      profileImageUrl: meta?.profile_image_url ?? "",
       ownerType: (meta?.owner_type as "club" | "solo_coach") ?? "club",
       sportIds: Array.from(a.sportIds),
       classCount: a.classCount,

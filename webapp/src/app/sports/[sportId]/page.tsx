@@ -6,7 +6,7 @@ import ClassSearchBox from "@/components/ClassSearchBox";
 import DayFilterBrowser from "@/components/DayFilterBrowser";
 import InstructorHoverGrid from "@/components/InstructorHoverGrid";
 import FacilityCard from "@/components/FacilityCard";
-import { HoverExpand_001 } from "@/components/ui/skiper-ui/skiper52";
+import ClassCardCompact from "@/components/ClassCardCompact";
 import {
   facilitiesFromClasses,
   getAllClasses,
@@ -45,6 +45,7 @@ export default async function SportDetailPage({
       ])
     : [[], [], []];
   const wishedFacilitySet = new Set(wishedFacilityIds);
+  const wishedSet = new Set(wishedIds);
 
   const classes = allClasses.filter((c) => c.sportId === sportId);
   const popular = [...classes].sort((a, b) => b.rating - a.rating).slice(0, 8);
@@ -95,8 +96,10 @@ export default async function SportDetailPage({
         {popular.length > 0 && (
           <div className="mt-8" id="popular">
             <h2 className="mb-3 px-4 text-lg font-bold">지금 인기있는 클래스</h2>
-            <div className="px-4">
-              <HoverExpand_001 classes={popular} />
+            <div className="flex gap-3 overflow-x-auto px-4 pb-1">
+              {popular.map((c) => (
+                <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} />
+              ))}
             </div>
           </div>
         )}

@@ -15,14 +15,18 @@ export default function FacilityCard({
   variant?: "scroll" | "grid";
   wished?: boolean;
 }) {
+  // 카드 썸네일은 정사각형이라, 배너용으로 올라오는 와이드 커버 사진(coverImageUrl)을 쓰면
+  // object-cover가 좌우를 크게 잘라내 확대된 것처럼 보인다 — 정사각형 프로필 사진을 우선 사용.
+  const thumbnailUrl = item.profileImageUrl || item.coverImageUrl;
+
   return (
     <Link
       href={`/facilities/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
       <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
-        {item.coverImageUrl ? (
-          <Image src={item.coverImageUrl} alt="" fill sizes="144px" className="object-cover" />
+        {thumbnailUrl ? (
+          <Image src={thumbnailUrl} alt="" fill sizes="144px" className="object-cover" />
         ) : (
           <span className="text-3xl">🏟️</span>
         )}

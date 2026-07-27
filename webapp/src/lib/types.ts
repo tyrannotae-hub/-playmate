@@ -149,6 +149,7 @@ export type FacilitySummary = {
   region: string;
   regions: string[];
   coverImageUrl: string;
+  profileImageUrl: string;
   ownerType: "club" | "solo_coach";
   sportIds: string[];
   classCount: number;
