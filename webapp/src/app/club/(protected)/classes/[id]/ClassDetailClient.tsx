@@ -316,7 +316,7 @@ export default function ClassDetailClient({
         href={`/club/bookings?classId=${item.id}`}
         className="text-xs font-bold text-rink-deep"
       >
-        이 클래스 예약 현황 보기 {">"}
+        이 클래스 예약 현황 보기
       </Link>
 
       <form onSubmit={saveEdit} className={cardClass("flex flex-col gap-3")}>

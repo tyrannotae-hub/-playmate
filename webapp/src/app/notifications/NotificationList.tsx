@@ -80,7 +80,7 @@ export default function NotificationList({ initial }: { initial: AppNotification
                     className: "mt-2 bg-rink text-white",
                   })}
                 >
-                  리뷰 쓰기 {">"}
+                  리뷰 쓰기
                 </Link>
               )}
             </div>

@@ -115,7 +115,6 @@ export default async function HomePage({
               </p>
               <p className="mt-0.5 text-sm font-bold">{recommendCta}</p>
             </div>
-            <span className="shrink-0 text-lg">{">"}</span>
           </Link>
         </div>
 
@@ -148,7 +147,7 @@ export default async function HomePage({
             <div className="mb-3 flex items-center justify-between px-4">
               <h2 className="text-lg font-bold">인기 팀・클럽</h2>
               <Link href="/facilities" className="text-xs font-bold text-rink-deep">
-                전체보기 {">"}
+                전체보기
               </Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-1">

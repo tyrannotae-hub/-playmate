@@ -15,7 +15,7 @@ const pretendard = localFont({
 // font-weight로 자동 선택되게 한다.
 const paperlogy = localFont({
   src: [
-    { path: "../fonts/Paperlogy-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Paperlogy-SemiBold.woff2", weight: "600 650", style: "normal" },
     { path: "../fonts/Paperlogy-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-paperlogy",

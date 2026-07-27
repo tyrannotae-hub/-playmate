@@ -139,7 +139,7 @@ export default function BookingRow({
           <StatusBadge status={booking.status} />
           {linkToDetail && (
             <Link href={`/club/bookings/${booking.id}`} className="text-[11px] font-bold text-rink-deep">
-              상세보기 {">"}
+              상세보기
             </Link>
           )}
         </div>

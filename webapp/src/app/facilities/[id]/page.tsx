@@ -85,10 +85,9 @@ export default async function FacilityHomePage({
         <div className="px-4 pt-4">
           <Link
             href={`/facilities/${facility.id}/info`}
-            className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+            className="flex items-center justify-center rounded-lg border border-line px-3 py-2"
           >
-            <span className="text-sm font-bold">클럽 정보</span>
-            <span className="text-muted">{">"}</span>
+            <span className="text-xs font-bold">클럽 정보</span>
           </Link>
         </div>
 

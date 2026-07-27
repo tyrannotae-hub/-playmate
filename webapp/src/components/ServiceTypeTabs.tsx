@@ -18,7 +18,7 @@ export default function ServiceTypeTabs({ active }: { active: HomeTab }) {
           <Link
             key={tab.type}
             href={tab.href}
-            className={`text-base font-extrabold transition ${
+            className={`font-tab-650 text-base transition ${
               isActive ? "text-foreground" : "text-muted"
             }`}
           >

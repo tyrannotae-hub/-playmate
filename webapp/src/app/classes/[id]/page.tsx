@@ -179,15 +179,15 @@ export default async function ClassDetailPage({
 
           <Link
             href={`/facilities/${item.facility.id}`}
-            className="mt-5 flex items-center gap-3 rounded-xs border border-line p-3"
+            className="mt-5 flex items-center gap-2.5 rounded-lg border border-line px-3 py-2"
           >
-            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-gradient-to-br from-rink to-rink-deep text-base font-extrabold text-white">
+            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-rink to-rink-deep text-sm font-extrabold text-white">
               {item.facility.profileImageUrl ? (
                 <Image
                   src={item.facility.profileImageUrl}
                   alt=""
                   fill
-                  sizes="44px"
+                  sizes="32px"
                   className="object-cover"
                 />
               ) : (
@@ -195,9 +195,9 @@ export default async function ClassDetailPage({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold">{item.facility.name}</p>
+              <p className="truncate text-xs font-bold">{item.facility.name}</p>
               {item.facility.address && (
-                <p className="truncate text-xs text-muted">{item.facility.address}</p>
+                <p className="truncate text-[11px] text-muted">{item.facility.address}</p>
               )}
             </div>
           </Link>
@@ -208,8 +208,11 @@ export default async function ClassDetailPage({
         </div>
       </main>
 
-      <div className="shadow-elevated fixed inset-x-0 bottom-[4.5rem] z-20 mx-auto w-full max-w-md border-t border-line bg-surface px-4 py-3">
-        <Link href={`/booking/${item.id}`} className={buttonClass({ className: "text-center" })}>
+      <div className="shadow-elevated fixed inset-x-0 bottom-[4.5rem] z-20 mx-auto w-full max-w-md bg-surface px-4 py-3">
+        <Link
+          href={`/booking/${item.id}`}
+          className={buttonClass({ radius: "round", className: "text-center" })}
+        >
           예약 신청하기
         </Link>
       </div>

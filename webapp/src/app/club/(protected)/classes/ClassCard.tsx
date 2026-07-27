@@ -52,7 +52,6 @@ export default function ClassCard({
           </span>
         )}
       </div>
-      <span className="shrink-0 text-lg text-line">{">"}</span>
     </Link>
   );
 }

@@ -8,6 +8,7 @@ const ITEMS = [
   { href: "/search", label: "검색", Icon: SearchIcon },
   { href: "/wishlist", label: "찜", Icon: HeartIcon },
   { href: "/mypage/bookings", label: "내 클래스", Icon: ClassIcon },
+  { href: "/mypage", label: "마이페이지", Icon: ProfileIcon },
 ];
 
 export default function BottomNav() {
@@ -64,6 +65,14 @@ function ClassIcon({ active }: { active: boolean }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
       <path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1zm3 18H5V8h14Z" />
+    </svg>
+  );
+}
+
+function ProfileIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity={active ? 1 : 0.65}>
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z" />
     </svg>
   );
 }

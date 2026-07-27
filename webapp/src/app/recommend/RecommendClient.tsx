@@ -92,7 +92,7 @@ export default function RecommendClient({
               </div>
               <p className="mt-2 text-sm text-rink-deep">{top.sport.traits.join(" · ")}</p>
               <p className="mt-3 text-sm font-bold text-rink-deep">
-                이 지역 클래스 {classCounts[top.sport.id] ?? 0}개 보기 {">"}
+                이 지역 클래스 {classCounts[top.sport.id] ?? 0}개 보기
               </p>
             </Link>
           )}

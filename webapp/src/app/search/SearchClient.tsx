@@ -7,7 +7,8 @@ import ClassCardCompact from "@/components/ClassCardCompact";
 import ClassSearchBox from "@/components/ClassSearchBox";
 import FacilityCard from "@/components/FacilityCard";
 import SportIcon from "@/components/icons/SportIcon";
-import { FacilitySummary, ServiceType, Sport, TeamClass } from "@/lib/types";
+import { FacilitySummary, Sport, TeamClass } from "@/lib/types";
+import type { HomeTab } from "@/components/ServiceTypeTabs";
 import { classRegionCodes, regionLabel } from "@/lib/region-meta";
 import { buttonClass } from "@/lib/ui";
 import { effectivePrice } from "@/lib/pricing";
@@ -43,7 +44,7 @@ export default function SearchClient({
 
   const [sportId, setSportId] = useState(initialSport);
   const [region, setRegion] = useState(initialRegion || "all");
-  const [serviceType, setServiceType] = useState<ServiceType | "all">("all");
+  const [serviceType, setServiceType] = useState<HomeTab | "all">("all");
   const [sort, setSort] = useState<SortKey>("recent");
 
   const regions = useMemo(() => {
@@ -69,7 +70,11 @@ export default function SearchClient({
     const byRegion =
       region === "all" ? bySport : bySport.filter((c) => classRegionCodes(c).includes(region));
     const byServiceType =
-      serviceType === "all" ? byRegion : byRegion.filter((c) => c.serviceType === serviceType);
+      serviceType === "all"
+        ? byRegion
+        : serviceType === "trial"
+          ? byRegion.filter((c) => c.allowTrial)
+          : byRegion.filter((c) => c.serviceType === serviceType);
     return [...byServiceType].sort(SORTERS[sort]);
   }, [classes, sportId, region, serviceType, sort, initialQuery]);
 
@@ -157,6 +162,18 @@ export default function SearchClient({
             })}
           >
             레슨
+          </button>
+          <button
+            onClick={() => setServiceType("trial")}
+            className={buttonClass({
+              variant: serviceType === "trial" ? "tabActive" : "tabInactive",
+              size: "sm",
+              full: false,
+              radius: "round",
+              className: "flex-1",
+            })}
+          >
+            원데이
           </button>
         </div>
 

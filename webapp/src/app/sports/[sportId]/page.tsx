@@ -109,7 +109,7 @@ export default async function SportDetailPage({
             <div className="mb-3 flex items-center justify-between px-4">
               <h2 className="text-lg font-bold">지금 인기있는 팀・클럽</h2>
               <Link href={`/facilities?sport=${sport.id}`} className="text-xs font-bold text-rink-deep">
-                전체보기 {">"}
+                전체보기
               </Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-1">
