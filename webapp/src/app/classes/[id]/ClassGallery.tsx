@@ -48,40 +48,31 @@ export default function ClassGallery({
 
   return (
     <div className="relative">
-      <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between p-3">
-        <button
-          type="button"
-          onClick={() => history.back()}
-          aria-label="뒤로"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"
-        >
-          ←
-        </button>
-        {(phone || instagramUrl) && (
-          <div className="flex gap-2">
-            {phone && (
-              <a
-                href={`tel:${phone}`}
-                aria-label={`${facilityName}에 전화 걸기`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"
-              >
-                <PhoneIcon />
-              </a>
-            )}
-            {instagramUrl && (
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${facilityName} 인스타그램 바로가기`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"
-              >
-                <InstagramIcon />
-              </a>
-            )}
-          </div>
-        )}
-      </div>
+      {/* 뒤로가기는 TopNav(좌상단)에 이미 있어서 여기서는 중복으로 두지 않는다 */}
+      {(phone || instagramUrl) && (
+        <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-end gap-2 p-3">
+          {phone && (
+            <a
+              href={`tel:${phone}`}
+              aria-label={`${facilityName}에 전화 걸기`}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"
+            >
+              <PhoneIcon />
+            </a>
+          )}
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${facilityName} 인스타그램 바로가기`}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur"
+            >
+              <InstagramIcon />
+            </a>
+          )}
+        </div>
+      )}
 
       {images.length === 0 ? (
         <div className="flex aspect-square w-full items-center justify-center bg-rink-soft text-rink-deep">

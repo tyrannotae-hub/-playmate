@@ -9,6 +9,7 @@ import { buttonClass, cardClass } from "@/lib/ui";
 import { REGION_OPTIONS } from "@/lib/region-meta";
 import ClassMediaManager from "../ClassMediaManager";
 import DayLabelPicker from "@/components/club/DayLabelPicker";
+import TimeRangePicker from "@/components/club/TimeRangePicker";
 import { formatIsoDateToKoreanShort } from "@/lib/schedule-dates";
 
 const CLASS_TYPE_LABEL: Record<ClubClass["classType"], string> = {
@@ -200,6 +201,11 @@ export default function ClassDetailClient({
     if (!dayLabel) {
       setSubmitting(false);
       setErrorMsg("요일을 하나 이상 선택해주세요.");
+      return;
+    }
+    if (!timeLabel.includes(" - ")) {
+      setSubmitting(false);
+      setErrorMsg("시작·종료 시간을 모두 선택해주세요.");
       return;
     }
 
@@ -745,13 +751,7 @@ export default function ClassDetailClient({
         ) : (
           <form onSubmit={addSchedule} className="mt-1.5 flex flex-col gap-2">
             <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
-            <input
-              required
-              value={timeLabel}
-              onChange={(e) => setTimeLabel(e.target.value)}
-              placeholder="시간 (예: 16:00)"
-              className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
-            />
+            <TimeRangePicker value={timeLabel} onChange={setTimeLabel} />
             <input
               type="number"
               required

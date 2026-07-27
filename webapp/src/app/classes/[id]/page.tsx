@@ -86,24 +86,29 @@ export default async function ClassDetailPage({
             <WishlistButton classId={item.id} initialWished={wished} initialCount={item.wishCount} />
           </div>
 
-          <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="shrink-0"
-            >
-              <path d="M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Z" />
-              <circle cx="12" cy="10.5" r="2.3" />
-            </svg>
-            <span className="truncate">
-              {item.facility.address}
-              {item.reviewCount > 0 && ` · ★ ${item.rating} (리뷰 ${item.reviewCount})`}
-            </span>
-          </div>
+          {(item.facility.address || item.reviewCount > 0) && (
+            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
+              {item.facility.address && (
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="shrink-0"
+                >
+                  <path d="M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Z" />
+                  <circle cx="12" cy="10.5" r="2.3" />
+                </svg>
+              )}
+              <span className="truncate">
+                {item.facility.address}
+                {item.facility.address && item.reviewCount > 0 && " · "}
+                {item.reviewCount > 0 && `★ ${item.rating} (리뷰 ${item.reviewCount})`}
+              </span>
+            </div>
+          )}
 
           <div className="mt-4 rounded-xs border border-line bg-surface-2 p-4">
             <div className="flex items-center justify-between border-b border-dashed border-line pb-3">
@@ -191,9 +196,10 @@ export default async function ClassDetailPage({
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold">{item.facility.name}</p>
-              <p className="truncate text-xs text-muted">{item.facility.address}</p>
+              {item.facility.address && (
+                <p className="truncate text-xs text-muted">{item.facility.address}</p>
+              )}
             </div>
-            <span className="shrink-0 text-muted">{">"}</span>
           </Link>
 
           <div className="mt-6">

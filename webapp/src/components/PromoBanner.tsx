@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
+import PlayMateLogo from "@/components/PlayMateLogo";
 
 const PUFFINS_FACILITY_ID = "b59ee112-2b7d-4155-98ad-c30b4b828875";
 const HOME_HERO_RINK_PHOTO =
@@ -90,9 +91,7 @@ export default function PromoBanner() {
             )}
             {b.layout === "logo" ? (
               <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center">
-                <p className="font-banner-title text-2xl tracking-tight">
-                  PlayMate<span className="text-energy">.</span>
-                </p>
+                <PlayMateLogo className="h-6 w-auto" />
                 <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
               </div>
             ) : (

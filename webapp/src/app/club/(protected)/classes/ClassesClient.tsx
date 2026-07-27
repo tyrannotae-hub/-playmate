@@ -8,6 +8,7 @@ import { ClubClass, FacilityInstructor, Sport } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 import { REGION_OPTIONS } from "@/lib/region-meta";
 import DayLabelPicker from "@/components/club/DayLabelPicker";
+import TimeRangePicker from "@/components/club/TimeRangePicker";
 import ClassCard from "./ClassCard";
 
 export default function ClassesClient({
@@ -64,8 +65,8 @@ export default function ClassesClient({
     e.preventDefault();
     setErrorMsg("");
 
-    if (!dayLabel.trim() || !timeLabel.trim()) {
-      setErrorMsg("시간대(요일·시간)를 최소 1개 입력해야 클래스를 등록할 수 있어요.");
+    if (!dayLabel.trim() || !timeLabel.includes(" - ")) {
+      setErrorMsg("요일과 시작·종료 시간을 모두 선택해야 클래스를 등록할 수 있어요.");
       return;
     }
 
@@ -417,13 +418,7 @@ export default function ClassesClient({
             첫 수업 시간대 <span className="font-normal">(필수, 최소 1개 등록해야 클래스를 만들 수 있어요)</span>
           </p>
           <DayLabelPicker value={dayLabel} onChange={setDayLabel} />
-          <input
-            required
-            value={timeLabel}
-            onChange={(e) => setTimeLabel(e.target.value)}
-            placeholder="시간 (예: 16:00)"
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-          />
+          <TimeRangePicker value={timeLabel} onChange={setTimeLabel} />
           <input
             type="number"
             min={1}
