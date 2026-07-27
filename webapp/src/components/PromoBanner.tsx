@@ -8,6 +8,8 @@ const HOME_HERO_RINK_PHOTO =
   "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/site-assets/banners/home-hero-ice-rink.jpg";
 const PUFFINS_PROMO_PHOTO =
   "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/promo/626c4b06-9b06-4638-9f79-25d8275e64e5.jpg";
+const HOME_FIVE_SPORTS_PHOTO =
+  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/site-assets/banners/home-five-sports-kids.png";
 
 type Banner =
   | {
@@ -47,6 +49,7 @@ const BANNERS: Banner[] = [
   {
     id: "recommend",
     href: "/recommend",
+    backgroundImageUrl: HOME_FIVE_SPORTS_PHOTO,
     gradientClassName: "bg-gradient-to-br from-[#0d3f63] to-[#1768ac]",
     layout: "text",
     title: "플레이메이트가 찾아줘요",
