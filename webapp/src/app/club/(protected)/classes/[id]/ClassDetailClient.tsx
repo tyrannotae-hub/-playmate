@@ -79,6 +79,8 @@ export default function ClassDetailClient({
     item.discountStartDate ?? ""
   );
   const [editDiscountEndDate, setEditDiscountEndDate] = useState(item.discountEndDate ?? "");
+  const [showRegularInfo, setShowRegularInfo] = useState(false);
+  const [showTrialInfo, setShowTrialInfo] = useState(false);
   const [editUseTrialDiscount, setEditUseTrialDiscount] = useState(
     item.trialDiscountPrice != null
   );
@@ -533,175 +535,202 @@ export default function ClassDetailClient({
             />
           </div>
         </div>
-        <div className="flex gap-2">
-          <div className="min-w-0 flex-1">
-            <label className="mb-1.5 block text-xs font-bold text-muted">가격</label>
-            <input
-              type="number"
-              required
-              min={0}
-              value={editPrice}
-              onChange={(e) => setEditPrice(Number(e.target.value))}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-            />
-          </div>
-          <div className="w-24">
-            <label className="mb-1.5 block text-xs font-bold text-muted">단위</label>
-            <input
-              required
-              value={editPriceUnit}
-              onChange={(e) => setEditPriceUnit(e.target.value)}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-            />
-          </div>
-        </div>
-        <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
-          <span className="text-sm font-bold">
-            가격 공개
-            <span className="mt-0.5 block text-xs font-normal text-muted">
-              끄면 학부모 화면에 가격 대신 &quot;가격 문의&quot;로 표시돼요
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            checked={editShowPrice}
-            onChange={(e) => setEditShowPrice(e.target.checked)}
-            className="h-5 w-5 flex-shrink-0 accent-rink"
-          />
-        </label>
-        <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
-          원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
-          시간대마다 원데이 가능을 켜고 끌 수 있어요.
-        </p>
-        {item.allowTrial && (
-          <div>
-            <label className="mb-1.5 block text-xs font-bold text-muted">
-              체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
+        <button
+          type="button"
+          onClick={() => setShowRegularInfo((v) => !v)}
+          className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+        >
+          <span className="text-sm font-bold">정기 수업 정보</span>
+          <span className="text-muted">{showRegularInfo ? "▲" : "▼"}</span>
+        </button>
+        {showRegularInfo && (
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <div className="min-w-0 flex-1">
+                <label className="mb-1.5 block text-xs font-bold text-muted">가격</label>
+                <input
+                  type="number"
+                  required
+                  min={0}
+                  value={editPrice}
+                  onChange={(e) => setEditPrice(Number(e.target.value))}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+              <div className="w-24">
+                <label className="mb-1.5 block text-xs font-bold text-muted">단위</label>
+                <input
+                  required
+                  value={editPriceUnit}
+                  onChange={(e) => setEditPriceUnit(e.target.value)}
+                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                />
+              </div>
+            </div>
+            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+              <span className="text-sm font-bold">
+                가격 공개
+                <span className="mt-0.5 block text-xs font-normal text-muted">
+                  끄면 학부모 화면에 가격 대신 &quot;가격 문의&quot;로 표시돼요
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={editShowPrice}
+                onChange={(e) => setEditShowPrice(e.target.checked)}
+                className="h-5 w-5 flex-shrink-0 accent-rink"
+              />
             </label>
-            <input
-              type="number"
-              min={0}
-              value={editTrialPrice}
-              onChange={(e) => setEditTrialPrice(e.target.value)}
-              placeholder="예: 30000"
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-            />
+            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+              <span className="text-sm font-bold">
+                할인하기
+                <span className="mt-0.5 block text-xs font-normal text-muted">
+                  기간을 정해 정가 대신 할인가를 노출해요
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={editUseDiscount}
+                onChange={(e) => setEditUseDiscount(e.target.checked)}
+                className="h-5 w-5 flex-shrink-0 accent-rink"
+              />
+            </label>
+            {editUseDiscount && (
+              <div className="flex flex-col gap-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold text-muted">할인가</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={editDiscountPrice}
+                    onChange={(e) => setEditDiscountPrice(e.target.value)}
+                    placeholder="예: 25000"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <div className="min-w-0 flex-1">
+                    <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
+                    <input
+                      type="date"
+                      value={editDiscountStartDate}
+                      onChange={(e) => setEditDiscountStartDate(e.target.value)}
+                      className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
+                    <input
+                      type="date"
+                      value={editDiscountEndDate}
+                      onChange={(e) => setEditDiscountEndDate(e.target.value)}
+                      className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
-        {item.allowTrial && (
-          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
-            <span className="text-sm font-bold">
-              체험가 공개
-              <span className="mt-0.5 block text-xs font-normal text-muted">
-                끄면 학부모 화면에 체험 가격 대신 &quot;가격 문의&quot;로 표시돼요
-              </span>
-            </span>
-            <input
-              type="checkbox"
-              checked={editShowTrialPrice}
-              onChange={(e) => setEditShowTrialPrice(e.target.checked)}
-              className="h-5 w-5 flex-shrink-0 accent-rink"
-            />
-          </label>
-        )}
-        <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
-          <span className="text-sm font-bold">
-            할인 적용
-            <span className="mt-0.5 block text-xs font-normal text-muted">
-              기간을 정해 정가 대신 할인가를 노출해요
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            checked={editUseDiscount}
-            onChange={(e) => setEditUseDiscount(e.target.checked)}
-            className="h-5 w-5 flex-shrink-0 accent-rink"
-          />
-        </label>
-        {editUseDiscount && (
+
+        <button
+          type="button"
+          onClick={() => setShowTrialInfo((v) => !v)}
+          className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+        >
+          <span className="text-sm font-bold">원데이 수업 정보</span>
+          <span className="text-muted">{showTrialInfo ? "▲" : "▼"}</span>
+        </button>
+        {showTrialInfo && (
           <div className="flex flex-col gap-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-muted">할인가</label>
-              <input
-                type="number"
-                min={0}
-                value={editDiscountPrice}
-                onChange={(e) => setEditDiscountPrice(e.target.value)}
-                placeholder="예: 25000"
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-              />
-            </div>
-            <div className="flex gap-2">
-              <div className="min-w-0 flex-1">
-                <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
-                <input
-                  type="date"
-                  value={editDiscountStartDate}
-                  onChange={(e) => setEditDiscountStartDate(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
-                <input
-                  type="date"
-                  value={editDiscountEndDate}
-                  onChange={(e) => setEditDiscountEndDate(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-        {item.allowTrial && (
-          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
-            <span className="text-sm font-bold">
-              원데이 할인 적용
-              <span className="mt-0.5 block text-xs font-normal text-muted">
-                정가 할인과 별개로, 원데이 체험가만 다른 기간에 할인할 수 있어요
-              </span>
-            </span>
-            <input
-              type="checkbox"
-              checked={editUseTrialDiscount}
-              onChange={(e) => setEditUseTrialDiscount(e.target.checked)}
-              className="h-5 w-5 flex-shrink-0 accent-rink"
-            />
-          </label>
-        )}
-        {item.allowTrial && editUseTrialDiscount && (
-          <div className="flex flex-col gap-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-muted">원데이 할인가</label>
-              <input
-                type="number"
-                min={0}
-                value={editTrialDiscountPrice}
-                onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
-                placeholder="예: 20000"
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-              />
-            </div>
-            <div className="flex gap-2">
-              <div className="min-w-0 flex-1">
-                <label className="mb-1.5 block text-xs font-bold text-muted">할인 시작일</label>
-                <input
-                  type="date"
-                  value={editTrialDiscountStartDate}
-                  onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <label className="mb-1.5 block text-xs font-bold text-muted">할인 종료일</label>
-                <input
-                  type="date"
-                  value={editTrialDiscountEndDate}
-                  onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
-                />
-              </div>
-            </div>
+            <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
+              시간대마다 원데이 가능을 켜고 끌 수 있어요.
+            </p>
+            {item.allowTrial && (
+              <>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold text-muted">
+                    체험 가격 <span className="font-normal">(선택, 비워두면 정가와 동일)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={editTrialPrice}
+                    onChange={(e) => setEditTrialPrice(e.target.value)}
+                    placeholder="예: 30000"
+                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                  />
+                </div>
+                <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+                  <span className="text-sm font-bold">
+                    체험가 공개
+                    <span className="mt-0.5 block text-xs font-normal text-muted">
+                      끄면 학부모 화면에 체험 가격 대신 &quot;가격 문의&quot;로 표시돼요
+                    </span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={editShowTrialPrice}
+                    onChange={(e) => setEditShowTrialPrice(e.target.checked)}
+                    className="h-5 w-5 flex-shrink-0 accent-rink"
+                  />
+                </label>
+                <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+                  <span className="text-sm font-bold">
+                    할인하기
+                    <span className="mt-0.5 block text-xs font-normal text-muted">
+                      정가 할인과 별개로, 원데이 체험가만 다른 기간에 할인할 수 있어요
+                    </span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={editUseTrialDiscount}
+                    onChange={(e) => setEditUseTrialDiscount(e.target.checked)}
+                    className="h-5 w-5 flex-shrink-0 accent-rink"
+                  />
+                </label>
+                {editUseTrialDiscount && (
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <label className="mb-1.5 block text-xs font-bold text-muted">원데이 할인가</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={editTrialDiscountPrice}
+                        onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
+                        placeholder="예: 20000"
+                        className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="min-w-0 flex-1">
+                        <label className="mb-1.5 block text-xs font-bold text-muted">
+                          할인 시작일
+                        </label>
+                        <input
+                          type="date"
+                          value={editTrialDiscountStartDate}
+                          onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
+                          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <label className="mb-1.5 block text-xs font-bold text-muted">
+                          할인 종료일
+                        </label>
+                        <input
+                          type="date"
+                          value={editTrialDiscountEndDate}
+                          onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
+                          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
         <div>
@@ -810,14 +839,14 @@ export default function ClassDetailClient({
                 </label>
                 <button
                   onClick={() => startEditSchedule(s)}
-                  className="font-bold text-muted"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-muted hover:bg-line/50"
                   aria-label="시간대 수정"
                 >
                   ✎
                 </button>
                 <button
                   onClick={() => deleteSchedule(s.id)}
-                  className="font-bold text-muted"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-muted hover:bg-line/50"
                   aria-label="시간대 삭제"
                 >
                   ✕

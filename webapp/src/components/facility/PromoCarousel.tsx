@@ -8,11 +8,17 @@ const AUTO_SLIDE_MS = 4000;
 
 export type PromoSlide = { url: string; title?: string; categoryId?: string };
 
-function SlideCaption({ title }: { title?: string }) {
+// key를 활성 슬라이드가 될 때마다 바꿔서(remount) 매번 fade-up-bright 애니메이션이
+// 새로 재생되게 한다 — 그냥 CSS 애니메이션만 걸어두면 최초 마운트(=페이지 로드) 때
+// 한 번만 재생되고, 슬라이드를 넘겨도 이미 마운트돼 있던 캡션은 다시 재생되지 않는다.
+function SlideCaption({ title, active, index }: { title?: string; active: boolean; index: number }) {
   if (!title) return null;
   return (
     <div className="absolute inset-x-0 top-3/4 -translate-y-1/2 px-5 text-center text-white">
-      <p className="font-banner-title animate-fade-up-bright whitespace-pre-line text-lg leading-snug tracking-tight">
+      <p
+        key={active ? `active-${index}` : "idle"}
+        className="font-banner-title animate-fade-up-bright whitespace-pre-line text-lg leading-snug tracking-tight"
+      >
         {title}
       </p>
     </div>
@@ -23,15 +29,19 @@ function Slide({
   slide,
   facilityId,
   className,
+  active,
+  index,
 }: {
   slide: PromoSlide;
   facilityId: string;
   className: string;
+  active: boolean;
+  index: number;
 }) {
   const content = (
     <>
       <Image src={slide.url} alt="" fill sizes="100vw" className="object-cover brightness-75" />
-      <SlideCaption title={slide.title} />
+      <SlideCaption title={slide.title} active={active} index={index} />
     </>
   );
 
@@ -81,6 +91,8 @@ export default function PromoCarousel({
           slide={images[0]}
           facilityId={facilityId}
           className="relative block aspect-video w-full"
+          active
+          index={0}
         />
       </div>
     );
@@ -99,6 +111,8 @@ export default function PromoCarousel({
             slide={slide}
             facilityId={facilityId}
             className="relative block aspect-video w-full shrink-0 snap-center"
+            active={i === index}
+            index={index}
           />
         ))}
       </div>
