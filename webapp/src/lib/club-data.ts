@@ -301,3 +301,16 @@ export async function getClubBookingById(
   if (!data) return null;
   return toClubBooking(data as unknown as RawClubBooking);
 }
+
+// 클럽 탈퇴 신청 화면(설정 페이지)에서 "이미 신청했어요" 안내를 미리 보여주기 위한 조회.
+export async function hasPendingWithdrawalRequest(facilityId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("club_withdrawal_requests")
+    .select("id")
+    .eq("facility_id", facilityId)
+    .eq("status", "pending")
+    .maybeSingle();
+
+  return !!data;
+}

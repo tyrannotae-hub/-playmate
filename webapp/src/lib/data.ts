@@ -230,11 +230,14 @@ function toTeamClass(
 // 단일 클래스나 특정 시설만 필요할 때도 전체를 긁어와 필터링하지 않도록
 // eq 필터를 옵션으로 받는 공용 헬퍼로 뺌 (getClassById/getFacilityHome에서 재사용).
 function classesQuery(supabase: SupabaseClient, filter?: { id?: string; facilityId?: string }) {
+  // facility:facilities!inner + status 필터로, 관리자가 탈퇴 승인해 status='withdrawn'이 된
+  // 시설의 클래스는 학부모 조회(getAllClasses/getClassById/getFacilityHome)에서 전부 제외한다.
   let query = supabase
     .from("teams_classes")
     .select(
-      "*, facility:facilities(id,name,address,region_code,phone,instagram_url,profile_image_url,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
-    );
+      "*, facility:facilities!inner(id,name,address,region_code,phone,instagram_url,profile_image_url,status,facility_regions(region_code)), class_instructors(instructor:instructors(id,name,career_years,certification_verified,certified_by,profile_image_url)), class_schedules(*), class_images(url, sort_order), class_holidays(holiday_date,class_schedule_id)"
+    )
+    .eq("facility.status", "active");
   if (filter?.id) query = query.eq("id", filter.id);
   if (filter?.facilityId) query = query.eq("facility_id", filter.facilityId);
   return query;
@@ -282,7 +285,8 @@ async function facilityMetaMap() {
   const supabase = createPublicClient();
   const { data } = await supabase
     .from("facilities")
-    .select("id, name, address, region_code, cover_image_url, profile_image_url, owner_type");
+    .select("id, name, address, region_code, cover_image_url, profile_image_url, owner_type")
+    .neq("status", "withdrawn");
 
   const map = new Map<string, RawFacilityMeta>();
   ((data ?? []) as RawFacilityMeta[]).forEach((f) => map.set(f.id, f));
@@ -399,7 +403,7 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
     supabase
       .from("facilities")
       .select(
-        "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type"
+        "id, name, address, phone, description, cover_image_url, profile_image_url, instagram_url, owner_type, status"
       )
       .eq("id", facilityId)
       .maybeSingle(),
@@ -429,7 +433,9 @@ export async function getFacilityHome(facilityId: string): Promise<FacilityHome 
       .order("sort_order", { ascending: true }),
   ]);
 
-  if (!facility) return null;
+  // 탈퇴 승인된(status='withdrawn') 시설은 학부모에게는 존재하지 않는 것처럼 404 처리한다
+  // (본인 대시보드/관리자 화면은 club-data.ts/admin-data.ts를 통해 별도로 계속 조회 가능).
+  if (!facility || facility.status === "withdrawn") return null;
 
   const instructors: FacilityInstructor[] = (instructorRows ?? []).map((i) => ({
     id: i.id,

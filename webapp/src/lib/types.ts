@@ -303,6 +303,15 @@ export type ClubSignupRequest = {
   businessRegNumber?: string;
 };
 
+export type ClubWithdrawalRequest = {
+  id: string;
+  facilityId: string;
+  facilityName: string;
+  status: "pending" | "approved" | "rejected";
+  requestedAt: string;
+  reviewedAt?: string;
+};
+
 export type NotificationType =
   | "booking_confirmed"
   | "booking_cancelled"

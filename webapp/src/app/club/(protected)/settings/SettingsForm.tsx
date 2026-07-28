@@ -6,7 +6,18 @@ import { createClient } from "@/lib/supabase/client";
 import { ClubOwner } from "@/lib/types";
 import { buttonClass, cardClass } from "@/lib/ui";
 
-export default function SettingsForm({ owner }: { owner: ClubOwner }) {
+const WITHDRAWAL_ERROR_MESSAGE: Record<string, string> = {
+  ACTIVE_BOOKINGS_EXIST: "처리 중인 예약이 있어 탈퇴할 수 없어요. 예약을 먼저 정리해주세요.",
+  ALREADY_REQUESTED: "이미 탈퇴 신청이 접수되어 있어요.",
+};
+
+export default function SettingsForm({
+  owner,
+  initialPendingWithdrawal = false,
+}: {
+  owner: ClubOwner;
+  initialPendingWithdrawal?: boolean;
+}) {
   const router = useRouter();
   const [name, setName] = useState(owner.name);
   const [savingName, setSavingName] = useState(false);
@@ -17,6 +28,11 @@ export default function SettingsForm({ owner }: { owner: ClubOwner }) {
   const [savingPassword, setSavingPassword] = useState(false);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
   const [passwordSaved, setPasswordSaved] = useState(false);
+
+  const [pendingWithdrawal, setPendingWithdrawal] = useState(initialPendingWithdrawal);
+  const [submittingWithdrawal, setSubmittingWithdrawal] = useState(false);
+  const [withdrawalErrorMsg, setWithdrawalErrorMsg] = useState("");
+  const [withdrawalRequested, setWithdrawalRequested] = useState(false);
 
   async function saveName(e: React.FormEvent) {
     e.preventDefault();
@@ -56,6 +72,24 @@ export default function SettingsForm({ owner }: { owner: ClubOwner }) {
     }
     setNewPassword("");
     setPasswordSaved(true);
+  }
+
+  async function requestWithdrawal() {
+    setSubmittingWithdrawal(true);
+    setWithdrawalErrorMsg("");
+    const supabase = createClient();
+
+    const { error } = await supabase.rpc("request_club_withdrawal");
+
+    setSubmittingWithdrawal(false);
+    if (error) {
+      setWithdrawalErrorMsg(
+        WITHDRAWAL_ERROR_MESSAGE[error.message] ?? "처리에 실패했어요. 다시 시도해주세요."
+      );
+      return;
+    }
+    setPendingWithdrawal(true);
+    setWithdrawalRequested(true);
   }
 
   return (
@@ -105,6 +139,30 @@ export default function SettingsForm({ owner }: { owner: ClubOwner }) {
           {savingPassword ? "변경 중..." : "비밀번호 변경"}
         </button>
       </form>
+
+      <div className={cardClass("flex flex-col gap-3")}>
+        <p className="font-bold">클럽 탈퇴</p>
+        <p className="text-xs text-muted">
+          탈퇴를 신청하면 관리자 검토 후 처리돼요. 처리 중인 예약(승인 대기・확정)이 있으면 신청할 수 없어요.
+        </p>
+        {withdrawalErrorMsg && <p className="text-xs text-negative">{withdrawalErrorMsg}</p>}
+        {pendingWithdrawal ? (
+          <p className="text-xs font-bold text-warn">
+            {withdrawalRequested
+              ? "탈퇴 신청이 접수됐어요. 관리자 승인 후 처리됩니다."
+              : "이미 탈퇴 신청이 접수되어 있어요. 관리자 승인 후 처리됩니다."}
+          </p>
+        ) : (
+          <button
+            type="button"
+            disabled={submittingWithdrawal}
+            onClick={requestWithdrawal}
+            className={buttonClass({ variant: "outline", size: "sm", full: false, className: "text-negative" })}
+          >
+            {submittingWithdrawal ? "신청 중..." : "탈퇴 신청"}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

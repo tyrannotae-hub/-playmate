@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Admin, ClubSignupRequest, Sport } from "@/lib/types";
+import { Admin, ClubSignupRequest, ClubWithdrawalRequest, Sport } from "@/lib/types";
 
 export async function getCurrentAdmin(): Promise<Admin | null> {
   const supabase = await createClient();
@@ -51,6 +51,26 @@ export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {
       wantsAcademy: r.wants_academy,
       wantsLesson: r.wants_lesson,
       businessRegNumber: r.business_reg_number ?? undefined,
+    };
+  });
+}
+
+export async function getClubWithdrawalRequests(): Promise<ClubWithdrawalRequest[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("club_withdrawal_requests")
+    .select("id, facility_id, requested_at, status, reviewed_at, facility:facilities(name)")
+    .order("requested_at", { ascending: false });
+
+  return (data ?? []).map((r) => {
+    const facility = r.facility as unknown as { name: string } | null;
+    return {
+      id: r.id,
+      facilityId: r.facility_id,
+      facilityName: facility?.name ?? "",
+      status: r.status as "pending" | "approved" | "rejected",
+      requestedAt: r.requested_at,
+      reviewedAt: r.reviewed_at ?? undefined,
     };
   });
 }
