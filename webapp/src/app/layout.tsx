@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
@@ -26,6 +26,13 @@ export const metadata: Metadata = {
   title: "PlayMate — 아이에게 맞는 운동을 찾는 가장 빠른 길",
   description:
     "체육시설·강사·클럽팀을 비교하고 후기를 확인하고 등록까지. 아이스하키부터 시작하는 어린이 체육 매칭 서비스, 플레이메이트.",
+};
+
+// iOS Safari에서 env(safe-area-inset-*)가 실제 값을 갖게 하려면 viewport-fit=cover가
+// 필요함 — 이게 없으면 하단 탭바의 안전영역 여백 계산이 항상 0으로 처리돼 아이폰
+// 홈 인디케이터 쪽에 탭바가 바짝 붙어 보인다.
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
