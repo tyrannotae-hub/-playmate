@@ -31,7 +31,7 @@ export default function ClassCard({
       className={cardClass("flex gap-3 transition hover:border-rink")}
     >
       {showPhoto && (
-        <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+        <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
           {cover ? (
             <Image src={cover} alt="" fill sizes="80px" className="object-cover" />
           ) : (
@@ -49,7 +49,7 @@ export default function ClassCard({
             </div>
             <h3 className="break-words text-base font-bold">{item.name}</h3>
             {item.allowTrial && (
-              <span className="mt-1 inline-block rounded-xs bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
+              <span className="mt-1 inline-block rounded-sm bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
                 원데이 체험 가능
               </span>
             )}

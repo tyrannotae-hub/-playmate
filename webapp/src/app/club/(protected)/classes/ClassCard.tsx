@@ -35,7 +35,7 @@ export default function ClassCard({
         <p className="mt-0.5 break-words font-bold">
           {item.name}
           {offersAcademy && offersLesson && (
-            <span className="ml-1.5 rounded-xs bg-surface-2 px-1.5 py-0.5 align-middle text-[11px] font-bold text-muted">
+            <span className="ml-1.5 rounded-sm bg-surface-2 px-1.5 py-0.5 align-middle text-[11px] font-bold text-muted">
               {item.serviceType === "academy" ? "아카데미" : "레슨"}
             </span>
           )}
@@ -46,7 +46,7 @@ export default function ClassCard({
           {item.regionCode && ` · ${regionLabel(item.regionCode)}`}
         </p>
         {item.allowTrial && (
-          <span className="mt-1 inline-block rounded-xs bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
+          <span className="mt-1 inline-block rounded-sm bg-[#1768ac]/10 px-2 py-0.5 text-[11px] font-bold text-[#0d3f63]">
             원데이 체험 가능
             {item.trialPrice != null && ` · ${item.trialPrice.toLocaleString()}원`}
           </span>

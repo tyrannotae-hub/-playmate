@@ -27,7 +27,7 @@ export default function ClassCardCompact({
       href={`/classes/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
-      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="144px" className="object-cover" />
         ) : (
@@ -42,11 +42,11 @@ export default function ClassCardCompact({
           />
         </div>
         <div className="absolute left-1.5 top-1.5 flex gap-1">
-          <span className="rounded-xs bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+          <span className="rounded-sm bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
             정기
           </span>
           {item.allowTrial && (
-            <span className="rounded-xs bg-[#1768ac] px-1.5 py-0.5 text-[10px] font-bold text-white">
+            <span className="rounded-sm bg-[#1768ac] px-1.5 py-0.5 text-[10px] font-bold text-white">
               원데이
             </span>
           )}

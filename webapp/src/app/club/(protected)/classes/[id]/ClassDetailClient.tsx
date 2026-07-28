@@ -372,7 +372,7 @@ export default function ClassDetailClient({
             required
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
         </div>
         <div className="flex gap-2">
@@ -381,7 +381,7 @@ export default function ClassDetailClient({
             <select
               value={editSportId}
               onChange={(e) => setEditSportId(e.target.value)}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             >
               {sports.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -395,7 +395,7 @@ export default function ClassDetailClient({
             <select
               value={editClassType}
               onChange={(e) => setEditClassType(e.target.value as ClubClass["classType"])}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             >
               {Object.entries(CLASS_TYPE_LABEL).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -445,7 +445,7 @@ export default function ClassDetailClient({
           <select
             value={editRegionCode}
             onChange={(e) => setEditRegionCode(e.target.value)}
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           >
             <option value="">선택 안 함</option>
             {REGION_OPTIONS.map((r) => (
@@ -465,14 +465,14 @@ export default function ClassDetailClient({
             onChange={(e) => setEditBannerTitle(e.target.value.slice(0, 20))}
             maxLength={20}
             placeholder="제목 (최대 20자)"
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
           <input
             value={editBannerSubtitle}
             onChange={(e) => setEditBannerSubtitle(e.target.value.slice(0, 40))}
             maxLength={40}
             placeholder="소제목 (최대 40자)"
-            className="mt-2 w-full rounded-xs border border-line bg-background px-3.5 py-3 text-xs"
+            className="mt-2 w-full rounded-sm border border-line bg-background px-3.5 py-3 text-xs"
           />
         </div>
 
@@ -481,7 +481,7 @@ export default function ClassDetailClient({
             담당 코치 (선택, 복수 선택 가능)
           </label>
           {instructors.length === 0 ? (
-            <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+            <p className="rounded-sm border border-dashed border-line px-3.5 py-3 text-xs text-muted">
               먼저{" "}
               <Link href="/club/instructors" className="font-bold text-rink-deep underline">
                 코치 관리
@@ -520,7 +520,7 @@ export default function ClassDetailClient({
               min={0}
               value={editAgeMin}
               onChange={(e) => setEditAgeMin(Number(e.target.value))}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div className="min-w-0 flex-1">
@@ -531,14 +531,14 @@ export default function ClassDetailClient({
               min={0}
               value={editAgeMax}
               onChange={(e) => setEditAgeMax(Number(e.target.value))}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
         </div>
         <button
           type="button"
           onClick={() => setShowRegularInfo((v) => !v)}
-          className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+          className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3"
         >
           <span className="text-sm font-bold">정기 수업 정보</span>
           <span className="text-muted">{showRegularInfo ? "▲" : "▼"}</span>
@@ -554,7 +554,7 @@ export default function ClassDetailClient({
                   min={0}
                   value={editPrice}
                   onChange={(e) => setEditPrice(Number(e.target.value))}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                  className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                 />
               </div>
               <div className="w-24">
@@ -563,11 +563,11 @@ export default function ClassDetailClient({
                   required
                   value={editPriceUnit}
                   onChange={(e) => setEditPriceUnit(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                  className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                 />
               </div>
             </div>
-            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+            <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 가격 공개
                 <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -581,7 +581,7 @@ export default function ClassDetailClient({
                 className="h-5 w-5 flex-shrink-0 accent-rink"
               />
             </label>
-            <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+            <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
               <span className="text-sm font-bold">
                 할인하기
                 <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -605,7 +605,7 @@ export default function ClassDetailClient({
                     value={editDiscountPrice}
                     onChange={(e) => setEditDiscountPrice(e.target.value)}
                     placeholder="예: 25000"
-                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -615,7 +615,7 @@ export default function ClassDetailClient({
                       type="date"
                       value={editDiscountStartDate}
                       onChange={(e) => setEditDiscountStartDate(e.target.value)}
-                      className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                      className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                     />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -624,7 +624,7 @@ export default function ClassDetailClient({
                       type="date"
                       value={editDiscountEndDate}
                       onChange={(e) => setEditDiscountEndDate(e.target.value)}
-                      className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                      className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                     />
                   </div>
                 </div>
@@ -636,14 +636,14 @@ export default function ClassDetailClient({
         <button
           type="button"
           onClick={() => setShowTrialInfo((v) => !v)}
-          className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+          className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3"
         >
           <span className="text-sm font-bold">원데이 수업 정보</span>
           <span className="text-muted">{showTrialInfo ? "▲" : "▼"}</span>
         </button>
         {showTrialInfo && (
           <div className="flex flex-col gap-2">
-            <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+            <p className="rounded-sm border border-dashed border-line px-3.5 py-3 text-xs text-muted">
               원데이 체험 허용 여부는 이제 시간대별로 설정해요. 아래 &quot;시간대&quot; 목록에서
               시간대마다 원데이 가능을 켜고 끌 수 있어요.
             </p>
@@ -659,10 +659,10 @@ export default function ClassDetailClient({
                     value={editTrialPrice}
                     onChange={(e) => setEditTrialPrice(e.target.value)}
                     placeholder="예: 30000"
-                    className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                    className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                   />
                 </div>
-                <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+                <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
                   <span className="text-sm font-bold">
                     체험가 공개
                     <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -676,7 +676,7 @@ export default function ClassDetailClient({
                     className="h-5 w-5 flex-shrink-0 accent-rink"
                   />
                 </label>
-                <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+                <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
                   <span className="text-sm font-bold">
                     할인하기
                     <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -700,7 +700,7 @@ export default function ClassDetailClient({
                         value={editTrialDiscountPrice}
                         onChange={(e) => setEditTrialDiscountPrice(e.target.value)}
                         placeholder="예: 20000"
-                        className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                        className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -712,7 +712,7 @@ export default function ClassDetailClient({
                           type="date"
                           value={editTrialDiscountStartDate}
                           onChange={(e) => setEditTrialDiscountStartDate(e.target.value)}
-                          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                          className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                         />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -723,7 +723,7 @@ export default function ClassDetailClient({
                           type="date"
                           value={editTrialDiscountEndDate}
                           onChange={(e) => setEditTrialDiscountEndDate(e.target.value)}
-                          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                          className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
                         />
                       </div>
                     </div>
@@ -779,7 +779,7 @@ export default function ClassDetailClient({
         <p className="mb-0.5 text-sm font-bold">시간대</p>
         {item.schedules.map((s) =>
           scheduleEditId === s.id ? (
-            <div key={s.id} className="flex flex-col gap-2 rounded-xs bg-background px-3 py-2.5">
+            <div key={s.id} className="flex flex-col gap-2 rounded-sm bg-background px-3 py-2.5">
               <DayLabelPicker value={scheduleEditDay} onChange={setScheduleEditDay} />
               <TimeRangePicker value={scheduleEditTime} onChange={setScheduleEditTime} />
               <input
@@ -788,7 +788,7 @@ export default function ClassDetailClient({
                 value={scheduleEditCapacity}
                 onChange={(e) => setScheduleEditCapacity(Number(e.target.value))}
                 placeholder="정원"
-                className="w-full rounded-xs border border-line bg-surface px-3 py-2 text-xs"
+                className="w-full rounded-sm border border-line bg-surface px-3 py-2 text-xs"
               />
               {scheduleEditErrorMsg && (
                 <p className="text-xs text-negative">{scheduleEditErrorMsg}</p>
@@ -822,7 +822,7 @@ export default function ClassDetailClient({
           ) : (
             <div
               key={s.id}
-              className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
+              className="flex items-center justify-between rounded-sm bg-background px-3 py-2 text-xs"
             >
               <span>
                 {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
@@ -881,7 +881,7 @@ export default function ClassDetailClient({
               value={capacity}
               onChange={(e) => setCapacity(Number(e.target.value))}
               placeholder="정원"
-              className="w-full rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
+              className="w-full rounded-sm border border-line bg-background px-3 py-2.5 text-xs"
             />
             <label className="flex items-center gap-1.5 text-xs font-bold text-muted">
               <input
@@ -927,7 +927,7 @@ export default function ClassDetailClient({
             .map((d) => (
               <div
                 key={d}
-                className="flex items-center justify-between rounded-xs bg-background px-3 py-2 text-xs"
+                className="flex items-center justify-between rounded-sm bg-background px-3 py-2 text-xs"
               >
                 <span>{formatIsoDateToKoreanShort(d)}</span>
                 <button
@@ -949,7 +949,7 @@ export default function ClassDetailClient({
             required
             value={newHoliday}
             onChange={(e) => setNewHoliday(e.target.value)}
-            className="flex-1 rounded-xs border border-line bg-background px-3 py-2.5 text-xs"
+            className="flex-1 rounded-sm border border-line bg-background px-3 py-2.5 text-xs"
           />
           <button
             type="submit"

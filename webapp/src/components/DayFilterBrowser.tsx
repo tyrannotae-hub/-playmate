@@ -124,7 +124,7 @@ export default function DayFilterBrowser({
             href={`/classes/${item.id}`}
             className="flex items-center gap-3 py-3"
           >
-            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
               {item.images[0] ? (
                 <Image src={item.images[0]} alt="" fill sizes="56px" className="object-cover" />
               ) : (

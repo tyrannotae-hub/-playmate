@@ -143,7 +143,7 @@ export default function ImageGalleryUploader({
         {images.map((url, i) => (
           <div
             key={url}
-            className={`relative w-24 shrink-0 overflow-hidden rounded-xs ${previewAspectClass}`}
+            className={`relative w-24 shrink-0 overflow-hidden rounded-sm ${previewAspectClass}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className="h-full w-full object-cover" />
@@ -188,7 +188,7 @@ export default function ImageGalleryUploader({
             />
             <label
               htmlFor={inputId}
-              className={`flex w-24 shrink-0 cursor-pointer items-center justify-center rounded-xs border border-dashed border-line text-xs text-muted ${previewAspectClass}`}
+              className={`flex w-24 shrink-0 cursor-pointer items-center justify-center rounded-sm border border-dashed border-line text-xs text-muted ${previewAspectClass}`}
             >
               {uploading ? "..." : "+ 추가"}
             </label>
@@ -208,7 +208,7 @@ export default function ImageGalleryUploader({
             return (
               <div key={url} className="flex items-center gap-2.5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-xs object-cover" />
+                <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-sm object-cover" />
                 <div className="min-w-0 flex-1">
                   <textarea
                     value={caption.title}
@@ -216,7 +216,7 @@ export default function ImageGalleryUploader({
                     onBlur={() => saveCaption(url)}
                     rows={2}
                     placeholder="제목"
-                    className="w-full resize-none rounded-xs border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
+                    className="w-full resize-none rounded-sm border border-line bg-background px-2.5 py-1.5 text-xs font-bold"
                   />
                 </div>
                 {savingCaption === url && <span className="shrink-0 text-[10px] text-muted">저장중</span>}

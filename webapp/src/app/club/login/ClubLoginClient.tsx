@@ -56,7 +56,7 @@ export default function ClubLoginClient() {
             onChange={(e) => setUsername(e.target.value.trim())}
             placeholder="아이디"
             autoCapitalize="none"
-            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-sm border border-line bg-surface px-4 py-3.5 text-sm"
           />
           <input
             type="password"
@@ -64,7 +64,7 @@ export default function ClubLoginClient() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호"
-            className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
+            className="w-full rounded-sm border border-line bg-surface px-4 py-3.5 text-sm"
           />
         </div>
 

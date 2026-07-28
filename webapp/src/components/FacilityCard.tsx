@@ -24,13 +24,13 @@ export default function FacilityCard({
       href={`/facilities/${item.id}`}
       className={variant === "grid" ? "w-full" : "w-36 flex-shrink-0"}
     >
-      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-none bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xs bg-rink-soft text-rink-deep">
         {thumbnailUrl ? (
           <Image src={thumbnailUrl} alt="" fill sizes="144px" className="object-cover" />
         ) : (
           <span className="text-3xl">🏟️</span>
         )}
-        <span className="absolute left-1.5 top-1.5 rounded-xs bg-black/80 px-1.5 py-0.5 text-[10px] font-bold text-white">
+        <span className="absolute left-1.5 top-1.5 rounded-sm bg-black/80 px-1.5 py-0.5 text-[10px] font-bold text-white">
           {item.ownerType === "solo_coach" ? "개인 코치" : "클럽"}
         </span>
         <div className="absolute right-1.5 top-1.5">

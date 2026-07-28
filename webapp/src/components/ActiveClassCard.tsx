@@ -9,7 +9,7 @@ export default function ActiveClassCard({ item }: { item: ActiveClass }) {
 
   return (
     <Link href={`/classes/${item.classId}`} className="w-64 flex-shrink-0">
-      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xs border border-line bg-rink-soft text-rink-deep">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-sm border border-line bg-rink-soft text-rink-deep">
         {cover ? (
           <Image src={cover} alt="" fill sizes="256px" className="object-cover" />
         ) : (

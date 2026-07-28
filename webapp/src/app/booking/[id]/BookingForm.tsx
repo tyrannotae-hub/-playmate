@@ -156,7 +156,7 @@ export default function BookingForm({
                 value={childName}
                 onChange={(e) => setChildName(e.target.value)}
                 placeholder="예: 민준"
-                className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
             <div>
@@ -166,7 +166,7 @@ export default function BookingForm({
                 required
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
             {errorMsg && <p className="text-sm text-negative">{errorMsg}</p>}
@@ -288,7 +288,7 @@ export default function BookingForm({
                 <select
                   value={trialDate}
                   onChange={(e) => setTrialDate(e.target.value)}
-                  className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                  className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
                 >
                   <option value="">날짜를 선택해주세요</option>
                   {trialDateOptions.map((opt) => (
@@ -329,7 +329,7 @@ export default function BookingForm({
             <select
               value={childId}
               onChange={(e) => setChildId(e.target.value)}
-              className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
             >
               {children.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -373,7 +373,7 @@ export default function BookingForm({
                     value={heightCm}
                     onChange={(e) => setHeightCm(e.target.value)}
                     placeholder="120"
-                    className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                    className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
                   />
                 </div>
               )}
@@ -388,7 +388,7 @@ export default function BookingForm({
                     value={shoeSizeMm}
                     onChange={(e) => setShoeSizeMm(e.target.value)}
                     placeholder="180"
-                    className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                    className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
                   />
                 </div>
               )}
@@ -404,7 +404,7 @@ export default function BookingForm({
                 value={residence}
                 onChange={(e) => setResidence(e.target.value)}
                 placeholder="예: 서울 강남구"
-                className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
               />
             </div>
           )}
@@ -418,15 +418,15 @@ export default function BookingForm({
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
               placeholder="010-1234-5678"
-              className="w-full rounded-xs border border-line bg-surface px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-surface px-3.5 py-3 text-sm"
             />
           </div>
 
-          <p className="rounded-xs bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
+          <p className="rounded-sm bg-energy-soft px-3.5 py-3 text-xs leading-relaxed text-[color:var(--foreground)]">
             ⚠️ 결제는 현장/계좌이체로 시설과 직접 진행됩니다
           </p>
 
-          <label className="flex items-start gap-2.5 rounded-xs border border-line px-3.5 py-3">
+          <label className="flex items-start gap-2.5 rounded-sm border border-line px-3.5 py-3">
             <input
               type="checkbox"
               checked={consent}

@@ -43,7 +43,7 @@ export default function DetailTabs({
               {item.instructors.map((instructor) => (
                 <div
                   key={instructor.id}
-                  className="w-[150px] shrink-0 overflow-hidden rounded-xs border border-line"
+                  className="w-[150px] shrink-0 overflow-hidden rounded-sm border border-line"
                 >
                   <div className="relative aspect-square bg-surface-2">
                     {instructor.profileImageUrl ? (
@@ -106,10 +106,10 @@ export default function DetailTabs({
             return (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3"
+                className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xs bg-rink-soft text-xs font-bold text-rink-deep">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-rink-soft text-xs font-bold text-rink-deep">
                     {s.dayLabel}
                   </span>
                   <span className="text-sm font-bold">{s.timeLabel}</span>
@@ -154,7 +154,7 @@ export default function DetailTabs({
                     {r.photoUrls.map((url) => (
                       <div
                         key={url}
-                        className="h-16 w-16 shrink-0 rounded-xs border border-line bg-surface-2 bg-cover bg-center"
+                        className="h-16 w-16 shrink-0 rounded-sm border border-line bg-surface-2 bg-cover bg-center"
                         style={{ backgroundImage: `url(${url})` }}
                       />
                     ))}

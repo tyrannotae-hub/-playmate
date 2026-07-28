@@ -74,7 +74,7 @@ export default function PushSubscribeButton() {
     <button
       onClick={enable}
       disabled={busy || status === "denied"}
-      className="flex w-full items-center justify-between rounded-xs border border-line bg-surface px-3.5 py-3 text-left text-sm disabled:opacity-50"
+      className="flex w-full items-center justify-between rounded-sm border border-line bg-surface px-3.5 py-3 text-left text-sm disabled:opacity-50"
     >
       <span>
         <span className="block font-bold">

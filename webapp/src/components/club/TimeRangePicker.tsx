@@ -38,7 +38,7 @@ export default function TimeRangePicker({
         required
         value={start}
         onChange={(e) => handleStart(e.target.value)}
-        className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+        className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
       >
         <option value="" disabled>
           시작 시간
@@ -54,7 +54,7 @@ export default function TimeRangePicker({
         required
         value={end}
         onChange={(e) => handleEnd(e.target.value)}
-        className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+        className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
       >
         <option value="" disabled>
           종료 시간

@@ -18,7 +18,7 @@ export default function RefreshButton() {
       type="button"
       onClick={refresh}
       aria-label="새로고침"
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xs border border-line text-muted transition hover:text-rink-deep"
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border border-line text-muted transition hover:text-rink-deep"
     >
       <svg
         width="15"

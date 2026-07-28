@@ -181,7 +181,7 @@ export default function ClassesClient({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="예: 주니어 초급반"
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             />
           </div>
           <div className="flex gap-2">
@@ -190,7 +190,7 @@ export default function ClassesClient({
               <select
                 value={sportId}
                 onChange={(e) => setSportId(e.target.value)}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               >
                 {sports.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -204,7 +204,7 @@ export default function ClassesClient({
               <select
                 value={classType}
                 onChange={(e) => setClassType(e.target.value as typeof classType)}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               >
                 <option value="group">그룹</option>
                 <option value="individual">개인</option>
@@ -250,7 +250,7 @@ export default function ClassesClient({
               담당 코치 (선택, 복수 선택 가능)
             </label>
             {instructors.length === 0 ? (
-              <p className="rounded-xs border border-dashed border-line px-3.5 py-3 text-xs text-muted">
+              <p className="rounded-sm border border-dashed border-line px-3.5 py-3 text-xs text-muted">
                 먼저{" "}
                 <Link href="/club/instructors" className="font-bold text-rink-deep underline">
                   코치 관리
@@ -287,7 +287,7 @@ export default function ClassesClient({
             <select
               value={regionCode}
               onChange={(e) => setRegionCode(e.target.value)}
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             >
               <option value="">선택 안 함</option>
               {REGION_OPTIONS.map((r) => (
@@ -307,14 +307,14 @@ export default function ClassesClient({
               onChange={(e) => setBannerTitle(e.target.value.slice(0, 20))}
               maxLength={20}
               placeholder="제목 (최대 20자)"
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             />
             <input
               value={bannerSubtitle}
               onChange={(e) => setBannerSubtitle(e.target.value.slice(0, 40))}
               maxLength={40}
               placeholder="소제목 (최대 40자)"
-              className="mt-2 w-full rounded-xs border border-line bg-background px-3.5 py-3 text-xs"
+              className="mt-2 w-full rounded-sm border border-line bg-background px-3.5 py-3 text-xs"
             />
           </div>
 
@@ -327,7 +327,7 @@ export default function ClassesClient({
                 min={0}
                 value={ageMin}
                 onChange={(e) => setAgeMin(Number(e.target.value))}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="min-w-0 flex-1">
@@ -338,7 +338,7 @@ export default function ClassesClient({
                 min={0}
                 value={ageMax}
                 onChange={(e) => setAgeMax(Number(e.target.value))}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function ClassesClient({
                 min={0}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
             <div className="w-24">
@@ -360,12 +360,12 @@ export default function ClassesClient({
                 required
                 value={priceUnit}
                 onChange={(e) => setPriceUnit(e.target.value)}
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               />
             </div>
           </div>
 
-          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+          <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
             <span className="text-sm font-bold">
               가격 공개
               <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -380,7 +380,7 @@ export default function ClassesClient({
             />
           </label>
 
-          <label className="flex items-center justify-between rounded-xs border border-line px-3.5 py-3">
+          <label className="flex items-center justify-between rounded-sm border border-line px-3.5 py-3">
             <span className="text-sm font-bold">
               원데이 체험 받기
               <span className="mt-0.5 block text-xs font-normal text-muted">
@@ -405,7 +405,7 @@ export default function ClassesClient({
                 value={trialPrice}
                 onChange={(e) => setTrialPrice(e.target.value)}
                 placeholder="예: 30000"
-                className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+                className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
               />
               <p className="mt-1.5 text-xs text-muted">
                 원데이 가능 여부는 아래 첫 수업 시간대에 적용돼요. 시간대를 여러 개
@@ -425,7 +425,7 @@ export default function ClassesClient({
             value={capacity}
             onChange={(e) => setCapacity(Number(e.target.value))}
             placeholder="정원"
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
 
           <div>

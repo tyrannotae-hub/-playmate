@@ -113,12 +113,12 @@ export default function PromoImagesManager({
           {images.map((url) => (
             <div key={url} className="flex items-center gap-2.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-xs object-cover" />
+              <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-sm object-cover" />
               <select
                 value={linkedCategories[url] ?? ""}
                 onChange={(e) => onCategoryChange(url, e.target.value)}
                 disabled={savingUrl === url}
-                className="w-full rounded-xs border border-line bg-background px-2.5 py-2 text-xs"
+                className="w-full rounded-sm border border-line bg-background px-2.5 py-2 text-xs"
               >
                 <option value="">연결 안 함</option>
                 {categories.map((c) => (

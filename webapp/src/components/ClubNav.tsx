@@ -43,7 +43,7 @@ export default function ClubNav({
             alt="PlayMate"
             width={28}
             height={28}
-            className="shrink-0 rounded-xs"
+            className="shrink-0 rounded-sm"
           />
           <div className="min-w-0">
             <p className="btn-label text-xs font-bold text-muted">클럽 관리센터</p>

@@ -69,7 +69,7 @@ export default function PromoBanner() {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-none shadow-elevated">
+    <div className="relative overflow-hidden rounded-xs shadow-elevated">
       <div
         ref={scrollRef}
         onScroll={handleScroll}

@@ -68,7 +68,7 @@ export default function SettingsForm({ owner }: { owner: ClubOwner }) {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
         </div>
         {nameErrorMsg && <p className="text-xs text-negative">{nameErrorMsg}</p>}
@@ -92,7 +92,7 @@ export default function SettingsForm({ owner }: { owner: ClubOwner }) {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="8자 이상"
-            className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+            className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
         </div>
         {passwordErrorMsg && <p className="text-xs text-negative">{passwordErrorMsg}</p>}

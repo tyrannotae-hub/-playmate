@@ -70,12 +70,12 @@ export default async function ClassDetailPage({
         <div className="px-4 pt-4">
           <div className="mb-2.5 flex items-center gap-1.5">
             {sport && (
-              <span className="btn-label inline-flex items-center gap-1 rounded-xs bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+              <span className="btn-label inline-flex items-center gap-1 rounded-sm bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
                 <SportIcon sportId={sport.id} size={14} /> {sport.name}
               </span>
             )}
             {item.allowTrial && (
-              <span className="rounded-xs bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
+              <span className="rounded-sm bg-rink-soft px-2.5 py-1 text-xs font-bold text-rink-deep">
                 원데이 체험 가능
               </span>
             )}
@@ -110,7 +110,7 @@ export default async function ClassDetailPage({
             </div>
           )}
 
-          <div className="mt-4 rounded-xs border border-line bg-surface-2 p-4">
+          <div className="mt-4 rounded-sm border border-line bg-surface-2 p-4">
             <div className="flex items-center justify-between border-b border-dashed border-line pb-3">
               <div>
                 <p className="text-xs font-bold text-muted">정기</p>
@@ -136,7 +136,7 @@ export default async function ClassDetailPage({
                 </div>
               </div>
               {discountPct != null && (
-                <span className="shrink-0 rounded-xs bg-energy px-2.5 py-1 text-xs font-bold text-white">
+                <span className="shrink-0 rounded-sm bg-energy px-2.5 py-1 text-xs font-bold text-white">
                   {discountPct}% 할인
                 </span>
               )}
@@ -168,7 +168,7 @@ export default async function ClassDetailPage({
                   </div>
                 </div>
                 {trialDiscountPct != null && (
-                  <span className="shrink-0 rounded-xs bg-energy px-2.5 py-1 text-xs font-bold text-white">
+                  <span className="shrink-0 rounded-sm bg-energy px-2.5 py-1 text-xs font-bold text-white">
                     {trialDiscountPct}% 할인
                   </span>
                 )}

@@ -70,7 +70,7 @@ export default function HomeCategoriesManager({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="카테고리 이름"
-              className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+              className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
             />
             <button
               type="submit"
@@ -208,7 +208,7 @@ function CategoryCard({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="카테고리 이름"
-          className="w-full rounded-xs border border-line bg-background px-3.5 py-3 text-sm"
+          className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
         />
         <button
           onClick={saveName}
@@ -269,12 +269,12 @@ function CategoryCard({
                   type="button"
                   disabled={togglingId === c.id}
                   onClick={() => toggleClass(c.id, !checked)}
-                  className={`relative flex w-20 shrink-0 flex-col items-center gap-1 rounded-xs border p-1.5 text-center transition ${
+                  className={`relative flex w-20 shrink-0 flex-col items-center gap-1 rounded-sm border p-1.5 text-center transition ${
                     checked ? "border-rink bg-rink-soft" : "border-line"
                   }`}
                 >
                   <div
-                    className="h-14 w-14 shrink-0 rounded-xs bg-surface-2 bg-cover bg-center"
+                    className="h-14 w-14 shrink-0 rounded-sm bg-surface-2 bg-cover bg-center"
                     style={c.coverImage ? { backgroundImage: `url(${c.coverImage})` } : undefined}
                   />
                   <span className="line-clamp-2 text-[11px] font-bold leading-tight">{c.name}</span>

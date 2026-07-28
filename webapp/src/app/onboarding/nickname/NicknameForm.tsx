@@ -44,7 +44,7 @@ export default function NicknameForm({ userId }: { userId: string }) {
         onChange={(e) => setNickname(e.target.value)}
         placeholder="예: 민준맘"
         maxLength={12}
-        className="w-full rounded-xs border border-line bg-surface px-4 py-3.5 text-sm"
+        className="w-full rounded-sm border border-line bg-surface px-4 py-3.5 text-sm"
       />
       {errorMsg && <p className="mt-3 text-sm text-negative">{errorMsg}</p>}
       <button type="submit" disabled={submitting} className={buttonClass({ className: "mt-4" })}>
