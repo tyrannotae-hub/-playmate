@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useHideOnScroll } from "@/lib/useHideOnScroll";
+import { useHideOnScroll, BOTTOM_NAV_ROW_HEIGHT } from "@/lib/useHideOnScroll";
 
 const ITEMS = [
   { href: "/", label: "홈", Icon: HomeIcon },
@@ -22,22 +22,27 @@ export default function BottomNav() {
         hidden ? "translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="mx-auto flex max-w-md items-start justify-around pt-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
-        {ITEMS.map(({ href, label, Icon }) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`btn-label flex flex-1 flex-col items-center gap-1 transition ${
-                active ? "text-rink" : "text-foreground"
-              }`}
-            >
-              <Icon />
-              <span className="text-[11px] font-bold leading-none">{label}</span>
-            </Link>
-          );
-        })}
+      <div style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <div
+          className="mx-auto flex max-w-md items-center justify-around"
+          style={{ height: BOTTOM_NAV_ROW_HEIGHT }}
+        >
+          {ITEMS.map(({ href, label, Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`btn-label flex flex-1 flex-col items-center gap-1 transition ${
+                  active ? "text-rink" : "text-foreground"
+                }`}
+              >
+                <Icon />
+                <span className="text-[11px] font-bold leading-none">{label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
