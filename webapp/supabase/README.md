@@ -30,6 +30,10 @@ README부터 읽으세요.**
 - `home-banners.sql` — 홈 최상단 배너(PromoBanner)가 컴포넌트에 하드코딩돼
   있던 걸 `home_banners` 테이블로 분리, `/admin/banners`에서 관리. 사진
   업로드용 `site-assets` 버킷도 이 파일에서 정식 등록 + RLS 부여.
+- `club-withdrawal.sql` — 클럽 계정 탈퇴: `club-signup-approval.sql`과 반대되는
+  "본인 신청 → 관리자 승인" 오프보딩 플로우. 진행 중 예약이 있으면 신청 자체를
+  막고, 승인돼도 `facilities`를 하드 삭제하지 않고 `status='withdrawn'`으로만
+  바꿔 예약/리뷰 이력은 보존. 학부모 화면(`data.ts`)에서만 조회 제외됨.
 - `solo-coach.sql` — 개인 코치(클럽 소속 없이 혼자 운영) 지원
 - `auth-username.sql` — 아이디+비밀번호 로그인
 
