@@ -41,6 +41,7 @@ export default function ClassDetailClient({
   const [newScheduleAllowTrial, setNewScheduleAllowTrial] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [scheduleDeleteErrorMsg, setScheduleDeleteErrorMsg] = useState("");
 
   const [scheduleEditId, setScheduleEditId] = useState<string | null>(null);
   const [scheduleEditDay, setScheduleEditDay] = useState("");
@@ -240,13 +241,22 @@ export default function ClassDetailClient({
   }
 
   async function deleteSchedule(scheduleId: string) {
+    setScheduleDeleteErrorMsg("");
     if (item.schedules.length <= 1) {
       alert("클래스에는 시간대가 최소 1개 있어야 해요. 마지막 시간대는 삭제할 수 없어요.");
       return;
     }
     const supabase = createClient();
     const { error } = await supabase.from("class_schedules").delete().eq("id", scheduleId);
-    if (!error) router.refresh();
+    if (!error) {
+      router.refresh();
+      return;
+    }
+    setScheduleDeleteErrorMsg(
+      error.code === "23503"
+        ? "이 시간대에 예약 내역이 있어 삭제할 수 없어요. 먼저 예약을 완료/취소 처리해주세요."
+        : "시간대 삭제에 실패했어요. 다시 시도해주세요."
+    );
   }
 
   async function toggleScheduleTrial(scheduleId: string, allowTrial: boolean) {
@@ -857,6 +867,9 @@ export default function ClassDetailClient({
         )}
         {item.schedules.length === 0 && (
           <p className="text-xs text-muted">등록된 시간대가 없어요.</p>
+        )}
+        {scheduleDeleteErrorMsg && (
+          <p className="text-xs text-negative">{scheduleDeleteErrorMsg}</p>
         )}
 
         {!addingSchedule ? (
