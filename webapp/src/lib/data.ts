@@ -75,8 +75,7 @@ type RawSchedule = {
   id: string;
   day_label: string;
   time_label: string;
-  slot_capacity: number;
-  slot_booked_count: number;
+  slot_capacity: number | null;
   allow_trial: boolean | null;
 };
 
@@ -250,8 +249,7 @@ function toTeamClass(
       id: s.id,
       dayLabel: s.day_label,
       timeLabel: s.time_label,
-      capacity: s.slot_capacity,
-      booked: s.slot_booked_count,
+      availableSpots: s.slot_capacity ?? undefined,
       allowTrial: s.allow_trial ?? false,
       holidays: row.class_holidays
         .filter((h) => h.class_schedule_id === s.id)

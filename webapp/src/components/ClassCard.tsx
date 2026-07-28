@@ -17,7 +17,8 @@ export default function ClassCard({
   showPhoto?: boolean;
 }) {
   const schedule = item.schedules[0] as typeof item.schedules[number] | undefined;
-  const isFull = !!schedule && schedule.booked >= schedule.capacity;
+  const hasSpotsInfo = schedule?.availableSpots != null;
+  const isFull = hasSpotsInfo && schedule!.availableSpots! <= 0;
   const cover = item.images[0];
   const region = item.regionCode
     ? regionLabel(item.regionCode)
@@ -93,7 +94,7 @@ export default function ClassCard({
               "가격 문의"
             )}
           </span>
-          {schedule && (
+          {hasSpotsInfo && (
             <>
               <span aria-hidden>·</span>
               <span
@@ -103,7 +104,7 @@ export default function ClassCard({
                     : "font-semibold text-good"
                 }
               >
-                {isFull ? "마감" : `빈자리 ${schedule.capacity - schedule.booked}`}
+                {isFull ? "마감" : `빈자리 ${schedule!.availableSpots}`}
               </span>
             </>
           )}

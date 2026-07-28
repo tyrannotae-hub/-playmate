@@ -44,8 +44,8 @@ export type ClassSchedule = {
   id: string;
   dayLabel: string;
   timeLabel: string;
-  capacity: number;
-  booked: number;
+  /** 지금 남은 자리 수. 운영자가 정원 관리를 안 하기로 했으면 undefined(항상 예약 가능). */
+  availableSpots?: number;
   allowTrial: boolean;
   /** 이 시간대만 원데이 휴무로 지정된 날짜(ISO). 클래스 전체 휴무(TeamClass.holidays)와는 별개. */
   holidays: string[];
@@ -250,8 +250,8 @@ export type ClubSchedule = {
   id: string;
   dayLabel: string;
   timeLabel: string;
-  capacity: number;
-  booked: number;
+  /** 지금 남은 자리 수. 정원 관리를 안 하기로 했으면 undefined(항상 예약 가능). */
+  availableSpots?: number;
   allowTrial: boolean;
   holidays: string[];
 };

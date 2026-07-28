@@ -50,10 +50,16 @@ README부터 읽으세요.**
 - `class-trial-options.sql` — ⚠️ `class_trial_dates` 테이블과
   `teams_classes.allow_trial`은 `class-schedule-trial-toggle.sql`에서 삭제됨.
   `trial_price`/`show_price`는 계속 유효.
-- `class-schedule-trial-toggle.sql` — ✅ 최신. 원데이 가능 여부는 클래스 단위가
-  아니라 `class_schedules.allow_trial`(시간대 단위)로 관리. `request_booking()`/
-  `request_booking_change()` 최신 버전도 여기 있음(이후 `booking-cancel-request.sql`이
-  `request_booking_change()`를 한 번 더 갱신).
+- `class-schedule-trial-toggle.sql` — ⚠️ 원데이 가능 여부는 클래스 단위가 아니라
+  `class_schedules.allow_trial`(시간대 단위)로 관리하는 부분은 계속 유효. 단
+  여기 정의된 `request_booking()`/`request_booking_change()`는 이후
+  `booking-cancel-request.sql`, 그다음 `class-schedule-available-spots.sql`에서
+  다시 갱신됨(정원 증감 로직 변경).
+- `class-schedule-available-spots.sql` — ✅ 최신. `class_schedules.slot_capacity`를
+  "정원"에서 "지금 남은 자리 수"로 의미를 바꾸고(nullable = 정원 관리 안 함),
+  `slot_booked_count` 컬럼은 삭제. `request_booking`/`cancel_booking`/
+  `respond_booking_cancel`/`request_booking_change`/`respond_booking_change`
+  전부 여기서 재정의(예약 시 -1, 취소/거절 시 +1).
 - `class-holiday-per-schedule.sql` — ✅ 최신. 원데이 휴무도 `class_holidays.
   class_schedule_id`로 시간대 단위 지정 가능(null이면 클래스 전체 휴무).
 - `banner-captions.sql` — ⚠️ `facility_promo_images.subtitle`은
@@ -78,12 +84,15 @@ README부터 읽으세요.**
   컬럼(참조 코드 없음, 삭제해도 무방).
 - `booking-trial.sql` — 체험(원데이) 예약 타입 최초 도입
 - `fix-request-booking-overload.sql` — 일회성 버그 수정(PostgREST 함수 오버로드 충돌)
-- `booking-cancel.sql` — ⚠️ `cancel_booking()` 최신 버전은 `booking-cancel-request.sql`.
+- `booking-cancel.sql` — ⚠️ `cancel_booking()` 최신 버전은
+  `class-schedule-available-spots.sql`.
 - `booking-changes.sql` — ⚠️ `request_booking_change()`/`respond_booking_change()`
-  최신 버전은 `class-schedule-trial-toggle.sql`(request 쪽)과
-  `booking-cancel-request.sql`(respond 쪽, `last_change_applied_at` 추가).
-- `booking-cancel-request.sql` — ✅ 최신. 확인중(club 미승인) 예약은 즉시 취소/변경,
-  승인된 예약은 취소도 변경요청과 동일하게 클럽 승인 필요.
+  최신 버전은 `class-schedule-available-spots.sql`.
+- `booking-cancel-request.sql` — ⚠️ 확인중(club 미승인) 예약은 즉시 취소/변경,
+  승인된 예약은 취소도 변경요청과 동일하게 클럽 승인 필요하다는 정책은 계속 유효.
+  단 여기 정의된 `cancel_booking`/`respond_booking_cancel`/`request_booking_change`/
+  `respond_booking_change` 본문은 `class-schedule-available-spots.sql`에서
+  정원 증감 로직만 바뀌어 재정의됨.
 
 ## 클럽 홈(공개 페이지)
 - `facility-home.sql` — 커버 이미지(현재는 홍보 캐러셀 fallback 용도로만 남음) +

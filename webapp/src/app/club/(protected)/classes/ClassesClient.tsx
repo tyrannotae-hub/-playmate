@@ -47,7 +47,7 @@ export default function ClassesClient({
   const [priceUnit, setPriceUnit] = useState("월");
   const [dayLabel, setDayLabel] = useState("");
   const [timeLabel, setTimeLabel] = useState("");
-  const [capacity, setCapacity] = useState(6);
+  const [availableSpots, setAvailableSpots] = useState("");
   const [collectHeight, setCollectHeight] = useState(false);
   const [collectShoeSize, setCollectShoeSize] = useState(false);
   const [collectResidence, setCollectResidence] = useState(false);
@@ -121,7 +121,7 @@ export default function ClassesClient({
       team_class_id: newClass.id,
       day_label: dayLabel.trim(),
       time_label: timeLabel.trim(),
-      slot_capacity: capacity,
+      slot_capacity: availableSpots.trim() ? Number(availableSpots) : null,
       allow_trial: allowTrial,
     });
 
@@ -140,6 +140,7 @@ export default function ClassesClient({
     setInstructorIds([]);
     setDayLabel("");
     setTimeLabel("");
+    setAvailableSpots("");
     setCollectHeight(false);
     setCollectShoeSize(false);
     setCollectResidence(false);
@@ -421,10 +422,10 @@ export default function ClassesClient({
           <TimeRangePicker value={timeLabel} onChange={setTimeLabel} />
           <input
             type="number"
-            min={1}
-            value={capacity}
-            onChange={(e) => setCapacity(Number(e.target.value))}
-            placeholder="정원"
+            min={0}
+            value={availableSpots}
+            onChange={(e) => setAvailableSpots(e.target.value)}
+            placeholder="빈자리 (선택, 비워두면 정원 관리 안 함)"
             className="w-full rounded-sm border border-line bg-background px-3.5 py-3 text-sm"
           />
 

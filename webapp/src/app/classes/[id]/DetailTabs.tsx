@@ -90,8 +90,7 @@ export default function DetailTabs({
         <div className="whitespace-pre-line text-sm leading-relaxed">
           {item.description || (
             <span className="text-muted">
-              대상 연령 {item.ageMin}–{item.ageMax}세
-              {item.schedules[0] && `, 정원 ${item.schedules[0].capacity}명`}의{" "}
+              대상 연령 {item.ageMin}–{item.ageMax}세의{" "}
               {item.classType === "team" ? "팀" : item.classType === "group" ? "그룹" : "개인"}{" "}
               수업입니다. 아직 클럽에서 상세 소개를 등록하지 않았어요.
             </span>
@@ -102,7 +101,8 @@ export default function DetailTabs({
       {tab === "시간표" && (
         <div className="flex flex-col gap-2">
           {item.schedules.map((s, i) => {
-            const isFull = s.booked >= s.capacity;
+            const hasSpotsInfo = s.availableSpots != null;
+            const isFull = hasSpotsInfo && s.availableSpots! <= 0;
             return (
               <div
                 key={i}
@@ -114,13 +114,15 @@ export default function DetailTabs({
                   </span>
                   <span className="text-sm font-bold">{s.timeLabel}</span>
                 </div>
-                <p
-                  className={`text-xs font-bold tabular-nums ${
-                    isFull ? "text-muted" : "text-good"
-                  }`}
-                >
-                  {isFull ? "마감" : `잔여 ${s.capacity - s.booked}/${s.capacity}석`}
-                </p>
+                {hasSpotsInfo && (
+                  <p
+                    className={`text-xs font-bold tabular-nums ${
+                      isFull ? "text-muted" : "text-good"
+                    }`}
+                  >
+                    {isFull ? "마감" : `잔여 ${s.availableSpots}석`}
+                  </p>
+                )}
               </div>
             );
           })}

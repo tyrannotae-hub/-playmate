@@ -37,7 +37,7 @@ export default function ClassDetailClient({
   const [addingSchedule, setAddingSchedule] = useState(false);
   const [dayLabel, setDayLabel] = useState("");
   const [timeLabel, setTimeLabel] = useState("");
-  const [capacity, setCapacity] = useState(6);
+  const [availableSpots, setAvailableSpots] = useState("");
   const [newScheduleAllowTrial, setNewScheduleAllowTrial] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -46,7 +46,7 @@ export default function ClassDetailClient({
   const [scheduleEditId, setScheduleEditId] = useState<string | null>(null);
   const [scheduleEditDay, setScheduleEditDay] = useState("");
   const [scheduleEditTime, setScheduleEditTime] = useState("");
-  const [scheduleEditCapacity, setScheduleEditCapacity] = useState(6);
+  const [scheduleEditAvailableSpots, setScheduleEditAvailableSpots] = useState("");
   const [scheduleEditErrorMsg, setScheduleEditErrorMsg] = useState("");
   const [savingScheduleEdit, setSavingScheduleEdit] = useState(false);
 
@@ -223,7 +223,7 @@ export default function ClassDetailClient({
       team_class_id: item.id,
       day_label: dayLabel,
       time_label: timeLabel,
-      slot_capacity: capacity,
+      slot_capacity: availableSpots.trim() ? Number(availableSpots) : null,
       allow_trial: newScheduleAllowTrial,
     });
 
@@ -234,7 +234,7 @@ export default function ClassDetailClient({
     }
     setDayLabel("");
     setTimeLabel("");
-    setCapacity(6);
+    setAvailableSpots("");
     setNewScheduleAllowTrial(false);
     setAddingSchedule(false);
     router.refresh();
@@ -272,7 +272,9 @@ export default function ClassDetailClient({
     setScheduleEditId(s.id);
     setScheduleEditDay(s.dayLabel);
     setScheduleEditTime(s.timeLabel);
-    setScheduleEditCapacity(s.capacity);
+    setScheduleEditAvailableSpots(
+      s.availableSpots != null ? String(s.availableSpots) : ""
+    );
     setScheduleEditErrorMsg("");
   }
 
@@ -292,7 +294,9 @@ export default function ClassDetailClient({
       .update({
         day_label: scheduleEditDay,
         time_label: scheduleEditTime,
-        slot_capacity: scheduleEditCapacity,
+        slot_capacity: scheduleEditAvailableSpots.trim()
+          ? Number(scheduleEditAvailableSpots)
+          : null,
       })
       .eq("id", scheduleId);
     setSavingScheduleEdit(false);
@@ -794,10 +798,10 @@ export default function ClassDetailClient({
               <TimeRangePicker value={scheduleEditTime} onChange={setScheduleEditTime} />
               <input
                 type="number"
-                min={1}
-                value={scheduleEditCapacity}
-                onChange={(e) => setScheduleEditCapacity(Number(e.target.value))}
-                placeholder="정원"
+                min={0}
+                value={scheduleEditAvailableSpots}
+                onChange={(e) => setScheduleEditAvailableSpots(e.target.value)}
+                placeholder="빈자리 (선택, 비워두면 정원 관리 안 함)"
                 className="w-full rounded-sm border border-line bg-surface px-3 py-2 text-xs"
               />
               {scheduleEditErrorMsg && (
@@ -835,7 +839,8 @@ export default function ClassDetailClient({
               className="flex items-center justify-between rounded-sm bg-background px-3 py-2 text-xs"
             >
               <span>
-                {s.dayLabel} {s.timeLabel} · {s.booked}/{s.capacity}명
+                {s.dayLabel} {s.timeLabel}
+                {s.availableSpots != null ? ` · 빈자리 ${s.availableSpots}명` : " · 정원 관리 안 함"}
               </span>
               <div className="flex shrink-0 items-center gap-3">
                 <label className="flex items-center gap-1.5 font-bold text-muted">
@@ -889,11 +894,10 @@ export default function ClassDetailClient({
             <TimeRangePicker value={timeLabel} onChange={setTimeLabel} />
             <input
               type="number"
-              required
-              min={1}
-              value={capacity}
-              onChange={(e) => setCapacity(Number(e.target.value))}
-              placeholder="정원"
+              min={0}
+              value={availableSpots}
+              onChange={(e) => setAvailableSpots(e.target.value)}
+              placeholder="빈자리 (선택, 비워두면 정원 관리 안 함)"
               className="w-full rounded-sm border border-line bg-background px-3 py-2.5 text-xs"
             />
             <label className="flex items-center gap-1.5 text-xs font-bold text-muted">

@@ -167,16 +167,14 @@ export async function getMyClasses(facilityId: string, classId?: string): Promis
         id: string;
         day_label: string;
         time_label: string;
-        slot_capacity: number;
-        slot_booked_count: number;
+        slot_capacity: number | null;
         allow_trial: boolean | null;
       }[]
     ).map((s) => ({
       id: s.id,
       dayLabel: s.day_label,
       timeLabel: s.time_label,
-      capacity: s.slot_capacity,
-      booked: s.slot_booked_count,
+      availableSpots: s.slot_capacity ?? undefined,
       allowTrial: s.allow_trial ?? false,
       holidays: holidayRows.filter((h) => h.class_schedule_id === s.id).map((h) => h.holiday_date),
     }));
