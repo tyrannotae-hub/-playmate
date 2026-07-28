@@ -30,16 +30,40 @@ export default function FacilityInfoForm({ facility }: { facility: ClubFacility 
       return;
     }
 
+    const trimmedAddress = address.trim();
+    if (trimmedAddress.length < 5) {
+      setErrorMsg("주소를 정확히 입력해주세요 (최소 5자).");
+      return;
+    }
+
+    const trimmedPhone = phone.trim();
+    if (trimmedPhone && !/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(trimmedPhone)) {
+      setErrorMsg("연락처 형식을 확인해주세요 (예: 010-1234-5678).");
+      return;
+    }
+
+    let normalizedInstagram = instagramUrl.trim();
+    if (normalizedInstagram) {
+      if (!/^https?:\/\//.test(normalizedInstagram)) {
+        // "@우리클럽" 또는 "우리클럽"처럼 핸들만 입력해도 정식 URL로 보정해준다.
+        normalizedInstagram = `https://www.instagram.com/${normalizedInstagram.replace(/^@/, "")}`;
+      }
+      if (!/^https?:\/\/(www\.)?instagram\.com\//.test(normalizedInstagram)) {
+        setErrorMsg("인스타그램 링크 형식을 확인해주세요 (예: https://www.instagram.com/우리클럽).");
+        return;
+      }
+    }
+
     setSubmitting(true);
     const supabase = createClient();
 
     const { error: updateError } = await supabase
       .from("facilities")
       .update({
-        address,
-        phone,
-        description,
-        instagram_url: instagramUrl || null,
+        address: trimmedAddress,
+        phone: trimmedPhone,
+        description: description.trim(),
+        instagram_url: normalizedInstagram || null,
         region_code: regions[0],
       })
       .eq("id", facility.id);

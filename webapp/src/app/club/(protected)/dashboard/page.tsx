@@ -55,6 +55,10 @@ export default async function ClubDashboardPage() {
     getMyClubBookings(owner.facilityId),
   ]);
   const isSoloCoach = facility?.ownerType === "solo_coach";
+  // 신규 승인된 클럽은 주소/지역이 빈 채로 생성돼서, 채우기 전까진 학부모
+  // 화면(검색 지역 필터 등)에 제대로 노출되지 않는다 — 잊지 않게 안내한다.
+  const profileIncomplete =
+    !!facility && (!facility.address.trim() || facility.regions.length === 0);
 
   const pending = bookings.filter((b) => b.status === "requested");
   const confirmed = bookings.filter((b) => b.status === "confirmed");
@@ -89,6 +93,18 @@ export default async function ClubDashboardPage() {
 
   return (
     <>
+      {profileIncomplete && (
+        <Link
+          href="/club/home"
+          className="mb-5 flex items-center justify-between gap-3 rounded-sm border border-warn bg-[color:var(--warn)]/10 px-4 py-3"
+        >
+          <span className="text-sm font-bold text-[color:var(--warn)]">
+            주소·지역 정보를 입력해야 학부모 검색에 노출돼요
+          </span>
+          <span className="shrink-0 text-xs font-bold text-[color:var(--warn)]">입력하기</span>
+        </Link>
+      )}
+
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold text-muted">예약 현황</p>
         <RefreshButton />

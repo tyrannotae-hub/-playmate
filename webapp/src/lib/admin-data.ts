@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Admin, ClubSignupRequest } from "@/lib/types";
+import { Admin, ClubSignupRequest, Sport } from "@/lib/types";
 
 export async function getCurrentAdmin(): Promise<Admin | null> {
   const supabase = await createClient();
@@ -16,6 +16,16 @@ export async function getCurrentAdmin(): Promise<Admin | null> {
 
   if (!data) return null;
   return { id: data.id, name: data.name, username: data.username };
+}
+
+export async function getAllSportsForAdmin(): Promise<Sport[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("sports")
+    .select("id, name, emoji, category, traits")
+    .order("category")
+    .order("name");
+  return (data ?? []) as Sport[];
 }
 
 export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {

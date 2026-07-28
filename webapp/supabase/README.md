@@ -24,6 +24,9 @@ README부터 읽으세요.**
   다른 여러 파일이 이 함수에 의존)
 - `club-owner-settings.sql` — 계정 설정에서 이름 변경
 - `club-signup-approval.sql`, `club-signup-sport.sql` — 셀프 가입 신청 + 관리자 승인
+- `sports-admin-management.sql` — 관리자가 `/admin/sports`에서 종목을 SQL 없이
+  추가/수정/삭제할 수 있도록 sports 테이블에 insert/update/delete RLS 추가
+  (기존엔 select 정책만 있었음)
 - `solo-coach.sql` — 개인 코치(클럽 소속 없이 혼자 운영) 지원
 - `auth-username.sql` — 아이디+비밀번호 로그인
 

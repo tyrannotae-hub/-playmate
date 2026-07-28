@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/admin-data";
+import AdminNavTabs from "./AdminNavTabs";
 
 // 학부모/클럽 세션과 완전히 독립된 관리자 인증. cookies()를 쓰는 getCurrentAdmin()을
 // 다른 fetch보다 먼저 단독으로 await하고, 혹시 모를 캐시 버그를 막기 위해
@@ -24,6 +25,7 @@ export default async function AdminProtectedLayout({
           </div>
         </div>
       </header>
+      <AdminNavTabs />
       <main className="px-4 pb-10 pt-5">{children}</main>
     </>
   );
