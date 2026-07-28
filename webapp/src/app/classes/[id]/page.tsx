@@ -4,6 +4,7 @@ import Image from "next/image";
 import TopNav from "@/components/TopNav";
 import DetailTabs from "./DetailTabs";
 import ClassGallery from "./ClassGallery";
+import StickyBookingCta from "./StickyBookingCta";
 import SportIcon from "@/components/icons/SportIcon";
 import {
   getClassById,
@@ -13,7 +14,6 @@ import {
   getReviewsForClass,
   getSports,
 } from "@/lib/data";
-import { buttonClass } from "@/lib/ui";
 import WishlistButton from "@/components/WishlistButton";
 import {
   effectivePrice,
@@ -208,14 +208,7 @@ export default async function ClassDetailPage({
         </div>
       </main>
 
-      <div className="shadow-elevated fixed inset-x-0 bottom-[4.5rem] z-20 mx-auto w-full max-w-md bg-surface px-4 py-3">
-        <Link
-          href={`/booking/${item.id}`}
-          className={buttonClass({ radius: "round", className: "text-center" })}
-        >
-          예약 신청하기
-        </Link>
-      </div>
+      <StickyBookingCta classId={item.id} />
     </>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useHideOnScroll } from "@/lib/useHideOnScroll";
 
 const ITEMS = [
   { href: "/", label: "홈", Icon: HomeIcon },
@@ -12,40 +12,9 @@ const ITEMS = [
   { href: "/mypage", label: "마이", Icon: ProfileIcon },
 ];
 
-// 스크롤을 내리면 숨기고 올리면 다시 보여준다 (네이티브 앱의 흔한 하단 탭바 동작).
-// 맨 위 근처(스크롤량이 작을 때)는 방향과 무관하게 항상 보여줘서 깜빡임을 줄인다.
-const HIDE_THRESHOLD = 12;
-
 export default function BottomNav() {
   const pathname = usePathname();
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    lastY.current = window.scrollY;
-    let ticking = false;
-
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        const diff = y - lastY.current;
-        if (y < HIDE_THRESHOLD) {
-          setHidden(false);
-        } else if (diff > 4) {
-          setHidden(true);
-        } else if (diff < -4) {
-          setHidden(false);
-        }
-        lastY.current = y;
-        ticking = false;
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const hidden = useHideOnScroll();
 
   return (
     <nav
