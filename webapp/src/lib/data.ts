@@ -11,6 +11,7 @@ import {
   FacilityInstructor,
   FacilitySummary,
   FeaturedInstructor,
+  HomeBanner,
   MyReview,
   ParentProfile,
   Review,
@@ -30,6 +31,44 @@ const getCachedSports = unstable_cache(
 
 export async function getSports(): Promise<Sport[]> {
   return getCachedSports();
+}
+
+type RawHomeBanner = {
+  id: string;
+  href: string;
+  background_image_url: string | null;
+  layout: string;
+  caption: string | null;
+  title: string | null;
+  subtitle: string | null;
+  sort_order: number;
+};
+
+const getCachedHomeBanners = unstable_cache(
+  async (): Promise<HomeBanner[]> => {
+    const supabase = createPublicClient();
+    const { data } = await supabase
+      .from("home_banners")
+      .select("id, href, background_image_url, layout, caption, title, subtitle, sort_order")
+      .order("sort_order", { ascending: true });
+
+    return ((data ?? []) as RawHomeBanner[]).map((b) => ({
+      id: b.id,
+      href: b.href,
+      backgroundImageUrl: b.background_image_url ?? undefined,
+      layout: b.layout === "logo" ? "logo" : "text",
+      caption: b.caption ?? undefined,
+      title: b.title ?? undefined,
+      subtitle: b.subtitle ?? undefined,
+      sortOrder: b.sort_order,
+    }));
+  },
+  ["home-banners"],
+  { revalidate: 60, tags: ["home-banners"] }
+);
+
+export async function getHomeBanners(): Promise<HomeBanner[]> {
+  return getCachedHomeBanners();
 }
 
 type RawSchedule = {

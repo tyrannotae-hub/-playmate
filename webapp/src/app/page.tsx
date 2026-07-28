@@ -13,6 +13,7 @@ import {
   getAllClasses,
   getCurrentParent,
   getFeaturedInstructors,
+  getHomeBanners,
   getMyChildren,
   getMyFacilityWishlistIds,
   getMyInstructorWishlistIds,
@@ -36,11 +37,12 @@ export default async function HomePage({
   const type: HomeTab =
     typeParam === "lesson" ? "lesson" : typeParam === "trial" ? "trial" : "academy";
 
-  const [allClasses, sports, instructors, user] = await Promise.all([
+  const [allClasses, sports, instructors, user, banners] = await Promise.all([
     getAllClasses(),
     getSports(),
     getFeaturedInstructors(),
     getCurrentParent(),
+    getHomeBanners(),
   ]);
   const classes =
     type === "trial" ? allClasses.filter((c) => c.allowTrial) : allClasses.filter((c) => c.serviceType === type);
@@ -79,7 +81,7 @@ export default async function HomePage({
       <ServiceTypeTabs active={type} />
       <main className="pb-10">
         <div className="px-4 pt-3">
-          <PromoBanner />
+          <PromoBanner banners={banners} />
         </div>
 
         <div className="px-4 pt-4">

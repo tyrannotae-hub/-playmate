@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/admin", label: "가입 신청" },
   { href: "/admin/sports", label: "종목 관리" },
+  { href: "/admin/banners", label: "홈 배너" },
   { href: "/admin/withdrawals", label: "탈퇴 신청" },
 ];
 

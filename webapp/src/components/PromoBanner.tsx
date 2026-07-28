@@ -3,62 +3,9 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import PlayMateLogo from "@/components/PlayMateLogo";
+import { HomeBanner } from "@/lib/types";
 
-const PUFFINS_FACILITY_ID = "b59ee112-2b7d-4155-98ad-c30b4b828875";
-const HOME_HERO_RINK_PHOTO =
-  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/site-assets/banners/home-hero-ice-rink.jpg";
-const PUFFINS_PROMO_PHOTO =
-  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/facility-covers/b59ee112-2b7d-4155-98ad-c30b4b828875/promo/626c4b06-9b06-4638-9f79-25d8275e64e5.jpg";
-const HOME_FIVE_SPORTS_PHOTO =
-  "https://unazmttaqqukrlupmnhr.supabase.co/storage/v1/object/public/site-assets/banners/home-five-sports-kids.png";
-
-type Banner =
-  | {
-      id: string;
-      href: string;
-      backgroundImageUrl?: string;
-      gradientClassName?: string;
-      layout: "logo";
-      caption: string;
-    }
-  | {
-      id: string;
-      href: string;
-      backgroundImageUrl?: string;
-      gradientClassName?: string;
-      layout: "text";
-      title: string;
-      subtitle: string;
-    };
-
-const BANNERS: Banner[] = [
-  {
-    id: "playmate",
-    href: "/",
-    backgroundImageUrl: HOME_HERO_RINK_PHOTO,
-    layout: "logo",
-    caption: "우리 아이 첫 운동, 플레이메이트와 함께 시작해요",
-  },
-  {
-    id: "puffins",
-    href: `/facilities/${PUFFINS_FACILITY_ID}`,
-    backgroundImageUrl: PUFFINS_PROMO_PHOTO,
-    layout: "text",
-    title: "퍼핀스 아카데미",
-    subtitle: "역삼・목동・신사・동탄 4개 지점, 아이스하키 아카데미",
-  },
-  {
-    id: "recommend",
-    href: "/recommend",
-    backgroundImageUrl: HOME_FIVE_SPORTS_PHOTO,
-    gradientClassName: "bg-gradient-to-br from-[#0d3f63] to-[#1768ac]",
-    layout: "text",
-    title: "플레이메이트가 찾아드려요",
-    subtitle: "우리 아이에게 맞는 운동 찾기",
-  },
-];
-
-export default function PromoBanner() {
+export default function PromoBanner({ banners }: { banners: HomeBanner[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
@@ -68,6 +15,8 @@ export default function PromoBanner() {
     setIndex(Math.round(el.scrollLeft / el.clientWidth));
   }
 
+  if (banners.length === 0) return null;
+
   return (
     <div className="relative overflow-hidden rounded-xs shadow-elevated">
       <div
@@ -75,13 +24,11 @@ export default function PromoBanner() {
         onScroll={handleScroll}
         className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {BANNERS.map((b) => (
+        {banners.map((b) => (
           <Link
             key={b.id}
             href={b.href}
-            className={`relative flex aspect-square w-full shrink-0 snap-center text-white ${
-              b.gradientClassName ?? ""
-            }`}
+            className="relative flex aspect-square w-full shrink-0 snap-center bg-rink-deep text-white"
           >
             {b.backgroundImageUrl && (
               <div
@@ -92,20 +39,26 @@ export default function PromoBanner() {
             {b.layout === "logo" ? (
               <div className="relative flex flex-1 flex-col items-center justify-center gap-2.5 px-6 pb-9 text-center">
                 <PlayMateLogo className="h-6 w-auto" />
-                <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
+                {b.caption && (
+                  <p className="text-[15px] font-bold leading-snug tracking-tight">{b.caption}</p>
+                )}
               </div>
             ) : (
               <div className="relative flex flex-1 flex-col justify-end gap-1 px-4 pb-9">
-                <p className="font-banner-title text-lg tracking-tight">{b.title}</p>
-                <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>
+                {b.title && (
+                  <p className="font-banner-title text-lg tracking-tight">{b.title}</p>
+                )}
+                {b.subtitle && <p className="text-xs leading-snug text-white/85">{b.subtitle}</p>}
               </div>
             )}
           </Link>
         ))}
       </div>
-      <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold text-white">
-        {index + 1}/{BANNERS.length}
-      </span>
+      {banners.length > 1 && (
+        <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold text-white">
+          {index + 1}/{banners.length}
+        </span>
+      )}
     </div>
   );
 }

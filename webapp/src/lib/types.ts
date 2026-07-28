@@ -6,6 +6,17 @@ export type Sport = {
   traits: string[];
 };
 
+export type HomeBanner = {
+  id: string;
+  href: string;
+  backgroundImageUrl?: string;
+  layout: "logo" | "text";
+  caption?: string;
+  title?: string;
+  subtitle?: string;
+  sortOrder: number;
+};
+
 export type Facility = {
   id: string;
   name: string;

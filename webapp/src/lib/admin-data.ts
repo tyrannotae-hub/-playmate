@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Admin, ClubSignupRequest, ClubWithdrawalRequest, Sport } from "@/lib/types";
+import { Admin, ClubSignupRequest, ClubWithdrawalRequest, HomeBanner, Sport } from "@/lib/types";
 
 export async function getCurrentAdmin(): Promise<Admin | null> {
   const supabase = await createClient();
@@ -26,6 +26,25 @@ export async function getAllSportsForAdmin(): Promise<Sport[]> {
     .order("category")
     .order("name");
   return (data ?? []) as Sport[];
+}
+
+export async function getAllHomeBannersForAdmin(): Promise<HomeBanner[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("home_banners")
+    .select("id, href, background_image_url, layout, caption, title, subtitle, sort_order")
+    .order("sort_order", { ascending: true });
+
+  return (data ?? []).map((b) => ({
+    id: b.id,
+    href: b.href,
+    backgroundImageUrl: b.background_image_url ?? undefined,
+    layout: b.layout === "logo" ? "logo" : "text",
+    caption: b.caption ?? undefined,
+    title: b.title ?? undefined,
+    subtitle: b.subtitle ?? undefined,
+    sortOrder: b.sort_order,
+  }));
 }
 
 export async function getClubSignupRequests(): Promise<ClubSignupRequest[]> {

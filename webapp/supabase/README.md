@@ -27,6 +27,9 @@ README부터 읽으세요.**
 - `sports-admin-management.sql` — 관리자가 `/admin/sports`에서 종목을 SQL 없이
   추가/수정/삭제할 수 있도록 sports 테이블에 insert/update/delete RLS 추가
   (기존엔 select 정책만 있었음)
+- `home-banners.sql` — 홈 최상단 배너(PromoBanner)가 컴포넌트에 하드코딩돼
+  있던 걸 `home_banners` 테이블로 분리, `/admin/banners`에서 관리. 사진
+  업로드용 `site-assets` 버킷도 이 파일에서 정식 등록 + RLS 부여.
 - `solo-coach.sql` — 개인 코치(클럽 소속 없이 혼자 운영) 지원
 - `auth-username.sql` — 아이디+비밀번호 로그인
 
