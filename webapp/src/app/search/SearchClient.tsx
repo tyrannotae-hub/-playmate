@@ -21,6 +21,10 @@ const SORTERS: Record<SortKey, (a: TeamClass, b: TeamClass) => number> = {
   price: (a, b) => effectivePrice(a) - effectivePrice(b),
 };
 
+// 결과가 많아질 걸 대비해 처음엔 일부만 그리고 "더보기"로 늘려서, 필터를
+// 바꿀 때마다 수백 개를 한꺼번에 DOM에 올리지 않게 한다.
+const PAGE_SIZE = 20;
+
 export default function SearchClient({
   classes,
   facilities,
@@ -46,6 +50,15 @@ export default function SearchClient({
   const [region, setRegion] = useState(initialRegion || "all");
   const [serviceType, setServiceType] = useState<HomeTab | "all">("all");
   const [sort, setSort] = useState<SortKey>("recent");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  // 필터가 바뀌면 "더보기"로 늘려둔 개수를 초기화 — effect 대신 렌더 중 조정
+  // (React 권장 패턴, https://react.dev/learn/you-might-not-need-an-effect)
+  const filterKey = `${sportId}|${region}|${serviceType}|${sort}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
+    setVisibleCount(PAGE_SIZE);
+  }
 
   const regions = useMemo(() => {
     const codes = Array.from(new Set(classes.flatMap(classRegionCodes)));
@@ -220,12 +233,22 @@ export default function SearchClient({
         </p>
 
         <div className="grid grid-cols-2 gap-3 px-4">
-          {results.map((c) => (
+          {results.slice(0, visibleCount).map((c) => (
             <ClassCardCompact key={c.id} item={c} wished={wishedSet.has(c.id)} variant="grid" />
           ))}
         </div>
         {results.length === 0 && (
           <p className="py-10 text-center text-sm text-muted">조건에 맞는 클래스가 아직 없어요.</p>
+        )}
+        {visibleCount < results.length && (
+          <div className="px-4 pt-4">
+            <button
+              onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
+              className={buttonClass({ variant: "outline" })}
+            >
+              더보기 ({results.length - visibleCount}개 더 있음)
+            </button>
+          </div>
         )}
       </main>
     </>

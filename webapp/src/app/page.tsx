@@ -23,6 +23,10 @@ import {
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
+// 파트너(클럽) 수가 늘면 클래스 수도 같이 늘어나는데, 이 그리드를 무제한으로
+// 렌더링하면 페이지 payload가 계속 커진다 — 일정 개수 이후는 검색 페이지로 유도.
+const BROWSE_CLASSES_LIMIT = 20;
+
 export default async function HomePage({
   searchParams,
 }: {
@@ -167,9 +171,16 @@ export default async function HomePage({
 
         {browseClasses.length > 0 && (
           <div className="mt-8 px-4">
-            <h2 className="mb-3 text-lg font-bold">전체 클래스 둘러보기</h2>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-bold">전체 클래스 둘러보기</h2>
+              {browseClasses.length > BROWSE_CLASSES_LIMIT && (
+                <Link href="/search" className="text-xs font-bold text-rink-deep">
+                  전체보기
+                </Link>
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-3">
-              {browseClasses.map((c) => (
+              {browseClasses.slice(0, BROWSE_CLASSES_LIMIT).map((c) => (
                 <ClassCardCompact
                   key={c.id}
                   item={c}

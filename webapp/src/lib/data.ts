@@ -1,4 +1,7 @@
+import { unstable_cache } from "next/cache";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import {
   ActiveClass,
   AppNotification,
@@ -15,10 +18,18 @@ import {
   TeamClass,
 } from "@/lib/types";
 
+const getCachedSports = unstable_cache(
+  async (): Promise<Sport[]> => {
+    const supabase = createPublicClient();
+    const { data } = await supabase.from("sports").select("id, name, emoji, category, traits");
+    return (data ?? []) as Sport[];
+  },
+  ["all-sports"],
+  { revalidate: 300, tags: ["sports"] }
+);
+
 export async function getSports(): Promise<Sport[]> {
-  const supabase = await createClient();
-  const { data } = await supabase.from("sports").select("id, name, emoji, category, traits");
-  return (data ?? []) as Sport[];
+  return getCachedSports();
 }
 
 type RawSchedule = {
@@ -82,8 +93,11 @@ type RawClass = {
   class_images: { url: string; sort_order: number }[];
 };
 
+// 아래 map 헬퍼들(rating/wishCount/facilityMeta)은 전부 공개 집계 데이터라
+// 요청자 세션과 무관 — createPublicClient()로 통일해서 unstable_cache로 감싼
+// getAllClasses/getSports 안에서도 안전하게 재사용할 수 있게 한다.
 async function ratingMap() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("reviews")
     .select("target_id, rating")
@@ -100,7 +114,7 @@ async function ratingMap() {
 }
 
 async function wishCountMap() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.rpc("get_wishlist_counts");
 
   const map = new Map<string, number>();
@@ -111,7 +125,7 @@ async function wishCountMap() {
 }
 
 async function instructorWishCountMap() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.rpc("get_instructor_wishlist_counts");
 
   const map = new Map<string, number>();
@@ -122,7 +136,7 @@ async function instructorWishCountMap() {
 }
 
 async function facilityWishCountMap() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase.rpc("get_facility_wishlist_counts");
 
   const map = new Map<string, number>();
@@ -215,7 +229,7 @@ function toTeamClass(
 // teams_classes 조회는 공통 select/조인이 무거워서(강사·스케줄·이미지 전부 join),
 // 단일 클래스나 특정 시설만 필요할 때도 전체를 긁어와 필터링하지 않도록
 // eq 필터를 옵션으로 받는 공용 헬퍼로 뺌 (getClassById/getFacilityHome에서 재사용).
-function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter?: { id?: string; facilityId?: string }) {
+function classesQuery(supabase: SupabaseClient, filter?: { id?: string; facilityId?: string }) {
   let query = supabase
     .from("teams_classes")
     .select(
@@ -226,19 +240,32 @@ function classesQuery(supabase: Awaited<ReturnType<typeof createClient>>, filter
   return query;
 }
 
-export async function getAllClasses(): Promise<TeamClass[]> {
-  const supabase = await createClient();
-  const [{ data, error }, ratings, wishCounts, instructorWishCounts] = await Promise.all([
-    classesQuery(supabase),
-    ratingMap(),
-    wishCountMap(),
-    instructorWishCountMap(),
-  ]);
+// 클래스 전체 목록은 강사·스케줄·이미지까지 join한 무거운 조회라, 홈/검색
+// 페이지 접속마다 매번 새로 긁으면 파트너(클럽) 수가 늘수록 DB 부하가
+// 그대로 늘어난다. 개인화되지 않은 공개 데이터라 짧은 시간(30초) 동안은
+// 캐시를 재사용해도 무방 — 그 사이 다른 사용자가 같은 페이지를 봐도 DB를
+// 다시 훑지 않는다. 클럽이 방금 수정한 내용은 최대 30초 정도 늦게 반영될 수 있음.
+const getCachedAllClasses = unstable_cache(
+  async (): Promise<TeamClass[]> => {
+    const supabase = createPublicClient();
+    const [{ data, error }, ratings, wishCounts, instructorWishCounts] = await Promise.all([
+      classesQuery(supabase),
+      ratingMap(),
+      wishCountMap(),
+      instructorWishCountMap(),
+    ]);
 
-  if (error || !data) return [];
-  return (data as unknown as RawClass[]).map((r) =>
-    toTeamClass(r, ratings, wishCounts, instructorWishCounts)
-  );
+    if (error || !data) return [];
+    return (data as unknown as RawClass[]).map((r) =>
+      toTeamClass(r, ratings, wishCounts, instructorWishCounts)
+    );
+  },
+  ["all-classes"],
+  { revalidate: 30, tags: ["classes"] }
+);
+
+export async function getAllClasses(): Promise<TeamClass[]> {
+  return getCachedAllClasses();
 }
 
 type RawFacilityMeta = {
@@ -252,7 +279,7 @@ type RawFacilityMeta = {
 };
 
 async function facilityMetaMap() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("facilities")
     .select("id, name, address, region_code, cover_image_url, profile_image_url, owner_type");
