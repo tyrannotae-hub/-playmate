@@ -5,6 +5,7 @@ import TopNav from "@/components/TopNav";
 import FacilityWishlistButton from "@/components/FacilityWishlistButton";
 import { getCurrentParent, getFacilityHome, getFacilityWishInfo, getMyWishlistIds } from "@/lib/data";
 import FacilityContactLinks from "@/components/FacilityContactLinks";
+import CopyLinkButton from "@/components/CopyLinkButton";
 import PromoCarousel from "@/components/facility/PromoCarousel";
 import HomeCategoryShowcase from "./HomeCategoryShowcase";
 import FacilityClassGrid from "./FacilityClassGrid";
@@ -82,13 +83,14 @@ export default async function FacilityHomePage({
           </div>
         </div>
 
-        <div className="px-4 pt-4">
+        <div className="flex gap-2 px-4 pt-4">
           <Link
             href={`/facilities/${facility.id}/info`}
-            className="flex items-center justify-center rounded-lg border border-line px-3 py-2"
+            className="flex flex-1 items-center justify-center rounded-lg border border-line px-3 py-2"
           >
             <span className="text-xs font-bold">클럽 정보</span>
           </Link>
+          <CopyLinkButton path={`/facilities/${facility.id}`} />
         </div>
 
         <HomeCategoryShowcase
